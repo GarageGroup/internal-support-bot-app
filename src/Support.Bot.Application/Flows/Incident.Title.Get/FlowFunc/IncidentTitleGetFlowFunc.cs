@@ -2,24 +2,23 @@ using System;
 using GGroupp.Infra;
 using Microsoft.Bot.Builder.Dialogs;
 
-namespace GGroupp.Internal.Support.Bot
+namespace GGroupp.Internal.Support.Bot;
+
+using IIncidentTitleGetFlowFunc = IAsyncValueFunc<DialogContext, IncidentTitleGetFlowIn, ChatFlowStepResult<IncidentTitleGetFlowOut>>;
+
+internal sealed partial class IncidentTitleGetFlowFunc : IIncidentTitleGetFlowFunc
 {
-    using IIncidentTitleGetFlowFunc = IAsyncValueFunc<DialogContext, IncidentTitleGetFlowIn, ChatFlowStepResult<IncidentTitleGetFlowOut>>;
+    public static IncidentTitleGetFlowFunc Create(Unit _) => instance;
 
-    internal sealed partial class IncidentTitleGetFlowFunc : IIncidentTitleGetFlowFunc
+    private static readonly IncidentTitleGetFlowFunc instance;
+
+    static IncidentTitleGetFlowFunc() => instance = new();
+
+    private const int DefaultTitleLength = 30;
+
+    private const string Yes = "Да";
+
+    private IncidentTitleGetFlowFunc()
     {
-        public static IncidentTitleGetFlowFunc Create(Unit _) => instance;
-
-        private static readonly IncidentTitleGetFlowFunc instance;
-
-        static IncidentTitleGetFlowFunc() => instance = new();
-
-        private const int DefaultTitleLength = 30;
-
-        private const string Yes = "Да";
-
-        private IncidentTitleGetFlowFunc()
-        {
-        }
     }
 }

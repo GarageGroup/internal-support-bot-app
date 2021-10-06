@@ -1,9 +1,8 @@
 using System;
 
-namespace GGroupp.Internal.Support.Bot
+namespace GGroupp.Internal.Support.Bot;
+
+public interface IADUserApiClientConfiguration
 {
-    public interface IADUserApiClientConfiguration
-    {
-        Uri GraphApiBaseAddress { get; }
-    }
+    Uri GraphApiBaseAddress { get; }
 }

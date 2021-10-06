@@ -1,13 +1,12 @@
-namespace GGroupp.Internal.Support.Bot
+namespace GGroupp.Internal.Support.Bot;
+
+public interface IUserLogInConfiguration
 {
-    public interface IUserLogInConfiguration
-    {
-        string OAuthConnectionName { get; }
+    string OAuthConnectionName { get; }
 
-        string OAuthPromptText { get; }
+    string OAuthPromptText { get; }
 
-        string OAuthPromptTitle { get; }
+    string OAuthPromptTitle { get; }
 
-        int? OAuthTimeoutMilliseconds { get; }
-    }
+    int? OAuthTimeoutMilliseconds { get; }
 }

@@ -1,9 +1,8 @@
 using System;
 
-namespace GGroupp.Internal.Support.Bot
+namespace GGroupp.Internal.Support.Bot;
+
+internal sealed record UserFlowStateJson
 {
-    internal sealed record UserFlowStateJson
-    {
-        public Guid UserId { get; init; }
-    }
+    public Guid UserId { get; init; }
 }
