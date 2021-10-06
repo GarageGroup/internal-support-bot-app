@@ -1,3 +1,6 @@
+using System;
+using System.Net.Http;
+
 namespace GGroupp.Internal.Support.Bot
 {
     using IADUserGetFunc = IAsyncValueFunc<ADUserGetIn, Result<ADUserGetOut, Failure<Unit>>>;

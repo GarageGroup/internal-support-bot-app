@@ -1,5 +1,7 @@
+using System;
 using GGroupp.Infra;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Extensions.Logging;
 
 namespace GGroupp.Internal.Support.Bot
 {

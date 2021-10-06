@@ -1,4 +1,7 @@
+using System;
+using System.Threading;
 using GGroupp.Infra;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using PrimeFuncPack;
@@ -15,9 +18,9 @@ namespace GGroupp.Internal.Support.Bot
 
         static BotAppBuilderExtensions()
         {
-            lazyStorage = new(CreateStorage, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
-            lazyConversationState = new(CreateConversationState, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
-            lazyUserState = new(CreateUserState, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
+            lazyStorage = new(CreateStorage, LazyThreadSafetyMode.ExecutionAndPublication);
+            lazyConversationState = new(CreateConversationState, LazyThreadSafetyMode.ExecutionAndPublication);
+            lazyUserState = new(CreateUserState, LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
         public static IApplicationBuilder UseGSupportBot(this IApplicationBuilder app)

@@ -1,4 +1,8 @@
+using System;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using static System.FormattableString;
 
 namespace GGroupp.Internal.Support.Bot

@@ -1,3 +1,4 @@
+using System;
 using GGroupp.Infra;
 using Microsoft.Bot.Builder.Dialogs;
 

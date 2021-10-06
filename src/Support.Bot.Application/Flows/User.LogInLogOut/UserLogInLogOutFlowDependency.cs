@@ -5,19 +5,19 @@ using PrimeFuncPack;
 
 namespace GGroupp.Internal.Support.Bot
 {
-    using IUserLogInGetFlowFunc = IAsyncValueFunc<DialogContext, Unit, ChatFlowStepResult<UserLogInFlowOut>>;
+    using IUserLogInFlowFunc = IAsyncValueFunc<DialogContext, Unit, ChatFlowStepResult<UserLogInFlowOut>>;
     using IADUserGetFunc = IAsyncValueFunc<ADUserGetIn, Result<ADUserGetOut, Failure<Unit>>>;
     using IUserGetFunc = IAsyncValueFunc<UserGetIn, Result<UserGetOut, Failure<UserGetFailureCode>>>;
 
     public static class UserLogInLogOutFlowDependency
     {
-        public static Dependency<IUserLogInGetFlowFunc> UseUserLogInLogOutFlow<TConfiguration>(
+        public static Dependency<IUserLogInFlowFunc> UseUserLogInFlow<TConfiguration>(
             this Dependency<IADUserGetFunc, IUserGetFunc, TConfiguration, UserState, ILoggerFactory> dependency)
             where TConfiguration : IUserLogInConfiguration
             =>
-            dependency.Fold<IUserLogInGetFlowFunc>(CreateFlowGetFunc);
+            dependency.Fold<IUserLogInFlowFunc>(CreateFlowFunc);
 
-        private static UserLogInGetFlowFunc CreateFlowGetFunc<TConfiguration>(
+        private static UserLogInGetFlowFunc CreateFlowFunc<TConfiguration>(
             IADUserGetFunc adUserGetFunc,
             IUserGetFunc userGetFunc,
             TConfiguration userLogInConfiguration,

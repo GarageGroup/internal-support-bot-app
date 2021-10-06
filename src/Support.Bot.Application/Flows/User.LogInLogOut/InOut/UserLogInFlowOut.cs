@@ -1,4 +1,6 @@
-﻿namespace GGroupp.Internal.Support.Bot;
+﻿using System;
+
+namespace GGroupp.Internal.Support.Bot;
 
 public sealed record UserLogInFlowOut
 {
