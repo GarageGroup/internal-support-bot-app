@@ -3,7 +3,7 @@ using GGroupp.Infra;
 
 namespace GGroupp.Internal.Support.Bot;
 
-public sealed record DataverseApiClientConfiguration : IDataverseApiClientConfiguration
+internal sealed record DataverseApiClientConfiguration : IDataverseApiClientConfiguration
 {
     public string? DataverseApiServiceUrl { get; init; }
 

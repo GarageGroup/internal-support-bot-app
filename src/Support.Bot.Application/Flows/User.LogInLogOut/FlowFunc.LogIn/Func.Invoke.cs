@@ -43,7 +43,7 @@ partial class UserLogInGetFlowFunc
                 if (result.Succeeded is false)
                 {
                     var retryActivity = MessageFactory.Text("Не удалось авторизавоться. Повторите попытку");
-                    await context.Context.SendActivityAsync(retryActivity, token).ConfigureAwait(false);
+                    _ = await context.Context.SendActivityAsync(retryActivity, token).ConfigureAwait(false);
 
                     return ChatFlowStepResult.RetryAndAwait<string>();
                 }

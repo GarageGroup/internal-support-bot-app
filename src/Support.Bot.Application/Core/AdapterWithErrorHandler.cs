@@ -16,11 +16,11 @@ internal sealed class AdapterWithErrorHandler : BotFrameworkHttpAdapter
     {
         OnTurnError = async (turnContext, exception) =>
         {
-                // Log any leaked exception from the application.
-                logger.LogError(exception, $"[OnTurnError] unhandled error : {exception.Message}");
+            // Log any leaked exception from the application.
+            logger.LogError(exception, $"[OnTurnError] unhandled error : {exception.Message}");
 
-                // Send a message to the user
-                await turnContext.SendActivityAsync("Что-то пошло не так...");
+            // Send a message to the user
+            await turnContext.SendActivityAsync("Что-то пошло не так...");
         };
     }
 }

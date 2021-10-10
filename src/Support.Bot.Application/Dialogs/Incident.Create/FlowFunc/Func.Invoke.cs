@@ -11,8 +11,9 @@ partial class IncidentCreateDialogFlowFunc
     public ValueTask<ChatFlowStepResult<Unit>> InvokeAsync(DialogContext dialogContext, Unit _, CancellationToken cancellationToken = default)
         =>
         ChatFlow.Start(
-            dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)),
-            new IncidentCreateFlowState
+            dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)))
+        .MapFlowState(
+            _ => new IncidentCreateFlowState
             {
                 Description = dialogContext.Context.Activity.Text
             })

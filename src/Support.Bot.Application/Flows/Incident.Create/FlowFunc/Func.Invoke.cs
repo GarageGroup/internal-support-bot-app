@@ -17,7 +17,7 @@ partial class IncidentCreateFlowFunc
             dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)),
             input ?? throw new ArgumentNullException(nameof(input)))
         .SendActivity(
-            @in => MessageFactory.Text($"Создать инцидент '{@in.ToString()}'?"))
+            @in => MessageFactory.Text($"Создать инцидент '{@in}'?"))
         .SendActivity(
             _ => MessageFactory.Text($"'{Yes}' для подтверждения, любой другой ответ - отказ"))
         .Await()
@@ -68,8 +68,8 @@ partial class IncidentCreateFlowFunc
         .Fold<ChatFlowStepResult<Unit>>(
             async (createdIncident, token) =>
             {
-                var failureActivity = MessageFactory.Text("Создание инцидента отменено");
-                await dialogContext.Context.SendActivityAsync(failureActivity, token).ConfigureAwait(false);
+                var successActivity = MessageFactory.Text($"Инцидент {createdIncident.Id} был создан успешно!");
+                await dialogContext.Context.SendActivityAsync(successActivity, token).ConfigureAwait(false);
 
                 return default(Unit);
             },

@@ -14,10 +14,10 @@ internal sealed class DialogBot : ActivityHandler
         ConversationState conversationState, UserState userState, Dialog dialog, Dialog? onMembersAddedDialog = null)
         =>
         new(
-            conversationState ?? throw new ArgumentNullException(nameof(conversationState)),
-            userState ?? throw new ArgumentNullException(nameof(userState)),
-            dialog ?? throw new ArgumentNullException(nameof(dialog)),
-            onMembersAddedDialog);
+            conversationState: conversationState ?? throw new ArgumentNullException(nameof(conversationState)),
+            userState: userState ?? throw new ArgumentNullException(nameof(userState)),
+            dialog: dialog ?? throw new ArgumentNullException(nameof(dialog)),
+            onMembersAddedDialog: onMembersAddedDialog);
 
     private readonly BotState conversationState;
 
@@ -27,7 +27,7 @@ internal sealed class DialogBot : ActivityHandler
 
     private readonly Dialog? onMembersAddedDialog;
 
-    private DialogBot(ConversationState conversationState, UserState userState, Dialog dialog, Dialog? onMembersAddedDialog)
+    private DialogBot(BotState conversationState, BotState userState, Dialog dialog, Dialog? onMembersAddedDialog)
     {
         this.conversationState = conversationState;
         this.userState = userState;
@@ -35,8 +35,7 @@ internal sealed class DialogBot : ActivityHandler
         this.onMembersAddedDialog = onMembersAddedDialog;
     }
 
-    public override async Task OnTurnAsync(
-        ITurnContext turnContext, CancellationToken cancellationToken = default)
+    public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default)
     {
         await base.OnTurnAsync(turnContext, cancellationToken);
 
@@ -45,8 +44,7 @@ internal sealed class DialogBot : ActivityHandler
         await userState.SaveChangesAsync(turnContext, false, cancellationToken);
     }
 
-    protected override Task OnMessageActivityAsync(
-        ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
+    protected override Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         =>
         dialog.RunAsync(turnContext, conversationState.CreateProperty<DialogState>(dialog.Id), cancellationToken);
 
@@ -55,9 +53,9 @@ internal sealed class DialogBot : ActivityHandler
     {
         await base.OnMembersAddedAsync(membersAdded, turnContext, cancellationToken);
 
-        if (onMembersAddedDialog is not null)
+        /*if (onMembersAddedDialog is not null)
         {
             await onMembersAddedDialog.RunAsync(turnContext, conversationState.CreateProperty<DialogState>(onMembersAddedDialog.Id), cancellationToken);
-        }
+        }*/
     }
 }
