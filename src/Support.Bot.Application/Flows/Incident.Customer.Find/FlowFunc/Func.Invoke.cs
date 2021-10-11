@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GGroupp.Infra;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 
 namespace GGroupp.Internal.Support.Bot;
@@ -32,12 +30,12 @@ partial class IncidentCustomerFindFlowFunc
         =>
         AsyncPipeline.Start(
             dialogContext.Context.Activity, cancellationToken)
-        .Pipe<Guid, Unit>(
-            activity => Guid.TryParse(activity.Text, out var customerId) ? customerId : default(Unit))
+        .Pipe(
+            activity => activity.GetAdaptiveResponse<CustomerChooseDataJson>())
         .MapFailureValue(
             (_, token) => ShowCustomerSetAsync(dialogContext, token))
         .Fold(
-            customerId => new IncidentCustomerFindFlowOut(customerId),
+            customer => new IncidentCustomerFindFlowOut(customer.Id, customer.Title),
             failure => failure);
 
     private ValueTask<ChatFlowStepResult<IncidentCustomerFindFlowOut>> ShowCustomerSetAsync(
@@ -58,15 +56,15 @@ partial class IncidentCustomerFindFlowFunc
             customerSetFindFunc.InvokeAsync,
             MapCustomerSetFindFailure)
         .Forward<IReadOnlyCollection<CustomerItemFindOut>>(
-            customerSetResult => customerSetResult.Customers.Count switch
+            customerSetResult => customerSetResult.Customers.Any() switch
             {
-                > 0 => Result.Success(customerSetResult.Customers),
+                true => Result.Success(customerSetResult.Customers),
                 _ => Failure.Create(ChatFlowStepAlternativeCode.RetryAndAwaiting, "Не удалось найти ни одного клиента. Попробуйте уточнить запрос")
             })
         .MapSuccess(
             async (customers, token) =>
             {
-                var activity = BuildCustomerSetActivity(customers);
+                var activity = dialogContext.CreateCustomerChooseActivity(customers.Take(MaxCustomerSetCount));
                 await dialogContext.Context.SendActivityAsync(activity, token).ConfigureAwait(false);
 
                 return default(Unit);
@@ -82,16 +80,6 @@ partial class IncidentCustomerFindFlowFunc
         .Fold<ChatFlowStepResult<IncidentCustomerFindFlowOut>>(
             _ => ChatFlowStepResult.RetryAndAwait(),
             failureCode => failureCode);
-
-    private static IActivity BuildCustomerSetActivity(IReadOnlyCollection<CustomerItemFindOut> customers)
-    {
-        var textBuilder = new StringBuilder().Append("Выберите клиента:");
-        foreach (var customer in customers.Take(MaxCustomerSetCount))
-        {
-            textBuilder = textBuilder.Append("\n\r\n\r").Append($"{customer.Id} {customer.Title}");
-        }
-        return MessageFactory.Text(textBuilder.ToString());
-    }
 
     private Failure<ChatFlowStepAlternativeCode> MapCustomerSetFindFailure(Failure<CustomerSetFindFailureCode> failure)
     {

@@ -3,14 +3,14 @@ using Newtonsoft.Json;
 
 namespace GGroupp.Internal.Support.Bot;
 
-internal sealed record IncidentCreateActionDataJson
+internal sealed record IncidentCreateDataJson
 {
-    public static readonly IncidentCreateActionDataJson Create = new()
+    public static readonly IncidentCreateDataJson Create = new()
     {
         ActionName = "Create"
     };
 
-    public static readonly IncidentCreateActionDataJson Cancel = new()
+    public static readonly IncidentCreateDataJson Cancel = new()
     {
         ActionName = "Cancel"
     };

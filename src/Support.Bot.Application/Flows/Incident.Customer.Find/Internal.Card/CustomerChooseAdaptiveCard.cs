@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GGroupp.Infra;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 
 namespace GGroupp.Internal.Support.Bot;
 
-internal static class IncidentCreateAdaptiveCard
+internal static class CustomerChooseAdaptiveCard
 {
-    public static IActivity CreateIncidentCreateActivity(this DialogContext dialogContext, IncidentCreateFlowIn input)
+    public static IActivity CreateCustomerChooseActivity(this DialogContext dialogContext, IEnumerable<CustomerItemFindOut> customers)
         =>
         new AdaptiveCardJson("1.3")
         {
@@ -19,66 +21,25 @@ internal static class IncidentCreateAdaptiveCard
                     type = "TextBlock",
                     size = "Medium",
                     weight = "Bolder",
-                    text = input.Title
-                },
-                new
-                {
-                    type = "ColumnSet",
-                    columns = new object[]
-                    {
-                        new
-                        {
-                            type = "Column",
-                            items = new object[]
-                            {
-                                new
-                                {
-                                    type = "TextBlock",
-                                    text = "От:"
-                                }
-                            },
-                            width = "auto"
-                        },
-                        new
-                        {
-                            type = "Column",
-                            items = new object[]
-                            {
-                                new
-                                {
-                                    type = "TextBlock",
-                                    text = input.CustomerTitle,
-                                    weight = "Bolder"
-                                }
-                            },
-                            width = "auto"
-                        }
-                    }
-                },
-                new
-                {
-                    type = "TextBlock",
-                    wrap = true,
-                    text = input.Description
+                    text = "Выберите клиента"
                 }
             },
-            Actions = new object[]
-            {
-                new
-                {
-                    type = "Action.Submit",
-                    title = "Создать",
-                    data = IncidentCreateActionDataJson.Create
-                },
-                new
-                {
-                    type = "Action.Submit",
-                    title = "Отменить",
-                    data = IncidentCreateActionDataJson.Cancel
-                }
-            }
+            Actions = customers.Select(CreateCustomerAction).ToArray()
         }
         .Pipe(
             dialogContext.Context.Activity.CreateReplyFromCard);
+
+    private static object CreateCustomerAction(CustomerItemFindOut customer)
+        =>
+        new
+        {
+            type = "Action.Submit",
+            title = customer.Title,
+            data = new CustomerChooseDataJson
+            {
+                Id = customer.Id,
+                Title = customer.Title
+            }
+        };
 }
 

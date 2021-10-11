@@ -8,6 +8,8 @@ internal sealed record IncidentCreateFlowState
 
     public Guid CustomerId { get; init; }
 
+    public string? CustomerTitle { get; init; }
+
     public string? Title { get; init; }
 
     public string? Description { get; init; }

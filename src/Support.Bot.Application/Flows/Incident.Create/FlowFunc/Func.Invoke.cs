@@ -38,9 +38,9 @@ partial class IncidentCreateFlowFunc
         AsyncPipeline.Start(
             dialogContext.Context.Activity, cancellationToken)
         .Pipe(
-            activity => activity.GetAdaptiveResponse<IncidentCreateActionDataJson>())
+            activity => activity.GetAdaptiveResponse<IncidentCreateDataJson>())
         .Forward(
-            data => data == IncidentCreateActionDataJson.Create ? Result.Present(input) : default)
+            data => data == IncidentCreateDataJson.Create ? Result.Present(input) : default)
         .MapFailure(
             async (failure, token) =>
             {

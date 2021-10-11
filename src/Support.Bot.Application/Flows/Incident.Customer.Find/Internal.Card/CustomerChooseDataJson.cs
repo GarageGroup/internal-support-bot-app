@@ -1,22 +1,17 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace GGroupp.Internal.Support.Bot;
 
-internal sealed record IncidentCreateActionDataJson
+internal sealed record CustomerChooseDataJson
 {
-    public static readonly IncidentCreateActionDataJson Create = new()
-    {
-        ActionName = "Create"
-    };
+    [JsonProperty("id")]
+    [JsonPropertyName("id")]
+    public Guid Id { get; init; }
 
-    public static readonly IncidentCreateActionDataJson Cancel = new()
-    {
-        ActionName = "Cancel"
-    };
-
-    [JsonProperty("actionName")]
-    [JsonPropertyName("actionName")]
-    public string? ActionName { get; init; }
+    [JsonProperty("title")]
+    [JsonPropertyName("title")]
+    public string? Title { get; init; }
 }
 

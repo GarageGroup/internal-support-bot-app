@@ -68,13 +68,13 @@ internal static class IncidentCreateAdaptiveCard
                 {
                     type = "Action.Submit",
                     title = "Создать",
-                    data = IncidentCreateActionDataJson.Create
+                    data = IncidentCreateDataJson.Create
                 },
                 new
                 {
                     type = "Action.Submit",
                     title = "Отменить",
-                    data = IncidentCreateActionDataJson.Cancel
+                    data = IncidentCreateDataJson.Cancel
                 }
             }
         }

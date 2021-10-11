@@ -33,7 +33,8 @@ partial class IncidentCreateDialogFlowFunc
             incidentCustomerFindFlowFunc.InvokeAsync,
             (incident, customer) => incident with
             {
-                CustomerId = customer.CustomerId
+                CustomerId = customer.CustomerId,
+                CustomerTitle = customer.CustomerTitle
             })
         .ForwardChildValue(
             incident => new IncidentTitleGetFlowIn(
@@ -47,7 +48,7 @@ partial class IncidentCreateDialogFlowFunc
             incident => new IncidentCreateFlowIn(
                 ownerId: incident.OwnerId,
                 customerId: incident.CustomerId,
-                customerTitle: incident.CustomerId.ToString(),
+                customerTitle: incident.CustomerTitle,
                 title: incident.Title,
                 description: incident.Description),
             incidentCreateFlowFunc.InvokeAsync)
