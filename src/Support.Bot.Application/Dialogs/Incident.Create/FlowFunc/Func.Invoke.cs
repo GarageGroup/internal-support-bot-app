@@ -17,6 +17,10 @@ partial class IncidentCreateDialogFlowFunc
             {
                 Description = dialogContext.Context.Activity.Text
             })
+        .Forward(
+            state => state.Description.IsNotNullOrEmpty()
+                ? ChatFlowStepResult.Next(state)
+                : ChatFlowStepAlternativeCode.Interruption)
         .ForwardChildValue(
             Unit.From,
             userLogInFlowFunc.InvokeAsync,
@@ -43,6 +47,7 @@ partial class IncidentCreateDialogFlowFunc
             incident => new IncidentCreateFlowIn(
                 ownerId: incident.OwnerId,
                 customerId: incident.CustomerId,
+                customerTitle: incident.CustomerId.ToString(),
                 title: incident.Title,
                 description: incident.Description),
             incidentCreateFlowFunc.InvokeAsync)

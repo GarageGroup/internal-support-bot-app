@@ -1,11 +1,9 @@
 using System;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GGroupp.Infra;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 
 namespace GGroupp.Internal.Support.Bot;
@@ -19,9 +17,7 @@ partial class IncidentCreateFlowFunc
             dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)),
             input ?? throw new ArgumentNullException(nameof(input)))
         .SendActivity(
-            BuildConfirmationActivity)
-        .SendActivity(
-            _ => MessageFactory.Text($"'{Yes}' для подтверждения, любой другой ответ - отказ"))
+            dialogContext.CreateIncidentCreateActivity)
         .Await()
         .ForwardValue(
             CheckResponseAsync)
@@ -36,31 +32,15 @@ partial class IncidentCreateFlowFunc
         .CompleteValueAsync(
             cancellationToken);
 
-    private static IActivity BuildConfirmationActivity(IncidentCreateFlowIn input)
-        =>
-        Pipeline.Pipe(new StringBuilder())
-        .Append("Создать инцидент?")
-        .Append("\n\r\n\r")
-        .Append($"Название: {input.Title}")
-        .Append("\n\r\n\r")
-        .Append($"ИД клиента: {input.CustomerId}")
-        .Append("\n\r\n\r")
-        .Append($"Описание: {input.Description}")
-        .Pipe(
-            text => MessageFactory.Text(text.ToString()));
-
     private ValueTask<ChatFlowStepResult<IncidentCreateFlowIn>> CheckResponseAsync(
         DialogContext dialogContext, IncidentCreateFlowIn input, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Start(
-            dialogContext.Context.Activity.Text ?? string.Empty,
-            cancellationToken)
+            dialogContext.Context.Activity, cancellationToken)
         .Pipe(
-            activityText => IsYes(activityText) switch
-            {
-                true => Result.Present(input),
-                _ => default
-            })
+            activity => activity.GetAdaptiveResponse<IncidentCreateActionDataJson>())
+        .Forward(
+            data => data == IncidentCreateActionDataJson.Create ? Result.Present(input) : default)
         .MapFailure(
             async (failure, token) =>
             {

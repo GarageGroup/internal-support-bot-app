@@ -24,4 +24,12 @@
     <PackageReference Include="PrimeFuncPack.Core" Version="1.2.0-preview.1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Core.AdaptiveCard\" />
+    <None Remove="Flows\Incident.Create\Internal.Card\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core.AdaptiveCard\" />
+    <Folder Include="Flows\Incident.Create\Internal.Card\" />
+  </ItemGroup>
 </Project>
