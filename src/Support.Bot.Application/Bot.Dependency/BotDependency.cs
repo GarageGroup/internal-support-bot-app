@@ -1,4 +1,5 @@
-﻿using Microsoft.Bot.Builder;
+﻿using GGroupp.Infra;
+using Microsoft.Bot.Builder;
 using PrimeFuncPack;
 
 namespace GGroupp.Internal.Support.Bot;

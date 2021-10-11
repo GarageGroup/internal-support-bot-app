@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace GGroupp.Internal.Support.Bot;
 
-internal sealed record CustomerChooseDataJson
+internal sealed record CustomerChooseValueJson
 {
     [JsonProperty("id")]
     [JsonPropertyName("id")]

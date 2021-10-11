@@ -6,7 +6,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 
-namespace GGroupp.Internal.Support.Bot;
+namespace GGroupp.Infra;
 
 internal sealed class DialogBot : ActivityHandler
 {

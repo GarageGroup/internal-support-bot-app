@@ -31,7 +31,7 @@ partial class IncidentCustomerFindFlowFunc
         AsyncPipeline.Start(
             dialogContext.Context.Activity, cancellationToken)
         .Pipe(
-            activity => activity.GetAdaptiveResponse<CustomerChooseDataJson>())
+            activity => activity.GetDeserializedValue<CustomerChooseValueJson>())
         .MapFailureValue(
             (_, token) => ShowCustomerSetAsync(dialogContext, token))
         .Fold(
@@ -64,7 +64,7 @@ partial class IncidentCustomerFindFlowFunc
         .MapSuccess(
             async (customers, token) =>
             {
-                var activity = dialogContext.CreateCustomerChooseActivity(customers.Take(MaxCustomerSetCount));
+                var activity = customers.Take(MaxCustomerSetCount).Pipe(CustomerChooseActivity.Create);
                 await dialogContext.Context.SendActivityAsync(activity, token).ConfigureAwait(false);
 
                 return default(Unit);

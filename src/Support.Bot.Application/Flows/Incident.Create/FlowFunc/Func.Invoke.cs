@@ -18,7 +18,7 @@ partial class IncidentCreateFlowFunc
             dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)),
             input ?? throw new ArgumentNullException(nameof(input)))
         .SendActivity(
-            dialogContext.CreateConfirmationActivity)
+            IncidentCreateActivity.CreateConfirmation)
         .Await()
         .ForwardValue(
             CheckResponseAsync)
@@ -39,9 +39,9 @@ partial class IncidentCreateFlowFunc
         AsyncPipeline.Start(
             dialogContext.Context.Activity, cancellationToken)
         .Pipe(
-            activity => activity.GetAdaptiveResponse<IncidentCreateDataJson>())
+            activity => activity.GetDeserializedValue<IncidentCreateValueJson>())
         .Forward(
-            data => data == IncidentCreateDataJson.Create ? Result.Present(input) : default)
+            data => data == IncidentCreateValueJson.Create ? Result.Present(input) : default)
         .MapFailure(
             async (failure, token) =>
             {
@@ -68,7 +68,7 @@ partial class IncidentCreateFlowFunc
         .Fold<ChatFlowStepResult<Unit>>(
             async (incidentLink, token) =>
             {
-                var successActivity = dialogContext.CreateSuccessActivity(incidentLink);
+                var successActivity = IncidentCreateActivity.CreateSuccess(incidentLink);
                 await dialogContext.Context.SendActivityAsync(successActivity, token).ConfigureAwait(false);
 
                 return default(Unit);
