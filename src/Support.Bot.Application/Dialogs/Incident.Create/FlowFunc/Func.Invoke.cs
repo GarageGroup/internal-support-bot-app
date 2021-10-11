@@ -33,7 +33,7 @@ partial class IncidentCreateDialogFlowFunc
             })
         .ForwardChildValue(
             incident => new IncidentTitleGetFlowIn(
-                description: incident.Description ?? string.Empty),
+                description: incident.Description.OrEmpty()),
             incidentTitleFlowFunc.InvokeAsync,
             (incident, title) => incident with
             {

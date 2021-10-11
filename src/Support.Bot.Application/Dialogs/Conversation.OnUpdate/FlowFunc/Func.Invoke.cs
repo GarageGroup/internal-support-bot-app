@@ -29,9 +29,9 @@ partial class ConversationFlowOnUpdateFunc
             members => members.FirstOrDefault() is not null
                 ? ChatFlowStepResult.Next(default(Unit))
                 : ChatFlowStepResult.Interrupt())
-        .ForwardChildValue(
+        /*.ForwardChildValue(
             userLogInFlowGetFunc.InvokeAsync,
-            (_, _) => default(Unit))
+            (_, _) => default(Unit))*/
         .CompleteValueAsync(
             cancellationToken);
 }

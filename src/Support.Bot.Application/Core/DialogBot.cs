@@ -53,9 +53,9 @@ internal sealed class DialogBot : ActivityHandler
     {
         await base.OnMembersAddedAsync(membersAdded, turnContext, cancellationToken);
 
-        /*if (onMembersAddedDialog is not null)
+        if (onMembersAddedDialog is not null)
         {
             await onMembersAddedDialog.RunAsync(turnContext, conversationState.CreateProperty<DialogState>(onMembersAddedDialog.Id), cancellationToken);
-        }*/
+        }
     }
 }
