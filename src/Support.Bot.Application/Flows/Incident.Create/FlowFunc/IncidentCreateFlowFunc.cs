@@ -10,11 +10,15 @@ using IIncidentCreateFunc = IAsyncValueFunc<IncidentCreateIn, Result<IncidentCre
 
 internal sealed partial class IncidentCreateFlowFunc : IIncidentCreateFlowFunc
 {
+    private const string Yes = "Да";
+
+    private const string UnexpectedFailureMessage = "Не удалось создать инцидент. Возможно сервис не доступен. Обратитесь к администратору или повторите попытку позже";
+
     internal static IncidentCreateFlowFunc InternalCreate(IIncidentCreateFunc incidentCreateFunc, ILogger<IncidentCreateFlowFunc> logger)
         =>
         new(incidentCreateFunc, logger);
 
-    private const string Yes = "Да";
+    private static bool IsYes(string text) => string.Equals(text, Yes, StringComparison.InvariantCultureIgnoreCase);
 
     private readonly IIncidentCreateFunc incidentCreateFunc;
 

@@ -1,9 +1,11 @@
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GGroupp.Infra;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 
 namespace GGroupp.Internal.Support.Bot;
@@ -17,7 +19,7 @@ partial class IncidentCreateFlowFunc
             dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)),
             input ?? throw new ArgumentNullException(nameof(input)))
         .SendActivity(
-            @in => MessageFactory.Text($"Создать инцидент '{@in}'?"))
+            BuildConfirmationActivity)
         .SendActivity(
             _ => MessageFactory.Text($"'{Yes}' для подтверждения, любой другой ответ - отказ"))
         .Await()
@@ -33,6 +35,19 @@ partial class IncidentCreateFlowFunc
             CreateIncidentAsync)
         .CompleteValueAsync(
             cancellationToken);
+
+    private static IActivity BuildConfirmationActivity(IncidentCreateFlowIn input)
+        =>
+        Pipeline.Pipe(new StringBuilder())
+        .Append("Создать инцидент?")
+        .Append("\n\r\n\r")
+        .Append($"Название: {input.Title}")
+        .Append("\n\r\n\r")
+        .Append($"ИД клиента: {input.CustomerId}")
+        .Append("\n\r\n\r")
+        .Append($"Описание: {input.Description}")
+        .Pipe(
+            text => MessageFactory.Text(text.ToString()));
 
     private ValueTask<ChatFlowStepResult<IncidentCreateFlowIn>> CheckResponseAsync(
         DialogContext dialogContext, IncidentCreateFlowIn input, CancellationToken cancellationToken)
@@ -77,16 +92,9 @@ partial class IncidentCreateFlowFunc
             {
                 logger.LogError(failure.FailureMessage);
 
-                var failureActivity = MessageFactory.Text(UnexpectedIncidentCreateFailureMessage);
+                var failureActivity = MessageFactory.Text(UnexpectedFailureMessage);
                 await dialogContext.Context.SendActivityAsync(failureActivity, token).ConfigureAwait(false);
 
                 return ChatFlowStepResult.Interrupt();
             });
-
-    private static bool IsYes(string text)
-        =>
-        string.Equals(text, Yes, StringComparison.InvariantCultureIgnoreCase);
-
-    private const string UnexpectedIncidentCreateFailureMessage =
-        "Не удалось создать инцидент. Возможно сервис не доступен. Обратитесь к администратору или повторите попытку позже";
 }
