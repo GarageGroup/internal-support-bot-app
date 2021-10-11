@@ -3,7 +3,7 @@ using GGroupp.Infra;
 
 namespace GGroupp.Internal.Support.Bot;
 
-internal sealed record DataverseApiClientConfiguration : IDataverseApiClientConfiguration
+internal sealed record DataverseApiClientConfiguration : IDataverseApiClientConfiguration, IIncidentCreateFlowConfiguration
 {
     public string? DataverseApiServiceUrl { get; init; }
 
@@ -15,6 +15,8 @@ internal sealed record DataverseApiClientConfiguration : IDataverseApiClientConf
 
     public string? DataverseApiAuthClientSecret { get; init; }
 
+    public string? IncidentCardRelativeUrlTemplate { get; init; }
+
     string IDataverseApiClientConfiguration.ServiceUrl => DataverseApiServiceUrl.OrEmpty();
 
     string IDataverseApiClientConfiguration.ApiVersion => DataverseApiVersion.OrEmpty();
@@ -24,4 +26,16 @@ internal sealed record DataverseApiClientConfiguration : IDataverseApiClientConf
     string IDataverseApiClientConfiguration.AuthClientId => DataverseApiAuthClientId.OrEmpty();
 
     string IDataverseApiClientConfiguration.AuthClientSecret => DataverseApiAuthClientSecret.OrEmpty();
+
+    string IIncidentCreateFlowConfiguration.IncidentCardUrlTemplate
+    {
+        get
+        {
+            var baseUri = new Uri(DataverseApiServiceUrl.OrEmpty());
+
+            return new Uri(baseUri, IncidentCardRelativeUrlTemplate).AbsoluteUri
+                .Replace("%7B", "{", StringComparison.InvariantCultureIgnoreCase)
+                .Replace("%7D", "}", StringComparison.InvariantCultureIgnoreCase);
+        }
+    }
 }

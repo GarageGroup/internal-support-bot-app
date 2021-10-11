@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using GGroupp.Infra;
@@ -17,7 +18,7 @@ partial class IncidentCreateFlowFunc
             dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)),
             input ?? throw new ArgumentNullException(nameof(input)))
         .SendActivity(
-            dialogContext.CreateIncidentCreateActivity)
+            dialogContext.CreateConfirmationActivity)
         .Await()
         .ForwardValue(
             CheckResponseAsync)
@@ -60,10 +61,14 @@ partial class IncidentCreateFlowFunc
             incident, cancellationToken)
         .PipeValue(
             incidentCreateFunc.InvokeAsync)
+        .MapSuccess(
+            incident => new IncidentLink(
+                title: incident.Title,
+                url: GetIncidentUrl(incident)))
         .Fold<ChatFlowStepResult<Unit>>(
-            async (createdIncident, token) =>
+            async (incidentLink, token) =>
             {
-                var successActivity = MessageFactory.Text($"Инцидент {createdIncident.Id} был создан успешно!");
+                var successActivity = dialogContext.CreateSuccessActivity(incidentLink);
                 await dialogContext.Context.SendActivityAsync(successActivity, token).ConfigureAwait(false);
 
                 return default(Unit);
@@ -77,4 +82,8 @@ partial class IncidentCreateFlowFunc
 
                 return ChatFlowStepResult.Interrupt();
             });
+
+    private string GetIncidentUrl(IncidentCreateOut incident)
+        =>
+        string.Format(CultureInfo.InvariantCulture, flowConfiguration.IncidentCardUrlTemplate, incident.Id);
 }

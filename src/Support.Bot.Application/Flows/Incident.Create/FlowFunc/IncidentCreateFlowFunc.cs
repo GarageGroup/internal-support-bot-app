@@ -12,17 +12,26 @@ internal sealed partial class IncidentCreateFlowFunc : IIncidentCreateFlowFunc
 {
     private const string UnexpectedFailureMessage = "Не удалось создать инцидент. Возможно сервис не доступен. Обратитесь к администратору или повторите попытку позже";
 
-    internal static IncidentCreateFlowFunc InternalCreate(IIncidentCreateFunc incidentCreateFunc, ILogger<IncidentCreateFlowFunc> logger)
+    internal static IncidentCreateFlowFunc InternalCreate(
+        IIncidentCreateFunc incidentCreateFunc,
+        IIncidentCreateFlowConfiguration flowConfiguration,
+        ILogger<IncidentCreateFlowFunc> logger)
         =>
-        new(incidentCreateFunc, logger);
+        new(incidentCreateFunc, flowConfiguration, logger);
 
     private readonly IIncidentCreateFunc incidentCreateFunc;
 
+    private readonly IIncidentCreateFlowConfiguration flowConfiguration;
+
     private readonly ILogger logger;
 
-    private IncidentCreateFlowFunc(IIncidentCreateFunc incidentCreateFunc, ILogger<IncidentCreateFlowFunc> logger)
+    private IncidentCreateFlowFunc(
+        IIncidentCreateFunc incidentCreateFunc,
+        IIncidentCreateFlowConfiguration flowConfiguration,
+        ILogger<IncidentCreateFlowFunc> logger)
     {
         this.incidentCreateFunc = incidentCreateFunc;
+        this.flowConfiguration = flowConfiguration;
         this.logger = logger;
     }
 }

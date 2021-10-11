@@ -30,6 +30,8 @@ internal static class BotDependencyFlow
         =>
         BotDependencyApi.UseIncidentCreateApi()
         .With(
+            BotServiceProvider.GetConfiguration<DataverseApiClientConfiguration>)
+        .With(
             BotServiceProvider.GetLoggerFactory)
         .UseIncidentCreateFlow();
 

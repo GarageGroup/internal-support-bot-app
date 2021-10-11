@@ -7,7 +7,7 @@ namespace GGroupp.Internal.Support.Bot;
 
 internal static class IncidentCreateAdaptiveCard
 {
-    public static IActivity CreateIncidentCreateActivity(this DialogContext dialogContext, IncidentCreateFlowIn input)
+    public static IActivity CreateConfirmationActivity(this DialogContext dialogContext, IncidentCreateFlowIn input)
         =>
         new AdaptiveCardJson("1.3")
         {
@@ -75,6 +75,34 @@ internal static class IncidentCreateAdaptiveCard
                     type = "Action.Submit",
                     title = "Отменить",
                     data = IncidentCreateDataJson.Cancel
+                }
+            }
+        }
+        .Pipe(
+            dialogContext.Context.Activity.CreateReplyFromCard);
+
+    public static IActivity CreateSuccessActivity(this DialogContext dialogContext, IncidentLink incidentLink)
+        =>
+        new AdaptiveCardJson("1.3")
+        {
+            Type = "AdaptiveCard",
+            Body = new object[]
+            {
+                new
+                {
+                    type = "TextBlock",
+                    size = "Medium",
+                    weight = "Bolder",
+                    text = "Инцидент был создан успешно"
+                }
+            },
+            Actions = new object[]
+            {
+                new
+                {
+                    type = "Action.OpenUrl",
+                    title = incidentLink.Title,
+                    url = incidentLink.Url
                 }
             }
         }
