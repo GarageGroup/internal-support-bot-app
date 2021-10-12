@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GGroupp.Infra;
+using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
 namespace GGroupp.Internal.Support.Bot;
 
 internal static class CustomerChooseActivity
 {
-    public static IActivity Create(IEnumerable<CustomerItemFindOut> customers)
+    public static IActivity CreateCustomerChooseActivity(this ITurnContext turnContext, IEnumerable<CustomerItemFindOut> customers)
         =>
         new HeroCard
         {
@@ -15,7 +17,8 @@ internal static class CustomerChooseActivity
             Buttons = customers.Select(CreateCustomerAction).ToArray()
         }
         .ToAttachment()
-        .ToActivity();
+        .Pipe(
+            turnContext.Activity.CreateReplyWithAttachment);
 
     private static CardAction CreateCustomerAction(CustomerItemFindOut customer)
         =>

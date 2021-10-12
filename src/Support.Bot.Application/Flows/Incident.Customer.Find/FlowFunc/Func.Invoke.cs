@@ -64,7 +64,7 @@ partial class IncidentCustomerFindFlowFunc
         .MapSuccess(
             async (customers, token) =>
             {
-                var activity = customers.Take(MaxCustomerSetCount).Pipe(CustomerChooseActivity.Create);
+                var activity = customers.Take(MaxCustomerSetCount).Pipe(dialogContext.Context.CreateCustomerChooseActivity);
                 await dialogContext.Context.SendActivityAsync(activity, token).ConfigureAwait(false);
 
                 return default(Unit);
