@@ -12,8 +12,6 @@ internal sealed partial class IncidentCustomerFindFlowFunc : IIncidentCustomerFi
 {
     private const int MinSearchTextLength = 3;
 
-    private const int MaxCustomerSetCount = 5;
-
     private const string UnexpectedFailureMessage = "При выполнении запроса произошла непредвиденная ошибка. Обратитесь к администратору и повторите попытку позднее";
 
     internal static IncidentCustomerFindFlowFunc InternalCreate(

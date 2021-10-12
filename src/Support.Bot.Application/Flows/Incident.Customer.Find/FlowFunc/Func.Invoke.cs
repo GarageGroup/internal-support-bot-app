@@ -31,12 +31,12 @@ partial class IncidentCustomerFindFlowFunc
         AsyncPipeline.Start(
             dialogContext.Context.Activity, cancellationToken)
         .Pipe(
-            activity => activity.GetDeserializedValue<CustomerChooseValueJson>())
+            CustomerChooseActivity.GetCustomerOrAbsent)
         .MapFailureValue(
             (_, token) => ShowCustomerSetAsync(dialogContext, token))
         .Fold(
-            customer => new IncidentCustomerFindFlowOut(customer.Id, customer.Title),
-            failure => failure);
+            ChatFlowStepResult.Next,
+            Pipeline.Pipe);
 
     private ValueTask<ChatFlowStepResult<IncidentCustomerFindFlowOut>> ShowCustomerSetAsync(
         DialogContext dialogContext, CancellationToken cancellationToken)
@@ -64,7 +64,7 @@ partial class IncidentCustomerFindFlowFunc
         .MapSuccess(
             async (customers, token) =>
             {
-                var activity = customers.Take(MaxCustomerSetCount).Pipe(dialogContext.Context.CreateCustomerChooseActivity);
+                var activity = dialogContext.Context.Activity.CreateCustomerChooseActivity(customers);
                 await dialogContext.Context.SendActivityAsync(activity, token).ConfigureAwait(false);
 
                 return default(Unit);

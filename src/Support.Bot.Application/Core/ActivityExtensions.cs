@@ -1,77 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Connector;
 using Microsoft.Bot.Schema;
-using Newtonsoft.Json;
 
 namespace GGroupp.Infra;
 
 public static class ActivityExtensions
 {
-    public static Result<TJson, Unit> GetDeserializedValue<TJson>(this Activity activity)
-        =>
-        InnerGetDeserializedValue<TJson>(
-            activity ?? throw new ArgumentNullException(nameof(activity)));
-
     public static IMessageActivity ToActivity(this Attachment attachment)
         =>
         MessageFactory.Attachment(
             attachment ?? throw new ArgumentNullException(nameof(attachment)));
 
-    public static IMessageActivity CreateReplyWithAttachment(this Activity originalActivity, Attachment attachment)
+    public static bool IsCardSupported(this Activity activity)
         =>
-        InnerCreateReplyWithAttachment(
-            originalActivity ?? throw new ArgumentNullException(nameof(originalActivity)),
-            attachment ?? throw new ArgumentNullException(nameof(attachment)));
+        InnerIsCardSupported(
+            activity ?? throw new ArgumentNullException(nameof(activity)));
 
-    private static Result<TJson, Unit> InnerGetDeserializedValue<TJson>(this Activity activity)
-    {
-        if (activity.Type == ActivityTypes.Message)
+    public static Result<Guid, Unit> GetGuidValueOrAbsent(this Activity activity)
+        =>
+        InnerGetGuidValueOrAbsent(
+            activity ?? throw new ArgumentNullException(nameof(activity)));
+
+    private static bool InnerIsCardSupported(this Activity activity)
+        =>
+        activity.ChannelId switch
         {
-            var jsonValue = activity.Value.ToStringOrEmpty();
-            if (string.IsNullOrEmpty(jsonValue) is false)
-            {
-                return JsonConvert.DeserializeObject<TJson>(jsonValue);
-            }
-        }
-
-        return default;
-    }
-
-    private static IMessageActivity InnerCreateReplyWithAttachment(this Activity originalActivity, Attachment attachment)
-    {
-        var reply = Activity.CreateMessageActivity();
-
-        if (reply.Attachments is null)
-        {
-            reply.Attachments = new List<Attachment>();
-        }
-        reply.Attachments.Add(attachment);
-        return reply;
-        /*var reply = new Activity
-        {
-            Attachments = new[] { attachment }
+            Channels.Msteams => true,
+            Channels.Webchat => true,
+            Channels.Emulator => true,
+            _ => false
         };
 
-        originalActivity.SetReplyFields(reply);
-        return reply;*/
-    }
+    private static Result<Guid, Unit> InnerGetGuidValueOrAbsent(this Activity activity)
+        =>
+        activity.Type != ActivityTypes.Message
+            ? Result.Absent<Guid>()
+            : activity.ParseGuidValueOrAbsent().ToResult();
 
-    /*private static void SetReplyFields(this Activity originalActivity, IMessageActivity reply)
-    {
-        var tempReply = originalActivity.CreateReply(string.Empty);
+    private static Optional<Guid> ParseGuidValueOrAbsent(this Activity activity)
+        =>
+        Pipeline.Pipe(
+            activity.Text.ParseGuidOrAbsent())
+        .Or(
+            activity.Value.ToStringOrEmpty().ParseGuidOrAbsent);
 
-        reply.ChannelId = tempReply.ChannelId;
-        reply.Timestamp = tempReply.Timestamp;
-        reply.From = tempReply.From;
-        reply.Conversation = tempReply.Conversation;
-        reply.Recipient = tempReply.Recipient;
-        reply.Id = tempReply.Id;
-        reply.ReplyToId = tempReply.ReplyToId;
-
-        if (reply.Type is null)
-        {
-            reply.Type = ActivityTypes.Message;
-        }
-    }*/
+    private static Optional<Guid> ParseGuidOrAbsent(this string? value)
+        =>
+        string.IsNullOrEmpty(value) is false && Guid.TryParse(value, out var guid) ? guid : default(Optional<Guid>);
 }

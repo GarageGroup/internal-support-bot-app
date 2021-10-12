@@ -16,8 +16,6 @@ internal sealed partial class IncidentTitleGetFlowFunc : IIncidentTitleGetFlowFu
 
     private const int DefaultTitleLength = 30;
 
-    private const string Yes = "Да";
-
     private IncidentTitleGetFlowFunc()
     {
     }

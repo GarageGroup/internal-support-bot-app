@@ -18,7 +18,7 @@ partial class IncidentCreateFlowFunc
             dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)),
             input ?? throw new ArgumentNullException(nameof(input)))
         .SendActivity(
-            IncidentCreateActivity.CreateConfirmation)
+            dialogContext.Context.Activity.CreateConfirmationActivity)
         .Await()
         .ForwardValue(
             CheckResponseAsync)
@@ -39,9 +39,7 @@ partial class IncidentCreateFlowFunc
         AsyncPipeline.Start(
             dialogContext.Context.Activity, cancellationToken)
         .Pipe(
-            activity => activity.GetDeserializedValue<IncidentCreateValueJson>())
-        .Forward(
-            data => data == IncidentCreateValueJson.Create ? Result.Present(input) : default)
+            activity => activity.IsConfirmed() ? Result.Present(input) : default)
         .MapFailure(
             async (failure, token) =>
             {

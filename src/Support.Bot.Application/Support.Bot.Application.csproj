@@ -28,10 +28,14 @@
     <None Remove="Flows\Incident.Create\Internal.Card\" />
     <None Remove="Flows\Incident.Customer.Find\Internal.Card\" />
     <None Remove="Flows\Incident.Create\Configuration\" />
+    <None Remove="Flows\Incident.Title.Get\Internal.Card\" />
   </ItemGroup>
+
   <ItemGroup>
     <Folder Include="Flows\Incident.Create\Internal.Card\" />
     <Folder Include="Flows\Incident.Customer.Find\Internal.Card\" />
     <Folder Include="Flows\Incident.Create\Configuration\" />
+    <Folder Include="Flows\Incident.Title.Get\Internal.Card\" />
   </ItemGroup>
+
 </Project>

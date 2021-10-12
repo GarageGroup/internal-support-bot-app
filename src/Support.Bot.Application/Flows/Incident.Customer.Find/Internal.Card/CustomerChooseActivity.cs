@@ -2,34 +2,71 @@
 using System.Collections.Generic;
 using System.Linq;
 using GGroupp.Infra;
-using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
+using Newtonsoft.Json;
 
 namespace GGroupp.Internal.Support.Bot;
 
 internal static class CustomerChooseActivity
 {
-    public static IActivity CreateCustomerChooseActivity(this ITurnContext turnContext, IEnumerable<CustomerItemFindOut> customers)
+    private const int MaxCustomerSetCount = 5;
+
+    public static IActivity CreateCustomerChooseActivity(this Activity activity, IReadOnlyCollection<CustomerItemFindOut> customers)
         =>
         new HeroCard
         {
             Title = "Выберите клиента",
-            Buttons = customers.Select(CreateCustomerAction).ToArray()
+            Buttons = customers.Take(MaxCustomerSetCount).Select(activity.CreateCustomerAction).ToArray()
         }
         .ToAttachment()
-        .Pipe(
-            turnContext.Activity.CreateReplyWithAttachment);
+        .ToActivity();
 
-    private static CardAction CreateCustomerAction(CustomerItemFindOut customer)
+    public static Result<IncidentCustomerFindFlowOut, Unit> GetCustomerOrAbsent(this Activity activity)
+    {
+        if (activity.Type != ActivityTypes.Message)
+        {
+            return default;
+        }
+
+        if (activity.IsCardSupported())
+        {
+            var json = activity.Value.ToStringOrEmpty();
+            if(string.IsNullOrEmpty(json))
+            {
+                return default;
+            }
+
+            var value = JsonConvert.DeserializeObject<CustomerValueJson>(json);
+            if (value.CustomerId is null)
+            {
+                return default;
+            }
+
+            return new IncidentCustomerFindFlowOut(value.CustomerId.Value, value.CustomerTitle);
+        }
+
+        return activity.GetGuidValueOrAbsent().MapSuccess(
+            customerId => new IncidentCustomerFindFlowOut(customerId, default));
+    }
+
+    private static CardAction CreateCustomerAction(this Activity activity, CustomerItemFindOut customer)
         =>
         new(ActionTypes.PostBack)
         {
             Title = customer.Title,
-            Value = new CustomerChooseValueJson
-            {
-                Id = customer.Id,
-                Title = customer.Title
-            }
+            Text = customer.Title,
+            Value = activity.IsCardSupported()
+                ? new CustomerValueJson { CustomerId = customer.Id, CustomerTitle = customer.Title }
+                : customer.Id
         };
+
+    private sealed record CustomerValueJson
+    {
+        [JsonProperty("customerId")]
+        public Guid? CustomerId { get; init; }
+
+        [JsonProperty("customerTitle")]
+        public string? CustomerTitle { get; init; }
+    }
 }
 

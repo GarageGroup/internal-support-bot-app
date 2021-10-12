@@ -18,8 +18,7 @@ partial class IncidentTitleGetFlowFunc
         .MapFlowState(
             @in => CreareDefaultTitleFromDescription(@in.Description))
         .SendActivity(
-            title => MessageFactory.Text(
-                $"Теперь нужно указать название.\nПредлагаю: '{title}'.\n'{Yes}' для согласия или свое название."))
+            dialogContext.Context.Activity.CreateTitleHintActivity)
         .Await()
         .ForwardValue(
             CheckTitleResponseAsync)
@@ -28,7 +27,7 @@ partial class IncidentTitleGetFlowFunc
 
     private static string CreareDefaultTitleFromDescription(string description)
         =>
-        description switch
+        description.Trim(' ', '.', ',') switch
         {
             { Length: <= DefaultTitleLength } => description,
             _ => description.Substring(0, DefaultTitleLength) + "..."
@@ -38,13 +37,12 @@ partial class IncidentTitleGetFlowFunc
         DialogContext dialogContext, string defaultTitle, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Start(
-            dialogContext.Context.Activity.Text ?? string.Empty,
+            dialogContext.Context.Activity.GetTitleValue(),
             cancellationToken)
         .Pipe(
             activityText => activityText switch
             {
                 { Length: 0 } => Failure.Create("Название не указано. Повторите попытку"),
-                _ when IsYes(activityText) => Result.Success(defaultTitle).With<Failure<Unit>>(),
                 _ => Result.Success(activityText).With<Failure<Unit>>()
             })
         .MapFailure(
@@ -58,8 +56,4 @@ partial class IncidentTitleGetFlowFunc
         .Fold<ChatFlowStepResult<IncidentTitleGetFlowOut>>(
             title => new IncidentTitleGetFlowOut(title: title),
             _ => ChatFlowStepResult.RetryAndAwait());
-
-    private static bool IsYes(string text)
-        =>
-        string.Equals(text, Yes, StringComparison.InvariantCultureIgnoreCase);
 }
