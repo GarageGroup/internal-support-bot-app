@@ -27,29 +27,39 @@ public sealed partial class ChatFlow<TFlowState>
         this.flowStep = flowStep;
     }
 
+    private ValueTask<ChatFlowStepResult<TNextFlowState>> GetNextStepResultAsync<TNextFlowState>(
+        Func<TFlowState, CancellationToken, ValueTask<ChatFlowStepResult<TNextFlowState>>> nextAsync, CancellationToken token)
+        =>
+        token.IsCancellationRequested
+            ? ValueTask.FromCanceled<ChatFlowStepResult<TNextFlowState>>(token)
+            : InnerGetNextStepResultAsync(nextAsync, token);
+
     private async ValueTask<ChatFlowStepResult<TNextFlowState>> InnerGetNextStepResultAsync<TNextFlowState>(
         Func<TFlowState, CancellationToken, ValueTask<ChatFlowStepResult<TNextFlowState>>> nextAsync, CancellationToken token)
     {
-        if (token.IsCancellationRequested)
-        {
-            return await ValueTask.FromCanceled<ChatFlowStepResult<TNextFlowState>>(token);
-        }
-
         var stepResult = await InnerGetStepResultAsync(token).ConfigureAwait(false);
-        return await stepResult.ForwardValueAsync(
-            async flowState =>
+        return await stepResult.ForwardValueAsync(InnerForwardAsync).ConfigureAwait(false);
+
+        async ValueTask<ChatFlowStepResult<TNextFlowState>> InnerForwardAsync(TFlowState flowState)
+        {
+            var nextResult = await nextAsync.Invoke(flowState, token).ConfigureAwait(false);
+
+            if (nextResult.Code != ChatFlowStepResultCode.RetryAndAwaiting)
+            {
+                _ = dialogContext.SetChatFlowPosition(flowLevel: flowLevel, position: flowPosition + 1);
+            }
+
+            if (nextResult.Code == ChatFlowStepResultCode.RetryAndAwaiting || nextResult.Code == ChatFlowStepResultCode.NextAndAwaiting)
             {
                 _ = dialogContext.SetChatFlowState(flowLevel, flowState);
-                var nextResult = await nextAsync.Invoke(flowState, token).ConfigureAwait(false);
+            }
+            else
+            {
+                _ = dialogContext.ClearChatFlowState(flowLevel);
+            }
 
-                if (nextResult.Code != ChatFlowStepResultCode.RetryAndAwaiting)
-                {
-                    _ = dialogContext.SetChatFlowPosition(flowLevel: flowLevel, position: flowPosition + 1);
-                }
-
-                return nextResult;
-            })
-            .ConfigureAwait(false);
+            return nextResult;
+        }
     }
 
     private async ValueTask<ChatFlowStepResult<TFlowState>> InnerGetStepResultAsync(CancellationToken cancellationToken)

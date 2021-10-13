@@ -19,5 +19,5 @@ partial class ChatFlow<TFlowState>
             flowLevel: flowLevel,
             flowPosition: flowPosition + 1,
             dialogContext: dialogContext,
-            flowStep: token => InnerGetNextStepResultAsync(nextAsync, token));
+            flowStep: token => GetNextStepResultAsync(nextAsync, token));
 }

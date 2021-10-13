@@ -29,8 +29,24 @@ internal static partial class DialogContextExtensions
 
     public static Unit SetChatFlowState<TFlowState>(this DialogContext dialogContext, int flowLevel, TFlowState flowState)
     {
+        if (typeof(TFlowState) == typeof(Unit))
+        {
+            return default;
+        }
+
         var stateParamName = GetChatFlowStateParamName(flowLevel);
         dialogContext.ActiveDialog.State[stateParamName] = flowState;
+
+        return default;
+    }
+
+    public static Unit ClearChatFlowState(this DialogContext dialogContext, int flowLevel)
+    {
+        var stateParamName = GetChatFlowStateParamName(flowLevel);
+        if (dialogContext.ActiveDialog.State.ContainsKey(stateParamName))
+        {
+            dialogContext.ActiveDialog.State[stateParamName] = null;
+        }
 
         return default;
     }
