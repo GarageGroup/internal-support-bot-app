@@ -40,5 +40,5 @@ jobs:
         package: '$/app' 
        
     - name: logout 
-        run: |
-          az logout
+      run: |
+        az logout
