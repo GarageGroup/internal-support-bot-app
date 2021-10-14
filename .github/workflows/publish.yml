@@ -2,7 +2,7 @@ name: DotnetSixProjectPublisher_Test
 on:
   push:
     branches:
-      #- main
+      - main
 
 jobs:
   build:
