@@ -1,6 +1,8 @@
 name: DotnetSixProjectBuilder
 on:
   push:
+    branches:
+      - feature/*
 
 jobs:
   build:
@@ -26,9 +28,3 @@ jobs:
 
     - name: Build Application.csproj
       run: dotnet build ./src/*/Application.csproj --no-restore  -c Release
-    
-    # Publish
-      
-    #- name: Publish Application
-    #  if: ${{ github.ref == 'refs/heads/main' }}
-    #  run: dotnet nuget push "../../../nuget/*.nupkg" -s ${{ secrets.GGROUPP_NUGET_SOURCE_URL }} -k ${{ secrets.GGROUPP_NUGET_SOURCE_USER_PASSWORD }} --skip-duplicate

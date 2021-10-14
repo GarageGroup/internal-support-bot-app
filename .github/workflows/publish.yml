@@ -1,0 +1,44 @@
+name: DotnetSixProjectPublisher
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master 
+      - uses: azure/login@v1 
+        with: 
+          creds: ${{ secrets.GGROUPP_AZURE_CREDENTIALS }}
+
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        include-prerelease: true
+
+    - name: Add GGroupp NuGet Source
+      run: dotnet nuget add source ${{ secrets.GGROUPP_NUGET_SOURCE_URL }} -n ggroupp -u ${{ secrets.GGROUPP_NUGET_SOURCE_USER_NAME }} -p ${{ secrets.GGROUPP_NUGET_SOURCE_USER_PASSWORD }} --store-password-in-clear-text
+    
+    - name: Restore Application.csproj
+      run: dotnet restore ./src/*/Application.csproj
+
+    - name: Build Application.csproj
+      run: dotnet build ./src/*/Application.csproj --no-restore  -c Release
+
+    - name: Publish Application.csproj
+      run: dotnet publish ./src/*/Application.csproj --no-restore  -c Release -o '$/app'
+
+    - name: 'Run Azure webapp deploy action using azure credentials' 
+        uses: azure/webapps-deploy@v2 
+        with:  
+          app-name: test-internal-support-bot-app
+          package: '$/app' 
+       
+      - name: logout 
+        run: | 
+          az logout
