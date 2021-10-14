@@ -39,6 +39,6 @@ jobs:
           app-name: test-internal-support-bot-app
           package: '$/app' 
        
-      - name: logout 
-        run: | 
+    - name: logout 
+        run: |
           az logout
