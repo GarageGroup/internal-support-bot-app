@@ -1,0 +1,34 @@
+name: DotnetSixProjectBuilder
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        include-prerelease: true  
+        
+     # Add NuGet Sources
+
+    - name: Add GGroupp NuGet Source
+      run: dotnet nuget add source ${{ secrets.GGROUPP_NUGET_SOURCE_URL }} -n ggroupp -u ${{ secrets.GGROUPP_NUGET_SOURCE_USER_NAME }} -p ${{ secrets.GGROUPP_NUGET_SOURCE_USER_PASSWORD }} --store-password-in-clear-text
+
+    # Application.csproj
+    
+    - name: Restore Application.csproj
+      run: dotnet restore ./src/*/*/Application.csproj
+
+    - name: Build Application.csproj
+      run: dotnet build ./src/*/*/Application.csproj --no-restore  -c Release
+    
+    # Publish
+      
+    #- name: Publish Application
+    #  if: ${{ github.ref == 'refs/heads/main' }}
+    #  run: dotnet nuget push "../../../nuget/*.nupkg" -s ${{ secrets.GGROUPP_NUGET_SOURCE_URL }} -k ${{ secrets.GGROUPP_NUGET_SOURCE_USER_PASSWORD }} --skip-duplicate

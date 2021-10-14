@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>GGroupp.Internal.Support.Bot</RootNamespace>
+    <AssemblyName>GGroupp.Internal.Support.Bot.Flow.User.LogInLogOut.InOut</AssemblyName>
+  </PropertyGroup>
+
+</Project>
