@@ -10,9 +10,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@master 
-      - uses: azure/login@v1 
-        with: 
-          creds: ${{ secrets.GGROUPP_AZURE_CREDENTIALS }}
+    - uses: azure/login@v1 
+      with: 
+        creds: ${{ secrets.GGROUPP_AZURE_CREDENTIALS }}
 
     - uses: actions/checkout@v2
     - name: Setup .NET
