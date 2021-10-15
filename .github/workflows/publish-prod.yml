@@ -32,7 +32,7 @@ jobs:
       run: dotnet build ./src/*/Application.csproj --no-restore  -c Release
 
     - name: Publish Application.csproj
-      run: dotnet publish ./src/*/Application.csproj --no-restore  -c Release -o '$/app'
+      run: dotnet publish ./src/*/Application.csproj --no-restore  -c Release --self-contained -o '$/app'
 
     - name: 'Run Azure webapp deploy action using azure credentials' 
       uses: azure/webapps-deploy@v2 
