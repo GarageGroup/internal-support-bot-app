@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using GGroupp.Infra;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Bot.Builder;
 using PrimeFuncPack;

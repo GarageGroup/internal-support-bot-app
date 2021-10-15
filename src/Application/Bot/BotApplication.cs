@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using GGroupp.Infra;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;

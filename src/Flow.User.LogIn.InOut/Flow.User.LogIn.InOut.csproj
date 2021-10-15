@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>GGroupp.Internal.Support.Bot</RootNamespace>
-    <AssemblyName>GGroupp.Internal.Support.Bot.Flow.User.LogInLogOut.InOut</AssemblyName>
+    <AssemblyName>GGroupp.Internal.Support.Bot.Flow.User.LogIn.InOut</AssemblyName>
   </PropertyGroup>
 
 </Project>

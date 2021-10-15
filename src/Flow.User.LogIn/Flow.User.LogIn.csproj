@@ -6,11 +6,11 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>GGroupp.Internal.Support.Bot</RootNamespace>
-    <AssemblyName>GGroupp.Internal.Support.Bot.Flow.User.LogInLogOut</AssemblyName>
+    <AssemblyName>GGroupp.Internal.Support.Bot.Flow.User.LogIn</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Flow.User.LogInLogOut.InOut\Flow.User.LogInLogOut.InOut.csproj" />
+    <ProjectReference Include="..\Flow.User.LogIn.InOut\Flow.User.LogIn.InOut.csproj" />
   </ItemGroup>
 
   <ItemGroup>

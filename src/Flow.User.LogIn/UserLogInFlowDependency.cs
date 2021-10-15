@@ -12,7 +12,7 @@ using IUserLogInFlowFunc = IAsyncValueFunc<DialogContext, Unit, ChatFlowStepResu
 using IADUserGetFunc = IAsyncValueFunc<ADUserGetIn, Result<ADUserGetOut, Failure<Unit>>>;
 using IUserGetFunc = IAsyncValueFunc<UserGetIn, Result<UserGetOut, Failure<UserGetFailureCode>>>;
 
-public static class UserLogInLogOutFlowDependency
+public static class UserLogInFlowDependency
 {
     public static Dependency<IUserLogInFlowFunc> UseUserLogInFlow<TConfiguration>(
         this Dependency<IADUserGetFunc, IUserGetFunc, TConfiguration, UserState, ILoggerFactory> dependency)

@@ -13,7 +13,7 @@
     <ProjectReference Include="..\Flow.Customer.Find.InOut\Flow.Customer.Find.InOut.csproj" />
     <ProjectReference Include="..\Flow.Incident.Create.InOut\Flow.Incident.Create.InOut.csproj" />
     <ProjectReference Include="..\Flow.IncidentTitle.Get.InOut\Flow.IncidentTitle.Get.InOut.csproj" />
-    <ProjectReference Include="..\Flow.User.LogInLogOut.InOut\Flow.User.LogInLogOut.InOut.csproj" />
+    <ProjectReference Include="..\Flow.User.LogIn.InOut\Flow.User.LogIn.InOut.csproj" />
   </ItemGroup>
 
   <ItemGroup>

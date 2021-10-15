@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.AspNet.Core" Version="1.0.1" />
-    <PackageReference Include="GGroupp.Infra.Dataverse.Api" Version="2.1.0-preview.1.2.0" />
+    <PackageReference Include="GGroupp.Infra.Dataverse.Api" Version="2.1.0" />
     <PackageReference Include="GGroupp.Infra.Http.SocketsHandlerProvider" Version="2.0.0" />
     <PackageReference Include="GGroupp.Internal.Support.CustomerSet.Find.Api" Version="1.0.4" />
     <PackageReference Include="GGroupp.Internal.Support.Incident.Create.Api" Version="1.1.2" />
@@ -24,7 +24,7 @@
     <ProjectReference Include="..\Flow.Customer.Find\Flow.Customer.Find.csproj" />
     <ProjectReference Include="..\Flow.Incident.Create\Flow.Incident.Create.csproj" />
     <ProjectReference Include="..\Flow.IncidentTitle.Get\Flow.IncidentTitle.Get.csproj" />
-    <ProjectReference Include="..\Flow.User.LogInLogOut\Flow.User.LogInLogOut.csproj" />
+    <ProjectReference Include="..\Flow.User.LogIn\Flow.User.LogIn.csproj" />
   </ItemGroup>
 
 </Project>
