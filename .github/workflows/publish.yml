@@ -2,7 +2,7 @@ name: DotnetSixProjectPublisher_Test
 on:
   push:
     branches:
-      - main
+      #- main
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@master 
     - uses: azure/login@v1 
       with: 
-        creds: ${{ secrets.GGROUPP_AZURE_CREDENTIALS }}
+        creds: ${{ secrets.GGROUPP_AZURE_CREDENTIALS_TEST }}
 
     - uses: actions/checkout@v2
     - name: Setup .NET
