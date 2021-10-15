@@ -2,7 +2,7 @@ name: DotnetSixProjectPublisher_Test
 on:
   push:
     branches:
-      #- main
+      - main
 
 jobs:
   build:
@@ -39,6 +39,6 @@ jobs:
         app-name: test-internal-support-bot-app
         package: '$/app' 
        
-    - name: logout 
+    - name: Azure Logout 
       run: |
         az logout
