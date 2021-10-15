@@ -13,16 +13,16 @@
     "mpnId": "5458095"
   },
   "icons": {
-    "color": "icon-color.png",
-    "outline": "icon-outline.png"
+    "color": "gg-icon-color.png",
+    "outline": "gg-icon-outline.png"
   },
   "name": {
     "short": "G-Support Bot",
     "full": "G-Support Bot"
   },
   "description": {
-    "short": "Бот для работы с инцидентами",
-    "full": "Бот для работы с инцидентами"
+    "short": "Бот для команды клиентской поддержки GGroupp",
+    "full": "Бот для команды клиентской поддержки GGroupp"
   },
   "accentColor": "#FFFFFF",
   "staticTabs": [
