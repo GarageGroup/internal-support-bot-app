@@ -1,0 +1,63 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.9/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.9",
+  "version": "1.0.0",
+  "showLoadingIndicator": true,
+  "id": "d75da39e-a9ad-4455-9cd8-8d211e624474",
+  "packageName": "ru.ggroupp.internal.supportbot",
+  "developer": {
+    "name": "GGroupp",
+    "websiteUrl": "https://www.microsoft.com",
+    "privacyUrl": "https://www.teams.com/privacy",
+    "termsOfUseUrl": "https://www.teams.com/termsofuser",
+    "mpnId": "5458095"
+  },
+  "icons": {
+    "color": "icon-color.png",
+    "outline": "icon-outline.png"
+  },
+  "name": {
+    "short": "G-Support Bot",
+    "full": "G-Support Bot"
+  },
+  "description": {
+    "short": "Бот для работы с инцидентами",
+    "full": "Бот для работы с инцидентами"
+  },
+  "accentColor": "#FFFFFF",
+  "staticTabs": [
+    {
+      "entityId": "conversations",
+      "scopes": [
+        "personal"
+      ]
+    },
+    {
+      "entityId": "about",
+      "scopes": [
+        "personal"
+      ]
+    }
+  ],
+  "bots": [
+    {
+      "botId": "d75da39e-a9ad-4455-9cd8-8d211e624474",
+      "scopes": [
+        "personal"
+      ],
+      "supportsFiles": false,
+      "isNotificationOnly": false
+    }
+  ],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "token.botframework.com",
+    "*.ngrok.io"
+  ],
+  "devicePermissions": [
+    "notifications"
+  ]
+}
