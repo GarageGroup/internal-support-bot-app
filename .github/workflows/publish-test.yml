@@ -25,7 +25,7 @@ jobs:
       run: dotnet nuget add source ${{ secrets.GGROUPP_NUGET_SOURCE_URL }} -n ggroupp -u ${{ secrets.GGROUPP_NUGET_SOURCE_USER_NAME }} -p ${{ secrets.GGROUPP_NUGET_SOURCE_USER_PASSWORD }} --store-password-in-clear-text
 
     - name: Publish Application.csproj
-      run: dotnet publish ./src/*/Application.csproj -c Release -r win-x64 --self-contained -o '$/app'
+      run: dotnet publish ./src/*/Application.csproj -c Release -o '$/app'
 
     - name: 'Run Azure webapp deploy action using azure credentials' 
       uses: azure/webapps-deploy@v2 
