@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>GGroupp.Internal.Support.Bot</RootNamespace>
+    <AssemblyName>GGroupp.Internal.Support.Bot.Dialog.Incident.Create</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Flow.Customer.Find.InOut\Flow.Customer.Find.InOut.csproj" />
+    <ProjectReference Include="..\Flow.Incident.Create.InOut\Flow.Incident.Create.InOut.csproj" />
+    <ProjectReference Include="..\Flow.IncidentTitle.Get.InOut\Flow.IncidentTitle.Get.InOut.csproj" />
+    <ProjectReference Include="..\Flow.User.LogIn.InOut\Flow.User.LogIn.InOut.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow" Version="1.0.0" />
+    <PackageReference Include="PrimeFuncPack.Core" Version="1.1.1" />
+    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="1.2.1" />
+  </ItemGroup>
+
+</Project>
