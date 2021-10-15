@@ -1,4 +1,4 @@
-name: DotnetSixProjectPublisher_Test
+name: TestBotApplicationPublisher
 on:
   push:
     branches:

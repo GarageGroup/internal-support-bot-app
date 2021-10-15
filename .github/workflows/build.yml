@@ -1,4 +1,4 @@
-name: DotnetSixProjectBuilder
+name: BotApplicationBuilder
 on:
   push:
     branches:
