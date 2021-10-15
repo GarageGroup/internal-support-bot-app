@@ -1,8 +1,5 @@
 name: ProductionBotApplicationPublisher
 on:
-  #push:
-  #  branches:
-  #    - main
   page_build:
   release:
     types:
