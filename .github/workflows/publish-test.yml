@@ -30,7 +30,7 @@ jobs:
     - name: 'Run Azure webapp deploy action using azure credentials' 
       uses: azure/webapps-deploy@v2 
       with:  
-        app-name: test-internal-support-bot-app
+        app-name: test-internal-support-bot-webapp
         package: '$/app' 
        
     - name: Azure Logout 
