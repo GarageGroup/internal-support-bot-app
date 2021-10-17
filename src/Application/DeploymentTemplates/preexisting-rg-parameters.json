@@ -19,10 +19,10 @@
         },
         "newAppServicePlanSku": {
             "value": {
-                "name": "S1",
-                "tier": "Standard",
-                "size": "S1",
-                "family": "S",
+                "name": "F1",
+                "tier": "Free",
+                "size": "F1",
+                "family": "F",
                 "capacity": 1
             }
         },
