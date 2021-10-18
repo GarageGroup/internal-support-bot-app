@@ -13,7 +13,7 @@
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.AspNet.Core" Version="1.0.1" />
     <PackageReference Include="GGroupp.Infra.Dataverse.Api" Version="2.1.0" />
     <PackageReference Include="GGroupp.Infra.Http.SocketsHandlerProvider" Version="2.0.0" />
-    <PackageReference Include="GGroupp.Internal.Support.CustomerSet.Find.Api" Version="1.0.4" />
+    <PackageReference Include="GGroupp.Internal.Support.CustomerSet.Search.Api" Version="1.0.0" />
     <PackageReference Include="GGroupp.Internal.Support.Incident.Create.Api" Version="1.1.2" />
     <PackageReference Include="GGroupp.Internal.Support.User.Get.Api" Version="1.1.0" />
   </ItemGroup>

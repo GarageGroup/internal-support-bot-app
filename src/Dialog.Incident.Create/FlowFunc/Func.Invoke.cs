@@ -50,6 +50,7 @@ partial class IncidentCreateDialogFlowFunc
                 customerId: incident.CustomerId,
                 customerTitle: incident.CustomerTitle,
                 title: incident.Title,
+                caseTypeCode: 1, //TODO это необходимо брать из доп шага
                 description: incident.Description),
             incidentCreateFlowFunc.InvokeAsync)
         .CompleteValueAsync(

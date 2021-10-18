@@ -28,6 +28,7 @@ partial class IncidentCreateFlowFunc
                 customerId: @in.CustomerId,
                 title: @in.Title,
                 description: @in.Description,
+                caseTypeCode: @in.CaseTypeCode,
                 caseOriginCode: flowConfiguration.CaseOriginCode))
         .ForwardValue(
             CreateIncidentAsync)

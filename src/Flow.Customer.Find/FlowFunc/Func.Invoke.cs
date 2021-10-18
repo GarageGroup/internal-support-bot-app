@@ -51,7 +51,7 @@ partial class IncidentCustomerFindFlowFunc
                 _ => Failure.Create(ChatFlowStepAlternativeCode.RetryAndAwaiting, $"Введите больше символов, хотя бы {MinSearchTextLength}")
             })
         .MapSuccess(
-            searchText => new CustomerSetFindIn(searchText))
+            searchText => new CustomerSetFindIn(searchText, CustomerChooseActivity.MaxCustomerSetCount))
         .ForwardValue(
             customerSetFindFunc.InvokeAsync,
             MapCustomerSetFindFailure)

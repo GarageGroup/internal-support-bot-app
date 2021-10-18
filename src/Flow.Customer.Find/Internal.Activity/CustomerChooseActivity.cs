@@ -9,7 +9,7 @@ namespace GGroupp.Internal.Support.Bot;
 
 internal static class CustomerChooseActivity
 {
-    private const int MaxCustomerSetCount = 5;
+    internal const int MaxCustomerSetCount = 5;
 
     public static IActivity CreateCustomerChooseActivity(this Activity activity, IReadOnlyCollection<CustomerItemFindOut> customers)
         =>
