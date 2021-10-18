@@ -19,9 +19,9 @@ internal static class BotDependencyApi
         =>
         UseDataverseApiClient("IncidentCreateApi").UseIncidentCreateApi();
 
-    public static Dependency<ICustomerSetFind> UseCustomerSetFindApi()
+    public static Dependency<ICustomerSetFind> UseCustomerSetSearchApi()
         =>
-        UseDataverseApiClient("CustomerSetFindApi").UseCustomerSetFindApi();
+        UseDataverseApiClient("CustomerSetFindApi").UseCustomerSetSearchApi();
 
     public static Dependency<IADUserGetFunc> UseADUserGetApi()
         =>

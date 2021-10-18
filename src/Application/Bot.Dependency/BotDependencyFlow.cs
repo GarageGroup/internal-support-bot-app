@@ -37,7 +37,7 @@ internal static class BotDependencyFlow
 
     public static Dependency<IIncidentCustomerFindFlowFunc> UseIncidentCustomerFindFlow()
         =>
-        BotDependencyApi.UseCustomerSetFindApi()
+        BotDependencyApi.UseCustomerSetSearchApi()
         .With(
             BotServiceProvider.GetLoggerFactory)
         .UseIncidentCustomerFindFlow();
