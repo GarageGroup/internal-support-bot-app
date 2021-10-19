@@ -13,4 +13,6 @@ internal sealed record IncidentCreateFlowState
     public string? Title { get; init; }
 
     public string? Description { get; init; }
+
+    public int CaseType { get; init; }
 }

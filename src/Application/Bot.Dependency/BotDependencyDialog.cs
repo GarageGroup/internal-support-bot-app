@@ -19,5 +19,7 @@ internal static class BotDependencyDialog
             BotDependencyFlow.UseIncidentCustomerFindFlow())
         .With(
             BotDependencyFlow.UseIncidentCreateFlow())
+        .With(
+            BotDependencyFlow.UseIncidentTypeGetFlow())
         .UseIncidentCreateDialog();
 }

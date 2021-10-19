@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Flow.Customer.Find\Flow.Customer.Find.csproj" />
     <ProjectReference Include="..\Flow.Incident.Create\Flow.Incident.Create.csproj" />
     <ProjectReference Include="..\Flow.IncidentTitle.Get\Flow.IncidentTitle.Get.csproj" />
+    <ProjectReference Include="..\Flow.IncidentType.Get\Flow.IncidentType.Get.csproj" />
     <ProjectReference Include="..\Flow.User.LogIn\Flow.User.LogIn.csproj" />
   </ItemGroup>
 

@@ -10,6 +10,7 @@ using IUserLogInFlowFunc = IAsyncValueFunc<DialogContext, Unit, ChatFlowStepResu
 using IIncidentCreateFlowFunc = IAsyncValueFunc<DialogContext, IncidentCreateFlowIn, ChatFlowStepResult<Unit>>;
 using IIncidentCustomerFindFlowFunc = IAsyncValueFunc<DialogContext, Unit, ChatFlowStepResult<IncidentCustomerFindFlowOut>>;
 using IIncidentTitleGetFlowFunc = IAsyncValueFunc<DialogContext, IncidentTitleGetFlowIn, ChatFlowStepResult<IncidentTitleGetFlowOut>>;
+using IIncidentTypeGetFlowFunc = IAsyncValueFunc<DialogContext, Unit, ChatFlowStepResult<IncidentTypeGetFlowOut>>;
 
 internal static class BotDependencyFlow
 {
@@ -45,4 +46,9 @@ internal static class BotDependencyFlow
     public static Dependency<IIncidentTitleGetFlowFunc> UseIncidentTitleGetFlow()
         =>
         IncidentTitleGetFlowDependency.UseIncidentTitleGetFlow();
+
+    public static Dependency<IIncidentTypeGetFlowFunc> UseIncidentTypeGetFlow()
+        =>
+        IncidentTypeGetFlowDependency.UseIncidentTypeGetFlow();
+
 }
