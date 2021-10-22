@@ -41,7 +41,7 @@ jobs:
       uses: azure/webapps-deploy@v2 
       with:  
         app-name: ggroupp-test-internal-support-bot-webapp
-        package: '$/app' 
+        package: '$/docker' 
     
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
@@ -50,10 +50,7 @@ jobs:
         tags: ggrouppinternalsupportbotappregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3afd9b79227743e7a1d17ff4a6148673 }}/internal-support-bot-app-test-image:${{ github.sha }}
         file: ./docker/Dockerfile
 
-    - name: Azure Logout 
-      run: |
-        az logout
-
+    
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -70,3 +67,7 @@ jobs:
         slot-name: 'test'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_3d21d7e3a609408693fafcc19a0e6cb6 }}
         images: 'ggrouppinternalsupportbotappregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3afd9b79227743e7a1d17ff4a6148673 }}/internal-support-bot-app-test-image:${{ github.sha }}'
+
+    - name: Azure Logout 
+      run: |
+        az logout
