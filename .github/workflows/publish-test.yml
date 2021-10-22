@@ -35,13 +35,13 @@ jobs:
       run: dotnet nuget add source ${{ secrets.GGROUPP_NUGET_SOURCE_URL }} -n ggroupp -u ${{ secrets.GGROUPP_NUGET_SOURCE_USER_NAME }} -p ${{ secrets.GGROUPP_NUGET_SOURCE_USER_PASSWORD }} --store-password-in-clear-text
 
     - name: Publish Application.csproj
-      run: dotnet publish ./src/*/Application.csproj -c Release -o '$/docker'
+      run: dotnet publish ./src/*/Application.csproj -c Release -o './docker/publish'
 
     - name: 'Run Azure webapp deploy action using azure credentials' 
       uses: azure/webapps-deploy@v2 
       with:  
         app-name: ggroupp-test-internal-support-bot-webapp
-        package: '$/docker' 
+        package: './docker' 
     
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
