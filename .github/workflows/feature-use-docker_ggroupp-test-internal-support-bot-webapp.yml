@@ -6,7 +6,7 @@ name: Build and deploy container app to Azure Web App - ggroupp-test-internal-su
 on:
   push:
     branches:
-      - feature/use-docker
+      - feature/never-launch-this
   workflow_dispatch:
 
 jobs:
