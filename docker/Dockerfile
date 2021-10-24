@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 RUN mkdir /app
 WORKDIR /app
 
-COPY ./docker/publish ./
+COPY ./docker ./
 RUN ls
 
 EXPOSE 80
