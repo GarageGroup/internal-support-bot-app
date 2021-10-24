@@ -1,8 +1,5 @@
-name: TestBotApplicationPublisher
+name: BuildAndPushDockerImage
 on:
-  push:
-    branches: [ '**' ]
-
   page_build:
   release:
     types: [ published ]
@@ -44,5 +41,5 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ggrouppinternalsupportbotappregistry.azurecr.io/internal-support-bot-app-image:v1.0.4.0-build.2
+        tags: ggrouppinternalsupportbotappregistry.azurecr.io/internal-support-bot-app-image:${{ steps.vars.outputs.tag }}
         file: ./docker/Dockerfile
