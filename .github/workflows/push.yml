@@ -39,7 +39,7 @@ jobs:
       run: dotnet nuget add source ${{ secrets.GGROUPP_NUGET_SOURCE_URL }} -n ggroupp -u ${{ secrets.GGROUPP_NUGET_SOURCE_USER_NAME }} -p ${{ secrets.GGROUPP_NUGET_SOURCE_USER_PASSWORD }} --store-password-in-clear-text
 
     - name: Publish Application.csproj
-      run: dotnet publish ./src/*/Application.csproj -c Release -o '$/publish'
+      run: dotnet publish ./src/*/Application.csproj -c Release -o './publish'
     
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
