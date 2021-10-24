@@ -1,4 +1,4 @@
-name: BotApplicationBuilder
+name: Build bot application
 on:
   push:
     branches: [ '**' ]
