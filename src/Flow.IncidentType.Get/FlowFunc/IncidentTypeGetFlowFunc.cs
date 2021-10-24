@@ -18,9 +18,9 @@ internal sealed partial class IncidentTypeGetFlowFunc : IIncidentTypeGetFlowFunc
         Instance = new();
         typeCodes = new Dictionary<int, string>()
         {
-            [1] = "Вопрос",
-            [2] = "Проблема",
-            [3] = "Запрос"
+            [1] = "Р’РѕРїСЂРѕСЃ",
+            [2] = "РџСЂРѕР±Р»РµРјР°",
+            [3] = "Р—Р°РїСЂРѕСЃ"
         };
     }
 
