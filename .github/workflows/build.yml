@@ -1,8 +1,6 @@
 name: BotApplicationBuilder
 on:
   push:
-    branches:
-      - feature/*
 
 jobs:
   build:
