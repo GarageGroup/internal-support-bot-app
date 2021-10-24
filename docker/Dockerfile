@@ -4,6 +4,7 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY ./ ./
+RUN ls
 
 EXPOSE 80
 ENTRYPOINT ["dotnet", "GGroupp.Internal.Support.Bot.Application.dll"]
