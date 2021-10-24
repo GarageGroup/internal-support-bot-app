@@ -1,8 +1,10 @@
-name: BotApplicationBuilder
+name: Build bot application
 on:
   push:
-    branches:
-      - feature/*
+    branches: [ '**' ]
+  
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:

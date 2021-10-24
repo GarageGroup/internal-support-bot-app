@@ -87,7 +87,7 @@ partial class IncidentCustomerFindFlowFunc
         return Failure.Create(ChatFlowStepAlternativeCode.Interruption, UnexpectedFailureMessage);
     }
 
-    private const int MinSearchTextLength = 3;
+    private const int MinSearchTextLength = 2;
 
     private const string UnexpectedFailureMessage
         =

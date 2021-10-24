@@ -45,12 +45,19 @@ partial class IncidentCreateDialogFlowFunc
                 Title = title.Title
             })
         .ForwardChildValue(
+            Unit.From,
+            incidentTypeGetFlowFunc.InvokeAsync,
+            (incident, type) => incident with
+            {
+                CaseType = type.CaseTypeCode
+            })
+        .ForwardChildValue(
             incident => new IncidentCreateFlowIn(
                 ownerId: incident.OwnerId,
                 customerId: incident.CustomerId,
                 customerTitle: incident.CustomerTitle,
                 title: incident.Title,
-                caseTypeCode: 1, //TODO это необходимо брать из доп шага
+                caseTypeCode: incident.CaseType,
                 description: incident.Description),
             incidentCreateFlowFunc.InvokeAsync)
         .CompleteValueAsync(
