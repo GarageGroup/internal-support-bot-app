@@ -19,7 +19,10 @@ jobs:
       with:
         dotnet-version: 6.0.x
         include-prerelease: true
-        
+
+    - name: Create publish folder
+      run: mkdir ./publish
+
     - uses: actions/checkout@v2
     - name: Set output
       id: vars
@@ -40,7 +43,7 @@ jobs:
 
     - name: Publish Application.csproj
       run: dotnet publish ./src/*/Application.csproj -c Release -o './publish'
-    
+
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
