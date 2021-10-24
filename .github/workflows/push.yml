@@ -2,7 +2,7 @@ name: Build and push docker image
 on:
   page_build:
   release:
-    types: [ published ]
+    types: [ published, updated ]
 
 jobs:
   build:
@@ -20,6 +20,11 @@ jobs:
       with:
         dotnet-version: 6.0.x
         include-prerelease: true
+        
+    - uses: actions/checkout@v2
+    - name: Set output
+      id: vars
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
