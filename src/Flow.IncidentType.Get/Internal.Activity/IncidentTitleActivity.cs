@@ -65,7 +65,7 @@ internal static class IncidentTypeActivity
             Text = value.Value,
             Value = activity.IsCardSupported()
                 ? new HintValueJson() { CaseCode = value.Key }
-                : value.Key
+                : value.Key.ToString()
         };
 }
 
