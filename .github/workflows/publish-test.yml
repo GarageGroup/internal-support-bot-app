@@ -1,8 +1,9 @@
 name: TestBotApplicationPublisher
 on:
-  push:
-    branches:
-      - feature/*
+  page_build:
+  release:
+    types:
+      - created
 
 jobs:
   build:
@@ -41,23 +42,5 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ggrouppinternalsupportbotappregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3afd9b79227743e7a1d17ff4a6148673 }}/internal-support-bot-app-test-image:${{ github.sha }}
+        tags: ggrouppinternalsupportbotappregistry.azurecr.io/internal-support-bot-app-image:${{ steps.vars.outputs.tag }}
         file: ./docker/Dockerfile
-
-    
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'test'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'ggroupp-test-internal-support-bot-webapp'
-        slot-name: 'test'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_3d21d7e3a609408693fafcc19a0e6cb6 }}
-        images: 'ggrouppinternalsupportbotappregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3afd9b79227743e7a1d17ff4a6148673 }}/internal-support-bot-app-test-image:${{ github.sha }}'
