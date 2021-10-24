@@ -2,7 +2,8 @@ name: Build and push docker image
 on:
   page_build:
   release:
-    types: [ published ]
+    types:
+      - created
 
 jobs:
   build:
