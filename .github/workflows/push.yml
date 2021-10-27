@@ -1,9 +1,7 @@
 name: Build and push docker image
 on:
-  page_build:
-  release:
-    types:
-      - created
+  push:
+    branches: [ 'is-disabled' ]
 
 jobs:
   build:
