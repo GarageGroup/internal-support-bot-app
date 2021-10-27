@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GGroupp.Infra.Bot.Builder;
+using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
@@ -11,6 +12,7 @@ internal static class CustomerChooseActivity
 {
     internal const int MaxCustomerSetCount = 5;
 
+    internal const string SearchDictName = "CustomerSearchResultDictionary";
     public static IActivity CreateCustomerChooseActivity(this Activity activity, IReadOnlyCollection<CustomerItemFindOut> customers)
         =>
         new HeroCard
@@ -21,32 +23,36 @@ internal static class CustomerChooseActivity
         .ToAttachment()
         .ToActivity();
 
-    public static Result<IncidentCustomerFindFlowOut, Unit> GetCustomerOrAbsent(this Activity activity)
+    public static Result<IncidentCustomerFindFlowOut, Unit> GetCustomerOrAbsent(this DialogContext dialogContext)
     {
+        var activity = dialogContext.Context.Activity;
+
         if (activity.IsMessageType() is false)
         {
             return default;
         }
 
-        if (activity.IsCardSupported())
+        var customerGuidOp = activity.GetGuidOrAbsent();
+        if (customerGuidOp.IsAbsent)
         {
-            var json = activity.Value.ToStringOrEmpty();
-            if(string.IsNullOrEmpty(json))
-            {
-                return default;
-            }
-
-            var value = JsonConvert.DeserializeObject<CustomerValueJson>(json);
-            if (value.CustomerId is null)
-            {
-                return default;
-            }
-
-            return new IncidentCustomerFindFlowOut(value.CustomerId.Value, value.CustomerTitle);
+            return default;
         }
 
-        return activity.GetGuidOrAbsent().ToResult().MapSuccess(
-            customerId => new IncidentCustomerFindFlowOut(customerId, default));
+        var customerGuid = customerGuidOp.OrThrow();
+        
+        if(dialogContext.ActiveDialog.State is null || dialogContext.ActiveDialog.State.ContainsKey(SearchDictName) is false)
+        {
+            return default;
+        }
+
+        var searchDict = (Dictionary<Guid,string>)dialogContext.ActiveDialog.State[SearchDictName];
+
+        if(searchDict is null || searchDict.ContainsKey(customerGuid) is false)
+        {
+            return default;
+        }
+
+        return new IncidentCustomerFindFlowOut(customerGuid, searchDict[customerGuid]);
     }
 
     private static CardAction CreateCustomerAction(this Activity activity, CustomerItemFindOut customer)
@@ -54,10 +60,7 @@ internal static class CustomerChooseActivity
         new(ActionTypes.PostBack)
         {
             Title = customer.Title,
-            Text = customer.Title,
-            Value = activity.IsCardSupported()
-                ? new CustomerValueJson { CustomerId = customer.Id, CustomerTitle = customer.Title }
-                : customer.Id
+            Text = customer.Id.ToString()
         };
 
     private sealed record CustomerValueJson

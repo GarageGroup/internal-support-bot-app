@@ -17,11 +17,15 @@ partial class IncidentCustomerFindFlowFunc
         =>
         ChatFlow.Start(
             dialogContext ?? throw new ArgumentNullException(nameof(dialogContext)))
+        .On(
+            _ => dialogContext.ActiveDialog.State[CustomerChooseActivity.SearchDictName] = null)
         .SendActivity(
             _ => MessageFactory.Text("Нужно выбрать клиента. Введите часть названия для поиска"))
         .Await()
         .ForwardValue(
             FindCustomerAsync)
+        .On(
+            _ => dialogContext.ActiveDialog.State[CustomerChooseActivity.SearchDictName] = null)
         .CompleteValueAsync(
             cancellationToken);
 
@@ -29,7 +33,7 @@ partial class IncidentCustomerFindFlowFunc
         DialogContext dialogContext, Unit _, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
-            dialogContext.Context.Activity, cancellationToken)
+            dialogContext, cancellationToken)
         .Pipe(
             CustomerChooseActivity.GetCustomerOrAbsent)
         .MapFailureValue(
@@ -64,6 +68,8 @@ partial class IncidentCustomerFindFlowFunc
         .MapSuccess(
             async (customers, token) =>
             {
+                dialogContext.ActiveDialog.State[CustomerChooseActivity.SearchDictName] = customers
+                    .ToDictionary(customer => customer.Id, customer => customer.Title);
                 var activity = dialogContext.Context.Activity.CreateCustomerChooseActivity(customers);
                 await dialogContext.Context.SendActivityAsync(activity, token).ConfigureAwait(false);
 
