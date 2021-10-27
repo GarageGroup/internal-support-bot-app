@@ -43,5 +43,6 @@ jobs:
       with:
         context: .
         push: true
-        tags: ggrouppinternalsupportbotappregistry.azurecr.io/internal-support-bot-app-image:${{ steps.vars.outputs.tag }},ggrouppinternalsupportbotappregistry.azurecr.io/internal-support-bot-app-image:latest
+        #tags: ggrouppinternalsupportbotappregistry.azurecr.io/internal-support-bot-app-image:${{ steps.vars.outputs.tag }},ggrouppinternalsupportbotappregistry.azurecr.io/internal-support-bot-app-image:latest
+        tags: ggrouppinternalsupportbotappregistry.azurecr.io/internal-support-bot-app-image:latest
         file: ./docker/Dockerfile
