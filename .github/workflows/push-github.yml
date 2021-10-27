@@ -1,11 +1,11 @@
-name: Build bot application
+name: Build and push docker image to Github Container Registry
 on:
   push:
     branches: [ '**' ]
 
 jobs:
   build-and-push-docker-image:
-    name: Build Docker image and push to repositories
+    name: Build and push Docker image
     runs-on: ubuntu-latest
 
     steps:
@@ -42,7 +42,7 @@ jobs:
         with:
           context: ./docker
           tags: |
-            ghcr.io/ggrouppfoundation/internal-support-bot-app-image:${{ steps.vars.outputs.tag }}
+            ghcr.io/ggrouppfoundation/internal-support-bot-app-image:v1
             ghcr.io/ggrouppfoundation/internal-support-bot-app-image:latest
           push: true
 
