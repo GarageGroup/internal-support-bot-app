@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using GGroupp.Infra.Bot.Builder;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Connector;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
@@ -53,6 +55,7 @@ internal static class IncidentCreateActivity
             textBuilder = textBuilder.Append($"\n\r\n\rКлиент: {input.CustomerTitle}");
         }
         textBuilder = textBuilder.Append($"\n\r\n\rОписание: {input.Description}");
+        textBuilder = textBuilder.Append($"\n\r\n\rТип обращения: {input.CaseTypeTitle}");
 
         card.Title = "Создать инцидент?";
         card.Subtitle = null;
@@ -83,7 +86,9 @@ internal static class IncidentCreateActivity
         new()
         {
             Title = input.Title,
-            Subtitle = $"Клиент: {input.CustomerTitle}",
+            Subtitle = activity.ChannelId == Channels.Emulator ?
+                $"Клиент: {input.CustomerTitle}\n\r\n\rТип обращения: {input.CaseTypeTitle}" :
+                $"Клиент: {input.CustomerTitle}<br>Тип обращения: {input.CaseTypeTitle}",
             Text = input.Description,
             Buttons = new CardAction[]
             {
@@ -108,7 +113,7 @@ internal static class IncidentCreateActivity
 
     private sealed record ConfirmtionValueJson
     {
-        [JsonProperty("customerId")]
+        [JsonProperty("command")]
         public string? Command { get; init; }
     }
 }

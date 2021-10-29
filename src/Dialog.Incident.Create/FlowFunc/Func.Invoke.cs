@@ -49,7 +49,8 @@ partial class IncidentCreateDialogFlowFunc
             incidentTypeGetFlowFunc.InvokeAsync,
             (incident, type) => incident with
             {
-                CaseType = type.CaseTypeCode
+                CaseTypeCode = type.CaseTypeCode,
+                CaseTypeTitle = type.CaseTypeTitle
             })
         .ForwardChildValue(
             incident => new IncidentCreateFlowIn(
@@ -57,8 +58,9 @@ partial class IncidentCreateDialogFlowFunc
                 customerId: incident.CustomerId,
                 customerTitle: incident.CustomerTitle,
                 title: incident.Title,
-                caseTypeCode: incident.CaseType,
-                description: incident.Description),
+                caseTypeCode: incident.CaseTypeCode,
+                description: incident.Description,
+                caseTypeTitle: incident.CaseTypeTitle),
             incidentCreateFlowFunc.InvokeAsync)
         .CompleteValueAsync(
             cancellationToken);
