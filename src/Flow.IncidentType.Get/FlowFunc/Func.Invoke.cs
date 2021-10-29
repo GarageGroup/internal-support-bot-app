@@ -50,6 +50,6 @@ partial class IncidentTypeGetFlowFunc
                 return default(Unit);
             })
         .Fold(
-            caseCode => new IncidentTypeGetFlowOut(caseTypeCode: caseCode),
+            caseCode => new IncidentTypeGetFlowOut(caseTypeCode: caseCode, caseTypeTitle: typeCodes[caseCode]),
             ChatFlowStepResult.RetryAndAwait<IncidentTypeGetFlowOut>);
 }

@@ -11,7 +11,8 @@ public sealed record IncidentCreateFlowIn
         [AllowNull] string customerTitle, 
         [AllowNull] string title, 
         [AllowNull] string description,
-        int caseTypeCode)
+        int caseTypeCode,
+        [AllowNull] string caseTypeTitle)
     {
         OwnerId = ownerId;
         CustomerId = customerId;
@@ -19,6 +20,7 @@ public sealed record IncidentCreateFlowIn
         Title = title ?? string.Empty;
         Description = description ?? string.Empty;
         CaseTypeCode = caseTypeCode;
+        CaseTypeTitle = caseTypeTitle ?? string.Empty;
     }
 
     public Guid OwnerId { get; }
@@ -32,4 +34,6 @@ public sealed record IncidentCreateFlowIn
     public string Description { get; }
 
     public int CaseTypeCode {  get; }
+
+    public string CaseTypeTitle {  get; }
 }

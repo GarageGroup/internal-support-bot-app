@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GGroupp.Infra.Bot.Builder;
+﻿using GGroupp.Infra.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace GGroupp.Internal.Support.Bot;
 
@@ -60,7 +61,8 @@ internal static class CustomerChooseActivity
         new(ActionTypes.PostBack)
         {
             Title = customer.Title,
-            Text = customer.Id.ToString()
+            Text = customer.Id.ToString("D", CultureInfo.InvariantCulture),
+            Value = customer.Id.ToString("D", CultureInfo.InvariantCulture)
         };
 
     private sealed record CustomerValueJson
