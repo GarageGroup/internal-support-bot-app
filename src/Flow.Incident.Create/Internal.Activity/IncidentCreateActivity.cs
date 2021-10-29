@@ -49,13 +49,13 @@ internal static class IncidentCreateActivity
             return card.ToAttachment().ToActivity();
         }
 
-        var textBuilder = new StringBuilder($"Заголовок: {input.Title}");
+        var textBuilder = new StringBuilder($"**Заголовок:** {input.Title}");
         if (string.IsNullOrEmpty(input.CustomerTitle) is false)
         {
-            textBuilder = textBuilder.Append($"\n\r\n\rКлиент: {input.CustomerTitle}");
+            textBuilder = textBuilder.Append($"\n\r\n\r**Клиент:** {input.CustomerTitle}");
         }
-        textBuilder = textBuilder.Append($"\n\r\n\rОписание: {input.Description}");
-        textBuilder = textBuilder.Append($"\n\r\n\rТип обращения: {input.CaseTypeTitle}");
+        textBuilder = textBuilder.Append($"\n\r\n\r**Тип обращения:** {input.CaseTypeTitle}");
+        textBuilder = textBuilder.Append($"\n\r\n\r**Описание:** {input.Description}");
 
         card.Title = "Создать инцидент?";
         card.Subtitle = null;
