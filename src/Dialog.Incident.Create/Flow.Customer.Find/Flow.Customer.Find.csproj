@@ -6,19 +6,14 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>GGroupp.Internal.Support.Bot</RootNamespace>
-    <AssemblyName>GGroupp.Internal.Support.Bot.Dialog.Incident.Create</AssemblyName>
+    <AssemblyName>GGroupp.Internal.Support.Bot.Flow.Customer.Find</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Flow.Customer.Find.InOut\Flow.Customer.Find.InOut.csproj" />
-    <ProjectReference Include="..\Flow.Incident.Create.InOut\Flow.Incident.Create.InOut.csproj" />
-    <ProjectReference Include="..\Flow.IncidentTitle.Get.InOut\Flow.IncidentTitle.Get.InOut.csproj" />
-    <ProjectReference Include="..\Flow.IncidentType.Get\Flow.IncidentType.Get.csproj" />
-    <ProjectReference Include="..\Flow.User.LogIn.InOut\Flow.User.LogIn.InOut.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.0.1" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder" Version="1.0.3" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow" Version="1.0.0" />
+    <PackageReference Include="GGroupp.Internal.Support.CustomerSet.Find.InOut" Version="1.1.0" />
     <PackageReference Include="PrimeFuncPack.Core" Version="1.1.1" />
     <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="1.2.1" />
   </ItemGroup>
