@@ -62,16 +62,15 @@ internal static class CustomerChooseActivity
         {
             Title = customer.Title,
             Text = customer.Id.ToString("D", CultureInfo.InvariantCulture),
-            Value = customer.Id.ToString("D", CultureInfo.InvariantCulture)
+            Value = activity.IsCardSupported() ? 
+                new ButtonValueJson() { Id = customer.Id } : 
+                customer.Id.ToString("D", CultureInfo.InvariantCulture)
         };
 
-    private sealed record CustomerValueJson
+    private sealed record class ButtonValueJson
     {
-        [JsonProperty("customerId")]
-        public Guid? CustomerId { get; init; }
-
-        [JsonProperty("customerTitle")]
-        public string? CustomerTitle { get; init; }
+        [JsonProperty("id")]
+        public Guid? Id { get; init; }
     }
 }
 
