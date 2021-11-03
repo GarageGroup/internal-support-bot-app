@@ -26,7 +26,7 @@ jobs:
     # Application.csproj
     
     - name: Restore Application.csproj
-      run: dotnet restore ./src/*/Application.csproj
+      run: dotnet restore ./src/*/*/Application.csproj
 
     - name: Build Application.csproj
-      run: dotnet build ./src/*/Application.csproj --no-restore  -c Release
+      run: dotnet build ./src/*/*/Application.csproj --no-restore  -c Release

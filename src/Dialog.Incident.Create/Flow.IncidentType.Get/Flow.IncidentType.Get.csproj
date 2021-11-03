@@ -10,10 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Flow.IncidentType.Get.InOut\Flow.IncidentType.Get.InOut.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.0.1" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder" Version="1.0.0" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow" Version="1.0.0" />
