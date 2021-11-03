@@ -61,7 +61,7 @@ internal static class IncidentCreateActivity
         card.Subtitle = null;
         card.Text = null;
 
-        return MessageFactory.Attachment(card.ToAttachment(), textBuilder.ToString());
+        return MessageFactory.Attachment(card.ToAttachment(), textBuilder.ToString().ToEncodedActivityText());
     }
 
     public static IActivity CreateSuccess(IncidentLink incidentLink)
