@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.0.1" />
-    <PackageReference Include="GGroupp.Infra.Bot.Builder" Version="1.0.5" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder" Version="1.0.7" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow" Version="1.0.0" />
     <PackageReference Include="GGroupp.Internal.Support.Incident.Create.InOut" Version="1.1.0" />
     <PackageReference Include="PrimeFuncPack.Core" Version="1.1.1" />
