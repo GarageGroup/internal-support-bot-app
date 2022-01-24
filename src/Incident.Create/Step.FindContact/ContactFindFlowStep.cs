@@ -18,9 +18,13 @@ internal static class ContactFindFlowStep
 
     private static Guid PassId;
 
+    private static LookupValue PassValue;
+
     static ContactFindFlowStep()
-        =>
+    {
         PassId = Guid.Parse("6e271f6a-07b2-4887-af8d-938c66300387");
+        PassValue = new(PassId, PassButtonText);
+    }
 
     internal static ChatFlow<IncidentCreateFlowState> FindContcat(
         this ChatFlow<IncidentCreateFlowState> chatFlow, IContactSetSearchFunc contactSetSearchFunc, ILoggerFactory loggerFactory)
@@ -70,7 +74,7 @@ internal static class ContactFindFlowStep
         .PipeValue(
             contactSetSearchFunc.InvokeAsync)
         .Fold(
-            static @out => new LookupValueSetSeachOut(
+            static @out => new(
                 items: @out.Contacts.Select(MapContactItem).ToList().AddPassValue(),
                 choiceText: ChooseOrPass),
             failure => MapSearchFailure(failure, logger));
@@ -88,9 +92,9 @@ internal static class ContactFindFlowStep
     private static IReadOnlyCollection<LookupValue> AddPassValue(this List<LookupValue> lookupValues)
     {
         if (lookupValues == null)
-            return new[] { new LookupValue(PassId, PassButtonText) };
+            return new[] { PassValue };
 
-        lookupValues.Add(new(PassId, PassButtonText));
+        lookupValues.Add(PassValue);
         return lookupValues;
     }
 
@@ -107,8 +111,8 @@ internal static class ContactFindFlowStep
     private static LookupValueSetSeachOut MapSearchFailure(Failure<ContactSetSearchFailureCode> failure, ILogger logger)
     {
         logger.LogError(failure.FailureMessage, failure.FailureCode);
-        return new LookupValueSetSeachOut(
-            items: new List<LookupValue>().AddPassValue(),
+        return new(
+            items: new[] { PassValue },
             choiceText: ChooseOrPass);
     }
 }
