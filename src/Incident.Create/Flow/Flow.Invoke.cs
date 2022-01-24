@@ -1,10 +1,12 @@
 using System;
 using GGroupp.Infra.Bot.Builder;
+using Microsoft.Extensions.Logging;
 
 namespace GGroupp.Internal.Support;
 
 using ICustomerSetSearchFunc = IAsyncValueFunc<CustomerSetSearchIn, Result<CustomerSetSearchOut, Failure<CustomerSetSearchFailureCode>>>;
 using IIncidentCreateFunc = IAsyncValueFunc<IncidentCreateIn, Result<IncidentCreateOut, Failure<IncidentCreateFailureCode>>>;
+using IContactSetSearchFunc = IAsyncValueFunc<ContactSetSearchIn, Result<ContactSetSearchOut, Failure<ContactSetSearchFailureCode>>>;
 
 partial class IncidentCreateChatFlow
 {
@@ -13,6 +15,8 @@ partial class IncidentCreateChatFlow
         IncidentCreateBotOption option,
         ICustomerSetSearchFunc customerSetSearchFunc,
         IIncidentCreateFunc incidentCreateFunc,
+        IContactSetSearchFunc contactSetSearchFunc,
+        ILoggerFactory loggerFactory,
         IBotUserProvider botUserProvider)
         =>
         chatFlow.Start(
@@ -20,6 +24,8 @@ partial class IncidentCreateChatFlow
         .GetDescription()
         .FindCustomer(
             customerSetSearchFunc)
+        .FindContcat(
+            contactSetSearchFunc, loggerFactory)
         .GetTitle()
         .GetCaseType()
         .ConfirmCreation()

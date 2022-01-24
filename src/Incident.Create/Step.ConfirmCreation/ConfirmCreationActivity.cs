@@ -105,6 +105,10 @@ internal static class ConfirmCreationActivity
         .AppendLine(
             context.Activity)
         .AppendRow(
+            context.Activity, "Контакт", context.FlowState.ContactFullName ?? "--")
+        .AppendLine(
+            context.Activity)
+        .AppendRow(
             context.Activity, "Тип обращения", context.FlowState.CaseTypeTitle);
 
     private static StringBuilder AppendRow(this StringBuilder builder, Activity activity, string fieldName, string? fieldValue)
