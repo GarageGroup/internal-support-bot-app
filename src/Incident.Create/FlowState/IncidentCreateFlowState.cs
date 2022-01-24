@@ -14,6 +14,12 @@ internal sealed record IncidentCreateFlowState
     [JsonProperty("customerTitle")]
     public string? CustomerTitle { get; init; }
 
+    [JsonProperty("contactId")]
+    public Guid ContactId { get; init; }
+
+    [JsonProperty("contactFullName")]
+    public string? ContactFullName{ get; init; }
+
     [JsonProperty("title")]
     public string? Title { get; init; }
 

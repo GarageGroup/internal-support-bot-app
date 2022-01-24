@@ -8,7 +8,7 @@
     <InvariantGlobalization>false</InvariantGlobalization>
     <RootNamespace>GGroupp.Internal.Support</RootNamespace>
     <AssemblyName>GGroupp.Internal.Support.Bot.Application</AssemblyName>
-    <Version>2.0.1</Version>
+    <Version>2.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Support.Bot.App' " />
@@ -21,8 +21,9 @@
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.CosmosDb" Version="1.0.0" />
     <PackageReference Include="GGroupp.Infra.Dataverse.Api" Version="2.5.0" />
     <PackageReference Include="GGroupp.Infra.Http.SocketsHandlerProvider" Version="2.2.0" />
+    <PackageReference Include="GGroupp.Internal.Support.ContactSet.Search.Api" Version="1.1.0" />
     <PackageReference Include="GGroupp.Internal.Support.CustomerSet.Search.Api" Version="2.1.0" />
-    <PackageReference Include="GGroupp.Internal.Support.Incident.Create.Api" Version="2.1.0" />
+    <PackageReference Include="GGroupp.Internal.Support.Incident.Create.Api" Version="2.1.1" />
     <PackageReference Include="GGroupp.Platform.Azure.AzureUser.Get.Api" Version="1.1.0" />
     <PackageReference Include="GGroupp.Platform.Dataverse.DataverseUser.Get.Api" Version="1.0.0" />
   </ItemGroup>

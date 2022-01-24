@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -15,8 +15,9 @@
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ActivityExtensions" Version="1.1.1" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ActivityExtensions.Telegram" Version="1.0.0" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow.Step.Lookup" Version="1.2.2" />
+    <PackageReference Include="GGroupp.Internal.Support.ContactSet.Search.InOut" Version="1.0.0" />
     <PackageReference Include="GGroupp.Internal.Support.CustomerSet.Search.InOut" Version="2.0.0" />
-    <PackageReference Include="GGroupp.Internal.Support.Incident.Create.InOut" Version="2.0.0" />
+    <PackageReference Include="GGroupp.Internal.Support.Incident.Create.InOut" Version="2.0.1" />
     <PackageReference Include="PrimeFuncPack.Core" Version="1.1.1" />
   </ItemGroup>
 
