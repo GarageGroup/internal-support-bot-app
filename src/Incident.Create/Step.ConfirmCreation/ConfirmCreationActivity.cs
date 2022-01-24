@@ -59,7 +59,7 @@ internal static class ConfirmCreationActivity
             Buttons = activity.CreateCardActions()
         };
 
-        return MessageFactory.Attachment(card.ToAttachment(), summaryBuilder.ToString().ToEncodedActivityText());
+        return MessageFactory.Attachment(card.ToAttachment(), summaryBuilder.ToString());
     }
 
     private static IActivity CreateExtendedConfirmationActivity(this IChatFlowContext<IncidentCreateFlowState> context)
@@ -123,7 +123,8 @@ internal static class ConfirmCreationActivity
 
         if (string.IsNullOrEmpty(fieldValue) is false)
         {
-            _ = builder.Append(' ').Append(fieldValue);
+            var value = activity.IsTelegram() ? fieldValue.ToEncodedActivityText() : fieldValue;
+            _ = builder.Append(' ').Append(value);
         }
 
         return builder;
