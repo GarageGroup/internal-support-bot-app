@@ -46,7 +46,7 @@ internal static class IncidentCreateFlowStep
                 title: flowState.Title.OrEmpty(),
                 description: flowState.Description,
                 caseTypeCode: flowState.CaseTypeCode,
-                contactId: flowState.ContactId == Guid.Empty ? null : flowState.ContactId,
+                contactId: flowState.ContactId,
                 caseOriginCode: option.CaseOriginCode))
         .PipeValue(
             incidentCreateFunc.InvokeAsync)
