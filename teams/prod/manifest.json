@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.9/MicrosoftTeams.schema.json",
   "manifestVersion": "1.9",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "showLoadingIndicator": true,
   "id": "d75da39e-a9ad-4455-9cd8-8d211e624474",
   "packageName": "ru.ggroupp.internal.supportbot",
