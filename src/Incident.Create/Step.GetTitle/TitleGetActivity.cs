@@ -2,6 +2,7 @@ using System;
 using GGroupp.Infra.Bot.Builder;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
+using Newtonsoft.Json.Linq;
 
 namespace GGroupp.Internal.Support;
 
@@ -13,18 +14,18 @@ internal static class TitleGetActivity
 
     internal static IActivity CreateTitleHintActivity(this ITurnContext context, TitleGetFlowStepState stepState)
     {
-        var card = context.Activity.CreateTitleHintCard(stepState);
-        if (context.Activity.IsCardSupported())
+        if (context.IsTelegramChannel())
         {
-            return card.ToAttachment().ToActivity();
+            var telegramReply = MessageFactory.Text($"{CardTitle}. {CardText}");
+            telegramReply.ChannelData = CreateTelegramChannelData(stepState.OfferedTitle.OrEmpty());
+
+            return telegramReply;
         }
 
-        if (context.Activity.IsTelegram())
+        var card = context.CreateTitleHintCard(stepState);
+        if (context.IsCardSupported())
         {
-            var activity = MessageFactory.Text($"{CardTitle}. {CardText}");
-            var channelData = CreateTelegramChannelData(stepState.OfferedTitle.OrEmpty());
-
-            return activity.SetTelegramChannelData(channelData);
+            return card.ToAttachment().ToActivity();
         }
 
         var cardTitle = card.Title;
@@ -41,12 +42,12 @@ internal static class TitleGetActivity
 
     internal static Result<string, Unit> GetTitleValueOrFailure(this ITurnContext context, TitleGetFlowStepState stepState)
     {
-        if (context.Activity.IsNotMessageType())
+        if (context.IsNotMessageType())
         {
             return default;
         }
 
-        var buttonResult = context.Activity.GetCardActionValueOrAbsent();
+        var buttonResult = context.GetCardActionValueOrAbsent();
         if (buttonResult.IsPresent)
         {
             return buttonResult.OrThrow().Equals(stepState.ButtonId) switch
@@ -59,7 +60,7 @@ internal static class TitleGetActivity
         return context.Activity.Text.OrEmpty();
     }
 
-    private static HeroCard CreateTitleHintCard(this Activity activity, TitleGetFlowStepState stepState)
+    private static HeroCard CreateTitleHintCard(this ITurnContext context, TitleGetFlowStepState stepState)
         =>
         new()
         {
@@ -71,34 +72,29 @@ internal static class TitleGetActivity
                 {
                     Title = stepState.OfferedTitle.OrEmpty(),
                     Text = stepState.OfferedTitle.OrEmpty(),
-                    Value = activity.BuildCardActionValue(stepState.ButtonId)
+                    Value = context.BuildCardActionValue(stepState.ButtonId)
                 }
             }
         };
 
-    private static TelegramChannelData CreateTelegramChannelData(string offeredTitle)
+    private static JObject CreateTelegramChannelData(string offeredTitle)
         =>
-        new()
-        {
-            Method = TelegramMethod.SendMessage,
-            Parameters = new()
+        new TelegramChannelData(
+            parameters: new()
             {
-                ReplyMarkup = new TelegramReplyKeyboardMarkup
-                {
-                    Keyboard = new[]
+                ReplyMarkup = new TelegramReplyKeyboardMarkup(
+                    keyboard: new[]
                     {
                         new TelegramKeyboardButton[]
                         {
-                            new()
-                            {
-                                Text = offeredTitle
-                            }
+                            new(offeredTitle)
                         }
-                    },
+                    })
+                {
                     ResizeKeyboard = true,
                     OneTimeKeyboard = true,
                     InputFieldPlaceholder = CardTitle
                 }
-            }
-        };
+            })
+        .ToJObject();
 }
