@@ -52,7 +52,15 @@ internal static class CustomerFindFlowStep
 
     private static BotFlowFailure MapToFlowFailure(Failure<CustomerSetSearchFailureCode> failure)
         =>
-        new(
-            userMessage: "При выполнении запроса произошла непредвиденная ошибка. Обратитесь к администратору и повторите попытку позднее",
-            logMessage: failure.FailureMessage);
+        (failure.FailureCode switch
+        {
+            CustomerSetSearchFailureCode.NotAllowed
+                => "При поиске клиентов произошла ошибка. У вашей учетной записи не достаточно разрешений. Обратитесь к администратору приложения",
+            CustomerSetSearchFailureCode.TooManyRequests
+                => "Слишком много обращений к сервису. Попробуйте повторить попытку через несколько секунд",
+            _
+                => "При поиске клиентов произошла непредвиденная ошибка. Обратитесь к администратору или повторите попытку позднее"
+        })
+        .Pipe(
+            message => BotFlowFailure.From(message, failure.FailureMessage));
 }

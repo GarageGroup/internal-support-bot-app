@@ -12,13 +12,13 @@ internal static class TitleGetFlowStep
     internal static ChatFlow<IncidentCreateFlowState> GetTitle(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.ForwardValue(
-            GetTitleOrFailureAsync,
+            GetTitleOrBreakAsync,
             (flowState, title) => flowState with
             {
                 Title = title
             });
 
-    private static async ValueTask<ChatFlowJump<string>> GetTitleOrFailureAsync(
+    private static async ValueTask<ChatFlowJump<string>> GetTitleOrBreakAsync(
         this IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
     {
         if (context.StepState is not TitleGetFlowStepState stepState)
@@ -47,11 +47,6 @@ internal static class TitleGetFlowStep
             await context.SendActivityAsync(retryActivity, cancellationToken);
 
             return context.RepeatSameStateJump<string>();
-        }
-
-        if (context.Activity.IsTelegram())
-        {
-            await context.RemoveTelegramKeyboardAsync(cancellationToken).ConfigureAwait(false);
         }
 
         return title;

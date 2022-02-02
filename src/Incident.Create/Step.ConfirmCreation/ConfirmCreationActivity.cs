@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using GGroupp.Infra.Bot.Builder;
 using Microsoft.Bot.Builder;
-using Microsoft.Bot.Connector;
 using Microsoft.Bot.Schema;
 
 namespace GGroupp.Internal.Support;
@@ -27,7 +26,7 @@ internal static class ConfirmCreationActivity
 
     internal static ChatFlowJump<IncidentCreateFlowState> GetConfirmationResult(this IChatFlowContext<IncidentCreateFlowState> context)
         =>
-        context.Activity.GetCardActionValueOrAbsent().Fold(
+        context.GetCardActionValueOrAbsent().Fold(
             actionId => actionId switch
             {
                 _ when actionId == ActionCreateId => ChatFlowJump.Next(context.FlowState),
@@ -38,25 +37,23 @@ internal static class ConfirmCreationActivity
 
     internal static IActivity CreateActivity(IChatFlowContext<IncidentCreateFlowState> context)
         =>
-        context.Activity.IsCardSupported()
-        ? context.CreateExtendedConfirmationActivity()
-        : context.CreateConfirmationActivity();
+        context.IsCardSupported() ? context.CreateExtendedConfirmationActivity() : context.CreateConfirmationActivity();
 
     private static IActivity CreateConfirmationActivity(this IChatFlowContext<IncidentCreateFlowState> context)
     {
-        var activity = context.Activity;
         var flowState = context.FlowState;
 
-        var summaryBuilder = new StringBuilder().AppendSummaryTextBuilder(context);
+        var summaryBuilder = new StringBuilder().AppendSummaryTextBuilder(context, flowState);
         if (string.IsNullOrEmpty(flowState.Description) is false)
         {
-            summaryBuilder = summaryBuilder.AppendLine(activity).AppendRow(activity, "Описание", flowState.Description);
+            var description = context.EncodeText(flowState.Description);
+            summaryBuilder = summaryBuilder.AppendLine(context).AppendRow(context, "Описание", description);
         }
 
         var card = new HeroCard
         {
             Title = QuestionText,
-            Buttons = activity.CreateCardActions()
+            Buttons = context.CreateCardActions()
         };
 
         return MessageFactory.Attachment(card.ToAttachment(), summaryBuilder.ToString());
@@ -67,14 +64,14 @@ internal static class ConfirmCreationActivity
         new HeroCard
         {
             Title = QuestionText,
-            Subtitle = new StringBuilder().AppendSummaryTextBuilder(context).ToString(),
+            Subtitle = new StringBuilder().AppendSummaryTextBuilder(context, context.FlowState).ToString(),
             Text = context.FlowState.Description,
-            Buttons = context.Activity.CreateCardActions()
+            Buttons = context.CreateCardActions()
         }
         .ToAttachment()
         .ToActivity();
 
-    private static CardAction[] CreateCardActions(this Activity activity)
+    private static CardAction[] CreateCardActions(this ITurnContext turnContext)
         =>
         new CardAction[]
         {
@@ -82,40 +79,41 @@ internal static class ConfirmCreationActivity
             {
                 Title = ActionCreateText,
                 Text = ActionCreateText,
-                Value = activity.BuildCardActionValue(ActionCreateId)
+                Value = turnContext.BuildCardActionValue(ActionCreateId)
             },
             new(ActionTypes.PostBack)
             {
                 Title = ActionCancelText,
                 Text = ActionCancelText,
-                Value = activity.BuildCardActionValue(ActionCancelId)
+                Value = turnContext.BuildCardActionValue(ActionCancelId)
             }
         };
 
-    private static StringBuilder AppendSummaryTextBuilder(this StringBuilder stringBuilder, IChatFlowContext<IncidentCreateFlowState> context)
+    private static StringBuilder AppendSummaryTextBuilder(
+        this StringBuilder stringBuilder, ITurnContext context, IncidentCreateFlowState flowState)
         =>
         Pipeline.Pipe(
             stringBuilder)
         .AppendRow(
-            context.Activity, "Заголовок", context.FlowState.Title)
+            context, "Заголовок", context.EncodeText(flowState.Title))
         .AppendLine(
-            context.Activity)
+            context)
         .AppendRow(
-            context.Activity, "Клиент", context.FlowState.CustomerTitle)
+            context, "Клиент", context.EncodeText(flowState.CustomerTitle))
         .AppendLine(
-            context.Activity)
+            context)
         .AppendRow(
-            context.Activity, "Контакт", context.FlowState.ContactFullName ?? "--")
+            context, "Контакт", flowState.ContactFullName is not null ? context.EncodeText(flowState.ContactFullName) : "--")
         .AppendLine(
-            context.Activity)
+            context)
         .AppendRow(
-            context.Activity, "Тип обращения", context.FlowState.CaseTypeTitle);
+            context, "Тип обращения", context.EncodeText(flowState.CaseTypeTitle));
 
-    private static StringBuilder AppendRow(this StringBuilder builder, Activity activity, string fieldName, string? fieldValue)
+    private static StringBuilder AppendRow(this StringBuilder builder, ITurnContext turnContext, string fieldName, string? fieldValue)
     {
         if (string.IsNullOrEmpty(fieldName) is false)
         {
-            if (activity.IsTelegram())
+            if (turnContext.IsTelegramChannel())
             {
                 _ = builder.Append("**").Append(fieldName).Append(':').Append("**");
             }
@@ -127,19 +125,14 @@ internal static class ConfirmCreationActivity
 
         if (string.IsNullOrEmpty(fieldValue) is false)
         {
-            var value = activity.IsTelegram() ? fieldValue.ToEncodedActivityText() : fieldValue;
-            _ = builder.Append(' ').Append(value);
+            _ = builder.Append(' ').Append(fieldValue);
         }
 
         return builder;
     }
 
-    private static StringBuilder AppendLine(this StringBuilder builder, Activity activity)
+    private static StringBuilder AppendLine(this StringBuilder builder, ITurnContext turnContext)
         =>
         builder.Append(
-            activity.InnerIsMsTeams() ? "<br>" : "\n\r\n\r");
-
-    private static bool InnerIsMsTeams(this Activity activity)
-        =>
-        string.Equals(activity.ChannelId, Channels.Msteams, StringComparison.InvariantCultureIgnoreCase);
+            turnContext.IsMsteamsChannel() ? "<br>" : "\n\r\n\r");
 }

@@ -19,7 +19,7 @@ internal static class CaseTypeGetFlowStep
             [Guid.Parse("9a380544-0c61-4e44-86ff-daba4cf764b3")] = (2, "Проблема"),
             [Guid.Parse("91da3add-0f51-48f4-aaa8-58a22125dabb")] = (3, "Запрос")
         };
-        typeCodeChoiceSet = new(typeCodes.Select(ToLokupValue).ToArray(), "Выберите тип обращения");
+        typeCodeChoiceSet = new(typeCodes.Select(ToLokupValue).ToArray(), "Выберите тип обращения", LookupValueSetDirection.Horizon);
     }
 
     internal static ChatFlow<IncidentCreateFlowState> GetCaseType(this ChatFlow<IncidentCreateFlowState> chatFlow)

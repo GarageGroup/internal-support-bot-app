@@ -14,7 +14,7 @@ internal static class DescriptionGetFlowStep
     {
         var text = context.Activity.Text;
 
-        if (string.IsNullOrEmpty(text) || context.Activity.GetCardActionValueOrAbsent().IsPresent)
+        if (string.IsNullOrEmpty(text) || context.GetCardActionValueOrAbsent().IsPresent)
         {
             return default;
         }

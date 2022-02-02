@@ -7,13 +7,13 @@ partial class IncidentCreateChatFlow
 {
     internal static Result<ChatFlow, Unit> InternalRecoginzeOrFailure(this IBotContext context)
     {
-        var activity = context.TurnContext.Activity;
-        if (activity.IsNotMessageType())
+        var turnContext = context.TurnContext;
+        if (turnContext.IsNotMessageType())
         {
             return default;
         }
 
-        if (activity.IsTelegram() && string.Equals(activity.Text, "/start", StringComparison.InvariantCultureIgnoreCase))
+        if (turnContext.IsTelegramChannel() && string.Equals(turnContext.Activity.Text, "/start", StringComparison.InvariantCultureIgnoreCase))
         {
             return default;
         }
