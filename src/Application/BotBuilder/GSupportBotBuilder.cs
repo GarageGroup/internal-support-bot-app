@@ -10,20 +10,18 @@ namespace GGroupp.Internal.Support;
 
 internal static partial class GSupportBotBuilder
 {
-    private static Dependency<LoggerDelegatingHandler> CreateStandardHttpHandlerDependency(string loggerCategoryName)
+    private static Dependency<HttpMessageHandler> CreateStandardHttpHandlerDependency(string loggerCategoryName)
         =>
         PrimaryHandler.UseStandardSocketsHttpHandler()
         .UseLogging(
             sp => sp.GetRequiredService<ILoggerFactory>().CreateLogger(loggerCategoryName.OrEmpty()));
 
-    private static Dependency<IDataverseApiClient> CreateDataverseApiClient<THttpHandler>(
-        this Dependency<THttpHandler> dependency)
-        where THttpHandler : HttpMessageHandler
+    private static Dependency<IDataverseApiClient> CreateDataverseApiClient(this Dependency<HttpMessageHandler> dependency)
         =>
         dependency.UseDataverseApiClient(
-            sp => sp.GetRequiredService<IConfiguration>().GetDataverseApiClientConfiguration());
+            sp => sp.GetRequiredService<IConfiguration>().GetDataverseApiClientOption());
 
-    private static DataverseApiClientConfiguration GetDataverseApiClientConfiguration(this IConfiguration configuration)
+    private static DataverseApiClientOption GetDataverseApiClientOption(this IConfiguration configuration)
         =>
         new(
             serviceUrl: configuration.GetValue<string>("DataverseApiServiceUrl"),

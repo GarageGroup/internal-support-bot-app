@@ -4,13 +4,11 @@ namespace GGroupp.Internal.Support;
 
 internal static class DescriptionGetFlowStep
 {
-    internal static ChatFlow<IncidentCreateFlowState> GetDescription(
-        this ChatFlow<IncidentCreateFlowState> chatFlow)
+    internal static ChatFlow<IncidentCreateFlowState> GetDescription(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.Forward(GetDescriptionOrFailure);
 
-    private static ChatFlowJump<IncidentCreateFlowState> GetDescriptionOrFailure(
-        IChatFlowContext<IncidentCreateFlowState> context)
+    private static ChatFlowJump<IncidentCreateFlowState> GetDescriptionOrFailure(IChatFlowContext<IncidentCreateFlowState> context)
     {
         var text = context.Activity.Text;
 
