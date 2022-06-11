@@ -14,6 +14,10 @@ internal static class ContactFindHelper
 {
     private const string ChooseOrSkip = "Выберите контакт или введите часть имени для поиска. Этот шаг можно пропустить";
 
+    private const string UnsuccessfulDefaultResultText = "Клиенты для данного контакта еще не добавлены. Этот шаг можно пропустить";
+
+    private const string UnsuccessfulSearchResultText = "Не удалось найти ни одного контакта. Попробуйте уточнить запрос";
+
     private const string SkipButtonText = "ПРОПУСТИТЬ";
 
     private const int MaxCustomerSetCount = 5;
@@ -27,6 +31,26 @@ internal static class ContactFindHelper
         SkipId = Guid.Parse("6e271f6a-07b2-4887-af8d-938c66300387");
         SkipValue = new(SkipId, SkipButtonText);
     }
+
+    internal static ValueTask<LookupValueSetOption> GetDefaultContactsAsync(
+        this IContactSetSearchFunc contactSetSearchFunc,
+        IChatFlowContext<IncidentCreateFlowState> context,
+        CancellationToken token)
+        =>
+        AsyncPipeline.Pipe(
+            context.FlowState.CustomerId, token)
+        .Pipe(
+            static customerId => new ContactSetSearchIn(
+                searchText: string.Empty,
+                customerId: customerId,
+                top: MaxCustomerSetCount))
+        .PipeValue(
+            contactSetSearchFunc.InvokeAsync)
+        .Fold(
+            static @out => new(
+                items: @out.Contacts.Select(MapContactItem).ToList().AddSkipValue(),
+                choiceText: @out.Contacts.Any() ? ChooseOrSkip : UnsuccessfulDefaultResultText),
+            failure => MapSearchFailure(failure, context.Logger));
 
     internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchContactsAsync(
         this IContactSetSearchFunc contactSetSearchFunc,
@@ -49,27 +73,7 @@ internal static class ContactFindHelper
         .MapSuccess(
             static @out => new LookupValueSetOption(
                 items: @out.Contacts.Select(MapContactItem).ToList().AddSkipValue(),
-                choiceText: ChooseOrSkip));
-
-    internal static ValueTask<LookupValueSetOption> GetDefaultContactsAsync(
-        this IContactSetSearchFunc contactSetSearchFunc, 
-        IChatFlowContext<IncidentCreateFlowState> context,
-        CancellationToken token)
-        =>
-        AsyncPipeline.Pipe(
-            context.FlowState.CustomerId, token)
-        .Pipe(
-            static customerId => new ContactSetSearchIn(
-                searchText: string.Empty,
-                customerId: customerId,
-                top: MaxCustomerSetCount))
-        .PipeValue(
-            contactSetSearchFunc.InvokeAsync)
-        .Fold(
-            static @out => new(
-                items: @out.Contacts.Select(MapContactItem).ToList().AddSkipValue(),
-                choiceText: ChooseOrSkip),
-            failure => MapSearchFailure(failure, context.Logger));
+                choiceText: @out.Contacts.Any() ? ChooseOrSkip : UnsuccessfulSearchResultText));
 
     internal static Optional<LookupValue> IsNotSkipValueOrAbsent(this LookupValue contactValue)
         => 
