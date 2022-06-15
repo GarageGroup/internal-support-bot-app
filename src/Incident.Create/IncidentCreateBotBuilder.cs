@@ -17,41 +17,31 @@ public static class IncidentCreateBotBuilder
         Func<IBotContext, ICustomerSetSearchFunc> customerSetSearchFuncResolver,
         Func<IBotContext, IIncidentCreateFunc> incidentCreateFuncResolver,
         Func<IBotContext, IContactSetSearchFunc> contactSetSearchFuncResolver)
-        =>
-        InnerUseIncidentCreate(
-            botBuilder ?? throw new ArgumentNullException(nameof(botBuilder)),
-            optionResolver ?? throw new ArgumentNullException(nameof(optionResolver)),
-            customerSetSearchFuncResolver ?? throw new ArgumentNullException(nameof(customerSetSearchFuncResolver)),
-            incidentCreateFuncResolver ?? throw new ArgumentNullException(nameof(incidentCreateFuncResolver)),
-            contactSetSearchFuncResolver ?? throw new ArgumentNullException(nameof(contactSetSearchFuncResolver)));
-
-    private static IBotBuilder InnerUseIncidentCreate(
-        IBotBuilder botBuilder,
-        Func<IBotContext, IncidentCreateBotOption> optionResolver,
-        Func<IBotContext, ICustomerSetSearchFunc> customerSetSearchFuncResolver,
-        Func<IBotContext, IIncidentCreateFunc> incidentCreateFuncResolver,
-        Func<IBotContext, IContactSetSearchFunc> contactSetSearchFuncResolver)
     {
+        _ = botBuilder ?? throw new ArgumentNullException(nameof(botBuilder));
+        _ = optionResolver ?? throw new ArgumentNullException(nameof(optionResolver));
+        _ = customerSetSearchFuncResolver ?? throw new ArgumentNullException(nameof(customerSetSearchFuncResolver));
+        _ = incidentCreateFuncResolver ?? throw new ArgumentNullException(nameof(incidentCreateFuncResolver));
+        _ = contactSetSearchFuncResolver ?? throw new ArgumentNullException(nameof(contactSetSearchFuncResolver));
+
         return botBuilder.Use(InnerInvokeAsync);
 
         ValueTask<Unit> InnerInvokeAsync(IBotContext botContext, CancellationToken cancellationToken)
         {
-            return botContext.InternalRecoginzeOrFailure().FoldValueAsync(InvokeFlowAsync, FinishAsync);
+            return botContext.InternalRecoginzeOrFailure().FoldValueAsync(InvokeFlowAsync, NextAsync);
 
             ValueTask<Unit> InvokeFlowAsync(ChatFlow chatFlow)
                 =>
-                chatFlow.InvokeFlow(
+                chatFlow.Start(
                     optionResolver.Invoke(botContext),
                     customerSetSearchFuncResolver.Invoke(botContext),
                     incidentCreateFuncResolver.Invoke(botContext),
-                    contactSetSearchFuncResolver.Invoke(botContext),
-                    botContext.LoggerFactory,
-                    botContext.BotUserProvider)
+                    contactSetSearchFuncResolver.Invoke(botContext))
                 .CompleteValueAsync(cancellationToken);
-        }
 
-        static ValueTask<Unit> FinishAsync(Unit _)
-            =>
-            default;
+            ValueTask<Unit> NextAsync(Unit _)
+                =>
+                botContext.BotFlow.NextAsync(cancellationToken);
+        }
     }
 }

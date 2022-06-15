@@ -42,7 +42,7 @@ partial class GSupportBotBuilder
 
     private static IncidentCreateBotOption GetIncidentCreateBotOption(this IConfiguration configuration)
     {
-        var baseUri = new Uri(configuration.GetDataverseApiClientConfiguration().ServiceUrl);
+        var baseUri = new Uri(configuration.GetDataverseApiClientOption().ServiceUrl);
         var template = configuration.GetValue<string>("IncidentCardRelativeUrlTemplate");
 
         var uri = new Uri(baseUri, template.OrEmpty()).AbsoluteUri;

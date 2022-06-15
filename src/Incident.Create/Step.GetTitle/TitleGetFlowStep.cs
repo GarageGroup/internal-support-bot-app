@@ -1,7 +1,6 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using GGroupp.Infra.Bot.Builder;
+using Microsoft.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
@@ -11,52 +10,27 @@ internal static class TitleGetFlowStep
 
     internal static ChatFlow<IncidentCreateFlowState> GetTitle(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
-        chatFlow.ForwardValue(
-            GetTitleOrBreakAsync,
+        chatFlow.AwaitText(
+            GetStepOption,
+            CreateResultMessage,
             (flowState, title) => flowState with
             {
                 Title = title
             });
 
-    private static async ValueTask<ChatFlowJump<string>> GetTitleOrBreakAsync(
-        this IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
-    {
-        if (context.StepState is not TitleGetFlowStepState stepState)
-        {
-            var state = new TitleGetFlowStepState
-            {
-                ButtonId = Guid.NewGuid(),
-                OfferedTitle = CreareDefaultTitleFromDescription(context.FlowState.Description.OrEmpty())
-            };
-            var offeredTitleActivity = context.CreateTitleHintActivity(state);
-
-            await context.SendActivityAsync(offeredTitleActivity, cancellationToken);
-            return ChatFlowJump.Repeat<string>(state);
-        }
-
-        var titleResult = context.GetTitleValueOrFailure(stepState);
-        if (titleResult.IsFailure)
-        {
-            return context.RepeatSameStateJump<string>();
-        }
-
-        var title = titleResult.SuccessOrThrow();
-        if (string.IsNullOrEmpty(title))
-        {
-            var retryActivity = TitleGetActivity.CreateTitleMustBeSpecifiedActivity();
-            await context.SendActivityAsync(retryActivity, cancellationToken);
-
-            return context.RepeatSameStateJump<string>();
-        }
-
-        return title;
-    }
-
-    private static string CreareDefaultTitleFromDescription(string description)
+    private static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, string suggestion)
         =>
-        description.Trim(' ') switch
-        {
-            { Length: <= DefaultTitleLength } => description,
-            _ => description[..DefaultTitleLength] + "..."
-        };
+        $"Заголовок: {context.EncodeTextWithStyle(suggestion, BotTextStyle.Bold)}";
+
+    private static ValueStepOption GetStepOption(IChatFlowContext<IncidentCreateFlowState> context)
+        =>
+        new(
+            messageText: "Укажите заголовок. Можно воспользовать предложенным или ввести свой",
+            suggestions: new[]
+            {
+                new[]
+                {
+                    StringUtils.Ellipsis(context.FlowState.Description.OrEmpty(), DefaultTitleLength)
+                }
+            });
 }
