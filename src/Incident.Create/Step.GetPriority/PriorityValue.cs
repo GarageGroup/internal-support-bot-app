@@ -3,15 +3,15 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GGroupp.Internal.Support;
 
-internal sealed record class CaseTypeValue
+internal sealed record class PriorityValue
 {
-    public CaseTypeValue(IncidentCaseTypeCode code, [AllowNull] string name)
+    public PriorityValue(IncidentPriorityCode code, [AllowNull] string name)
     {
         Code = code;
         Name = name.OrEmpty();
     }
 
-    public IncidentCaseTypeCode Code { get; }
+    public IncidentPriorityCode Code { get; }
 
     public string Name { get; }
 }

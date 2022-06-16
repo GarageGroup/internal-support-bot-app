@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace GGroupp.Internal.Support;
 
-internal sealed record IncidentLinkFlowState
+internal sealed record class IncidentLinkFlowState
 {
     [JsonProperty("title")]
     public string? Title { get; init; }

@@ -12,16 +12,12 @@ internal static class ContactFindFlowStep
         =>
         chatFlow.AwaitLookupValue(
             contactSetSearchFunc.GetDefaultContactsAsync,
-            contactSetSearchFunc.SearchContactsAsync,
-            CreateResultMessage,
+            contactSetSearchFunc.SearchContactsOrFailureAsync,
+            ContactFindHelper.CreateResultMessage,
             MapFlowState);
 
-    private static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue contactValue)
-        =>
-        $"Контакт: {context.EncodeTextWithStyle(contactValue.Name, BotTextStyle.Bold)}";
-
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, LookupValue contactValue)
-        => 
+        =>
         contactValue.IsNotSkipValueOrAbsent().Map(flowState.WithContactValue).OrElse(flowState);
 
     private static IncidentCreateFlowState WithContactValue(this IncidentCreateFlowState flowState, LookupValue contactValue)
