@@ -6,22 +6,15 @@ internal static class CaseTypeGetFlowStep
 {
     internal static ChatFlow<IncidentCreateFlowState> GetCaseType(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
-        chatFlow.AwaitChoiceValue(
-            static _ => CaseTypeGetHelper.GetCaseTypeChoiceSet(),
-            CreateResultMessage,
+        chatFlow.AwaitValue(
+            static _ => CaseTypeGetHelper.GetValueStepOption(),
+            CaseTypeGetHelper.ParseCaseTypeOrFailure,
+            CaseTypeGetHelper.CreateResultMessage,
             MapFlowState);
 
-    private static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue typeCodeValue)
+    private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, CaseTypeValue caseTypeValue)
         =>
-        $"Тип обращения: {context.EncodeTextWithStyle(typeCodeValue.Name, BotTextStyle.Bold)}";
-
-    private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, LookupValue caseTypeValue)
-        => 
-        caseTypeValue.GetCaseTypeValueOrAbsent().Map(flowState.WithCaseTypeValue).OrElse(flowState);
-
-    private static IncidentCreateFlowState WithCaseTypeValue(this IncidentCreateFlowState flowState, CaseTypeValue caseTypeValue)
-        =>
-        flowState with 
+        flowState with
         { 
             CaseTypeCode = caseTypeValue.Code, 
             CaseTypeTitle = caseTypeValue.Name

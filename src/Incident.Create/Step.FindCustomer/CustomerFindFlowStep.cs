@@ -13,15 +13,11 @@ internal static class CustomerFindFlowStep
         chatFlow.SendText(
             static _ => "Нужно выбрать клиента. Введите часть названия для поиска")
         .AwaitLookupValue(
-            (_, search, token) => customerSetSearchFunc.SearchCustomersAsync(search, token),
-            CreateResultMessage,
+            (_, search, token) => customerSetSearchFunc.SearchCustomersOrFailureAsync(search, token),
+            CustomerFindHelper.CreateResultMessage,
             static (flowState, customerValue) => flowState with
             {
                 CustomerId = customerValue.Id,
                 CustomerTitle = customerValue.Name
             });
-
-    private static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue customerValue)
-        =>
-        $"Клиент: {context.EncodeTextWithStyle(customerValue.Name, BotTextStyle.Bold)}";
 }

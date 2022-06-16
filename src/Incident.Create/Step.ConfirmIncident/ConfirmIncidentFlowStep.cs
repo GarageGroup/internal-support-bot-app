@@ -22,6 +22,7 @@ internal static class ConfirmIncidentFlowStep
                 new("Клиент", context.FlowState.CustomerTitle),
                 new("Контакт", context.FlowState.ContactFullName ?? "--"),
                 new("Тип обращения", context.FlowState.CaseTypeTitle),
+                new("Приоритет", context.FlowState.PriorityTitle),
                 new("Описание", context.FlowState.Description)
             });
 }

@@ -10,9 +10,9 @@ using ICustomerSetSearchFunc = IAsyncValueFunc<CustomerSetSearchIn, Result<Custo
 
 internal static class CustomerFindHelper
 {
-    private const int MaxCustomerSetCount = 5;
+    private const int MaxCustomerSetCount = 6;
 
-    internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchCustomersAsync(
+    internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchCustomersOrFailureAsync(
         this ICustomerSetSearchFunc customerSetSearchFunc, string seachText, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
@@ -33,6 +33,10 @@ internal static class CustomerFindHelper
             static @out => new LookupValueSetOption(
                 items: @out.Customers.Select(MapCustomerItem).ToArray(),
                 choiceText: "Выберите клиента"));
+
+    internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue customerValue)
+        =>
+        $"Клиент: {context.EncodeTextWithStyle(customerValue.Name, BotTextStyle.Bold)}";
 
     private static LookupValue MapCustomerItem(CustomerItemSearchOut item)
         =>

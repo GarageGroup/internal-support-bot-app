@@ -7,34 +7,42 @@ namespace GGroupp.Internal.Support;
 
 internal static class CaseTypeGetHelper
 {
-    private static readonly IReadOnlyDictionary<Guid, CaseTypeValue> typeCodes;
+    private static readonly IReadOnlyDictionary<string, CaseTypeValue> caseTypeValues;
 
-    private static readonly LookupValueSetOption typeCodeChoiceSet;
+    private static readonly ValueStepOption valueStepOption;
 
     static CaseTypeGetHelper()
     {
-        typeCodes = new Dictionary<Guid, CaseTypeValue>()
+        var caseTypes = new CaseTypeValue[]
         {
-            [Guid.Parse("61deaa7f-95ed-4915-b8d6-5d09deefc9bb")] = new(1, "Вопрос"),
-            [Guid.Parse("9a380544-0c61-4e44-86ff-daba4cf764b3")] = new(2, "Проблема"),
-            [Guid.Parse("91da3add-0f51-48f4-aaa8-58a22125dabb")] = new(3, "Запрос")
+            new(IncidentCaseTypeCode.Question, "Вопрос"),
+            new(IncidentCaseTypeCode.Problem, "Проблема"),
+            new(IncidentCaseTypeCode.Request, "Запрос")
         };
 
-        typeCodeChoiceSet = new(
-            typeCodes.Select(ToLokupValue).ToArray(),
-            "Выберите тип обращения",
-            LookupValueSetDirection.Horizon);
+        caseTypeValues = caseTypes.ToDictionary(GetName, StringComparer.InvariantCultureIgnoreCase);
+
+        valueStepOption = new ValueStepOption(
+            messageText: "Выберите тип обращения",
+            suggestions: new[]
+            {
+                caseTypes.Select(GetName).ToArray()
+            });
+
+        static string GetName(CaseTypeValue value) => value.Name;
     }
 
-    internal static LookupValueSetOption GetCaseTypeChoiceSet()
+    internal static ValueStepOption GetValueStepOption()
         =>
-        typeCodeChoiceSet;
+        valueStepOption;
 
-    internal static Optional<CaseTypeValue> GetCaseTypeValueOrAbsent(this LookupValue typeCodeValue)
+    internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, string caseTypeName)
         =>
-        typeCodes.GetValueOrAbsent(typeCodeValue.Id);
+        $"Тип обращения: {context.EncodeTextWithStyle(caseTypeName, BotTextStyle.Bold)}";
 
-    private static LookupValue ToLokupValue(KeyValuePair<Guid, CaseTypeValue> item)
+    internal static Result<CaseTypeValue, BotFlowFailure> ParseCaseTypeOrFailure(string text)
         =>
-        new(item.Key, item.Value.Name);
+        caseTypeValues.TryGetValue(text, out var value)
+            ? Result.Success(value)
+            : BotFlowFailure.From(userMessage: "Выберите один из вариантов");
 }

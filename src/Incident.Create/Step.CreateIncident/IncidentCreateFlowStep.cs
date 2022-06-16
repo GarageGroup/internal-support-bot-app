@@ -32,14 +32,14 @@ internal static class IncidentCreateFlowStep
         AsyncPipeline.Pipe(
             context.FlowState, cancellationToken)
         .Pipe(
-            flowState => new IncidentCreateIn(
+            static flowState => new IncidentCreateIn(
                 ownerId: flowState.OwnerId,
                 customerId: flowState.CustomerId,
+                contactId: flowState.ContactId,
                 title: flowState.Title.OrEmpty(),
                 description: flowState.Description,
                 caseTypeCode: flowState.CaseTypeCode,
-                contactId: flowState.ContactId,
-                caseOriginCode: option.CaseOriginCode))
+                priorityCode: flowState.PriorityCode))
         .PipeValue(
             incidentCreateFunc.InvokeAsync)
         .Map(

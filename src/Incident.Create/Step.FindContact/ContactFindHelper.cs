@@ -52,7 +52,7 @@ internal static class ContactFindHelper
                 choiceText: @out.Contacts.Any() ? ChooseOrSkip : UnsuccessfulDefaultResultText),
             failure => MapSearchFailure(failure, context.Logger));
 
-    internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchContactsAsync(
+    internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchContactsOrFailureAsync(
         this IContactSetSearchFunc contactSetSearchFunc,
         IChatFlowContext<IncidentCreateFlowState> context,
         string seachText,
@@ -74,6 +74,10 @@ internal static class ContactFindHelper
             static @out => new LookupValueSetOption(
                 items: @out.Contacts.Select(MapContactItem).ToList().AddSkipValue(),
                 choiceText: @out.Contacts.Any() ? ChooseOrSkip : UnsuccessfulSearchResultText));
+
+    internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue contactValue)
+        =>
+        $"Контакт: {context.EncodeTextWithStyle(contactValue.Name, BotTextStyle.Bold)}";
 
     internal static Optional<LookupValue> IsNotSkipValueOrAbsent(this LookupValue contactValue)
         => 
