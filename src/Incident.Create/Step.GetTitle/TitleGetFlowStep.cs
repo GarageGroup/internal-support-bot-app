@@ -36,7 +36,7 @@ internal static class TitleGetFlowStep
     private static ValueStepOption GetStepOption(IChatFlowContext<IncidentCreateFlowState> context)
         =>
         new(
-            messageText: "Укажите заголовок. Можно воспользовать предложенным или ввести свой",
+            messageText: "Укажите или выберите заголовок",
             suggestions: new[]
             {
                 new[]
