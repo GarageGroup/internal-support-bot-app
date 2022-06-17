@@ -1,3 +1,4 @@
+using System.Text;
 using GGroupp.Infra.Bot.Builder;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
@@ -7,8 +8,6 @@ namespace GGroupp.Internal.Support;
 
 internal static class IncidentCreateActivity
 {
-    private const string SuccessMessage = "Инцидент был создан успешно";
-
     internal static IActivity CreateSuccessActivity(IChatFlowContext<IncidentLinkFlowState> context)
     {
         if (context.IsNotTelegramChannel())
@@ -26,7 +25,7 @@ internal static class IncidentCreateActivity
         =>
         new HeroCard
         {
-            Title = SuccessMessage,
+            Title = "Инцидент был создан успешно",
             Buttons = new CardAction[]
             {
                 new(ActionTypes.OpenUrl)
@@ -39,22 +38,27 @@ internal static class IncidentCreateActivity
         .ToAttachment()
         .ToActivity();
 
-    private static JObject CreateTelegramChannelData(ITurnContext turnContext, IncidentLinkFlowState flowState)
-        =>
-        new TelegramChannelData(
-            parameters: new(SuccessMessage)
+    private static JObject CreateTelegramChannelData(this ITurnContext turnContext, IncidentLinkFlowState flowState)
+    {
+        var encodedTitle = turnContext.EncodeText(flowState.Title);
+        var messageBuilder = new StringBuilder();
+
+        if (string.IsNullOrEmpty(encodedTitle))
+        {
+            messageBuilder = messageBuilder.Append($"<a href=\"{flowState.Url}\">Инцидент</a>");
+        }
+        else
+        {
+            messageBuilder = messageBuilder.Append($"Инцидент <a href=\"{flowState.Url}\">{encodedTitle}</a>");
+        }
+
+        var text = messageBuilder.Append(' ').Append("был создан успешно").ToString();
+        return new TelegramChannelData(
+            parameters: new(text)
             {
-                ReplyMarkup = new TelegramInlineKeyboardMarkup(
-                    keyboard: new[]
-                    {
-                        new TelegramInlineKeyboardButton[]
-                        {
-                            new(turnContext.EncodeText(flowState.Title))
-                            {
-                                Url = flowState.Url
-                            }
-                        }
-                    })
+                ParseMode = TelegramParseMode.Html,
+                ReplyMarkup = new TelegramReplyKeyboardRemove()
             })
         .ToJObject();
+    }
 }
