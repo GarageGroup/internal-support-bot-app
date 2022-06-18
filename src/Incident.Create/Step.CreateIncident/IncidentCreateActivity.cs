@@ -1,4 +1,4 @@
-using System.Text;
+using System.Web;
 using GGroupp.Infra.Bot.Builder;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
@@ -16,7 +16,7 @@ internal static class IncidentCreateActivity
         }
 
         var telegramReply = MessageFactory.Text(default);
-        telegramReply.ChannelData = CreateTelegramChannelData(context, context.FlowState);
+        telegramReply.ChannelData = CreateTelegramChannelData(context.FlowState);
 
         return telegramReply;
     }
@@ -38,27 +38,13 @@ internal static class IncidentCreateActivity
         .ToAttachment()
         .ToActivity();
 
-    private static JObject CreateTelegramChannelData(this ITurnContext turnContext, IncidentLinkFlowState flowState)
-    {
-        var encodedTitle = turnContext.EncodeText(flowState.Title);
-        var messageBuilder = new StringBuilder();
-
-        if (string.IsNullOrEmpty(encodedTitle))
-        {
-            messageBuilder = messageBuilder.Append($"<a href=\"{flowState.Url}\">Инцидент</a>");
-        }
-        else
-        {
-            messageBuilder = messageBuilder.Append($"Инцидент <a href=\"{flowState.Url}\">{encodedTitle}</a>");
-        }
-
-        var text = messageBuilder.Append(' ').Append("был создан успешно").ToString();
-        return new TelegramChannelData(
-            parameters: new(text)
+    private static JObject CreateTelegramChannelData(IncidentLinkFlowState flowState)
+        =>
+        new TelegramChannelData(
+            parameters: new($"Инцидент <a href=\"{flowState.Url}\">{HttpUtility.HtmlEncode(flowState.Title)}</a> был создан успешно")
             {
                 ParseMode = TelegramParseMode.Html,
                 ReplyMarkup = new TelegramReplyKeyboardRemove()
             })
         .ToJObject();
-    }
 }
