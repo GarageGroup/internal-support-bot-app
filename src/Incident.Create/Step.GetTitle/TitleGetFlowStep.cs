@@ -6,17 +6,28 @@ namespace GGroupp.Internal.Support;
 
 internal static class TitleGetFlowStep
 {
+    private const int MaxTitleLength = 200;
+
     private const int DefaultTitleLength = 30;
 
     internal static ChatFlow<IncidentCreateFlowState> GetTitle(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
-        chatFlow.AwaitText(
+        chatFlow.AwaitValue(
             GetStepOption,
+            ValidateText,
             CreateResultMessage,
             (flowState, title) => flowState with
             {
                 Title = title
             });
+
+    private static Result<string, BotFlowFailure> ValidateText(string text)
+        =>
+        text.Length switch
+        {
+            <= MaxTitleLength => Result.Success(text),
+            _ => BotFlowFailure.From($"Длина заголовка не может быть больше {MaxTitleLength}")
+        };
 
     private static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, string suggestion)
         =>
@@ -25,7 +36,7 @@ internal static class TitleGetFlowStep
     private static ValueStepOption GetStepOption(IChatFlowContext<IncidentCreateFlowState> context)
         =>
         new(
-            messageText: "Укажите заголовок. Можно воспользовать предложенным или ввести свой",
+            messageText: "Укажите или выберите заголовок",
             suggestions: new[]
             {
                 new[]

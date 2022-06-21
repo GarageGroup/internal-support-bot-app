@@ -8,15 +8,15 @@
     <InvariantGlobalization>false</InvariantGlobalization>
     <RootNamespace>GGroupp.Internal.Support</RootNamespace>
     <AssemblyName>GGroupp.Internal.Support.Bot.Application</AssemblyName>
-    <Version>2.2.1</Version>
+    <Version>2.2.2</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Support.Bot.App' " />
 
   <ItemGroup>
-    <PackageReference Include="GGroupp.Infra.Bot.Builder.Authorization.Dataverse" Version="1.4.0" />
-    <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Info" Version="1.2.1" />
-    <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Stop" Version="1.2.1" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Authorization.Dataverse" Version="1.4.1" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Info" Version="1.2.2" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Stop" Version="1.2.3" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.AspNet.Core" Version="1.5.0" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.CosmosDb" Version="1.1.0" />
     <PackageReference Include="GGroupp.Infra.Dataverse.Api" Version="2.8.0" />
