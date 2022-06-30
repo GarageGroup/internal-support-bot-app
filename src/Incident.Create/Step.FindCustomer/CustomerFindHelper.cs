@@ -36,7 +36,7 @@ internal static class CustomerFindHelper
 
     internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue customerValue)
         =>
-        $"Клиент: {context.EncodeTextWithStyle(customerValue.Name, BotTextStyle.Bold)}";
+        $"Клиент: {context.EncodeHtmlTextWithStyle(customerValue.Name, BotTextStyle.Bold)}";
 
     private static LookupValue MapCustomerItem(CustomerItemSearchOut item)
         =>

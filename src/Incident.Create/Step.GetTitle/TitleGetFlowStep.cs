@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GGroupp.Infra.Bot.Builder;
 using Microsoft.Bot.Builder;
 
@@ -8,7 +9,7 @@ internal static class TitleGetFlowStep
 {
     private const int MaxTitleLength = 200;
 
-    private const int DefaultTitleLength = 30;
+    private const int DefaultTitleLength = 130;
 
     internal static ChatFlow<IncidentCreateFlowState> GetTitle(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
@@ -16,7 +17,7 @@ internal static class TitleGetFlowStep
             GetStepOption,
             ValidateText,
             CreateResultMessage,
-            (flowState, title) => flowState with
+            static (flowState, title) => flowState with
             {
                 Title = title
             });
@@ -33,7 +34,7 @@ internal static class TitleGetFlowStep
         =>
         $"Заголовок: {context.EncodeTextWithStyle(suggestion, BotTextStyle.Bold)}";
 
-    private static ValueStepOption GetStepOption(IChatFlowContext<IncidentCreateFlowState> context)
+    private static ValueStepOption<string> GetStepOption(IChatFlowContext<IncidentCreateFlowState> context)
         =>
         new(
             messageText: "Укажите или выберите заголовок",
@@ -41,7 +42,21 @@ internal static class TitleGetFlowStep
             {
                 new[]
                 {
-                    StringUtils.Ellipsis(context.FlowState.Description.OrEmpty(), DefaultTitleLength)
+                    GetTitleSuggestion(context.FlowState.Description)
                 }
             });
+
+    private static KeyValuePair<string, string> GetTitleSuggestion(string? description)
+        =>
+        new(
+            key: StringUtils.Ellipsis(description.OrEmpty(), DefaultTitleLength),
+            value: GetMaxLengthTitle(description));
+
+    private static string GetMaxLengthTitle(string? description)
+        =>
+        description switch
+        {
+            { Length: > MaxTitleLength } => description[..MaxTitleLength],
+            _ => description.OrEmpty()
+        };
 }

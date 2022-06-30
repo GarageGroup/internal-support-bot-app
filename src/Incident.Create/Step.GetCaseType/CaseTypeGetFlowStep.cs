@@ -7,7 +7,7 @@ internal static class CaseTypeGetFlowStep
     internal static ChatFlow<IncidentCreateFlowState> GetCaseType(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.AwaitValue(
-            static _ => CaseTypeGetHelper.GetValueStepOption(),
+            CaseTypeGetHelper.GetValueStepOption,
             CaseTypeGetHelper.ParseCaseTypeOrFailure,
             CaseTypeGetHelper.CreateResultMessage,
             MapFlowState);

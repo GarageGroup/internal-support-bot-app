@@ -7,7 +7,7 @@ internal static class PriorityGetFlowStep
     internal static ChatFlow<IncidentCreateFlowState> GetPriority(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.AwaitValue(
-            static _ => PriorityGetHelper.GetValueStepOption(),
+            PriorityGetHelper.GetValueStepOption,
             PriorityGetHelper.ParseCaseTypeOrFailure,
             PriorityGetHelper.CreateResultMessage,
             MapFlowState);
