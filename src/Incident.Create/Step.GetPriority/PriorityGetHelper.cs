@@ -7,9 +7,7 @@ namespace GGroupp.Internal.Support;
 
 internal static class PriorityGetHelper
 {
-    private static readonly IReadOnlyDictionary<string, PriorityValue> priorityValues;
-
-    private static readonly ValueStepOption valueStepOption;
+    private static readonly ValueStepOption<PriorityValue> valueStepOption;
 
     static PriorityGetHelper()
     {
@@ -20,29 +18,29 @@ internal static class PriorityGetHelper
             new(IncidentPriorityCode.Low, "Низкий")
         };
 
-        priorityValues = caseTypes.ToDictionary(GetName, StringComparer.InvariantCultureIgnoreCase);
-
-        valueStepOption = new ValueStepOption(
+        valueStepOption = new(
             messageText: "Выберите приоритет",
             suggestions: new[]
             {
-                caseTypes.Select(GetName).ToArray()
+                caseTypes.Select(GetSuggestion).ToArray()
             });
 
-        static string GetName(PriorityValue value) => value.Name;
+        static KeyValuePair<string, PriorityValue> GetSuggestion(PriorityValue value)
+            =>
+            new(value.Name, value);
     }
 
-    internal static ValueStepOption GetValueStepOption()
+    internal static ValueStepOption<PriorityValue> GetValueStepOption()
         =>
         valueStepOption;
 
-    internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, string caseTypeName)
+    internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, PriorityValue priorityValue)
         =>
-        $"Приоритет: {context.EncodeTextWithStyle(caseTypeName, BotTextStyle.Bold)}";
+        $"Приоритет: {context.EncodeHtmlTextWithStyle(priorityValue.Name, BotTextStyle.Bold)}";
 
     internal static Result<PriorityValue, BotFlowFailure> ParseCaseTypeOrFailure(string text)
         =>
-        priorityValues.TryGetValue(text, out var value)
-            ? Result.Success(value)
-            : BotFlowFailure.From(userMessage: "Выберите один из вариантов");
+        valueStepOption.Suggestions.SelectMany(Pipeline.Pipe).GetValueOrAbsent(text).Fold<Result<PriorityValue, BotFlowFailure>>(
+            static value => Result.Success(value),
+            static () => BotFlowFailure.From(userMessage: "Выберите один из вариантов"));
 }

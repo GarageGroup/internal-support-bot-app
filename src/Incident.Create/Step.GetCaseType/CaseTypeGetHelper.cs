@@ -7,9 +7,7 @@ namespace GGroupp.Internal.Support;
 
 internal static class CaseTypeGetHelper
 {
-    private static readonly IReadOnlyDictionary<string, CaseTypeValue> caseTypeValues;
-
-    private static readonly ValueStepOption valueStepOption;
+    private static readonly ValueStepOption<CaseTypeValue> valueStepOption;
 
     static CaseTypeGetHelper()
     {
@@ -20,29 +18,29 @@ internal static class CaseTypeGetHelper
             new(IncidentCaseTypeCode.Request, "Запрос")
         };
 
-        caseTypeValues = caseTypes.ToDictionary(GetName, StringComparer.InvariantCultureIgnoreCase);
-
-        valueStepOption = new ValueStepOption(
+        valueStepOption = new(
             messageText: "Выберите тип обращения",
             suggestions: new[]
             {
-                caseTypes.Select(GetName).ToArray()
+                caseTypes.Select(GetSuggestion).ToArray()
             });
 
-        static string GetName(CaseTypeValue value) => value.Name;
+        static KeyValuePair<string, CaseTypeValue> GetSuggestion(CaseTypeValue value)
+            =>
+            new(value.Name, value);
     }
 
-    internal static ValueStepOption GetValueStepOption()
+    internal static ValueStepOption<CaseTypeValue> GetValueStepOption()
         =>
         valueStepOption;
 
-    internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, string caseTypeName)
+    internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, CaseTypeValue caseType)
         =>
-        $"Тип обращения: {context.EncodeTextWithStyle(caseTypeName, BotTextStyle.Bold)}";
+        $"Тип обращения: {context.EncodeHtmlTextWithStyle(caseType.Name, BotTextStyle.Bold)}";
 
     internal static Result<CaseTypeValue, BotFlowFailure> ParseCaseTypeOrFailure(string text)
         =>
-        caseTypeValues.TryGetValue(text, out var value)
-            ? Result.Success(value)
-            : BotFlowFailure.From(userMessage: "Выберите один из вариантов");
+        valueStepOption.Suggestions.SelectMany(Pipeline.Pipe).GetValueOrAbsent(text).Fold<Result<CaseTypeValue, BotFlowFailure>>(
+            static value => Result.Success(value),
+            static () => BotFlowFailure.From(userMessage: "Выберите один из вариантов"));
 }

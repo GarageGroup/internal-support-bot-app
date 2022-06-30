@@ -77,7 +77,7 @@ internal static class ContactFindHelper
 
     internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue contactValue)
         =>
-        $"Контакт: {context.EncodeTextWithStyle(contactValue.Name, BotTextStyle.Bold)}";
+        $"Контакт: {context.EncodeHtmlTextWithStyle(contactValue.Name, BotTextStyle.Bold)}";
 
     internal static Optional<LookupValue> IsNotSkipValueOrAbsent(this LookupValue contactValue)
         => 
