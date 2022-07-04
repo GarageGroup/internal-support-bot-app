@@ -1,20 +1,20 @@
 using System;
+using GGroupp.Infra;
 using GGroupp.Infra.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
 using ICustomerSetSearchFunc = IAsyncValueFunc<CustomerSetSearchIn, Result<CustomerSetSearchOut, Failure<CustomerSetSearchFailureCode>>>;
 using IContactSetSearchFunc = IAsyncValueFunc<ContactSetSearchIn, Result<ContactSetSearchOut, Failure<ContactSetSearchFailureCode>>>;
-using IIncidentCreateFunc = IAsyncValueFunc<IncidentCreateIn, Result<IncidentCreateOut, Failure<IncidentCreateFailureCode>>>;
+using IIncidentCreateFlowSender = IQueueWriter<FlowMessage<IncidentCreateFlowMessage>>;
 
 partial class IncidentCreateChatFlow
 {
     internal static ChatFlow<Unit> Start(
         this ChatFlow chatFlow,
-        IncidentCreateBotOption option,
         ICustomerSetSearchFunc customerSetSearchFunc,
         IContactSetSearchFunc contactSetSearchFunc,
-        IIncidentCreateFunc incidentCreateFunc)
+        IIncidentCreateFlowSender incidentCreateFlowSender)
         =>
         chatFlow.Start<IncidentCreateFlowState>(
             static () => new())
@@ -29,7 +29,7 @@ partial class IncidentCreateChatFlow
         .GetOwner()
         .ConfirmIncident()
         .CreateIncident(
-            incidentCreateFunc, option)
+            incidentCreateFlowSender)
         .MapFlowState(
             Unit.From);
 }

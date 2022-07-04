@@ -1,57 +1,53 @@
 ﻿using System;
+using GGroupp.Infra;
 using GGroupp.Infra.Bot.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using PrimeFuncPack;
 
 namespace GGroupp.Internal.Support;
 
 using ICustomerSetSearchFunc = IAsyncValueFunc<CustomerSetSearchIn, Result<CustomerSetSearchOut, Failure<CustomerSetSearchFailureCode>>>;
 using IContactSetSearchFunc = IAsyncValueFunc<ContactSetSearchIn, Result<ContactSetSearchOut, Failure<ContactSetSearchFailureCode>>>;
-using IIncidentCreateFunc = IAsyncValueFunc<IncidentCreateIn, Result<IncidentCreateOut, Failure<IncidentCreateFailureCode>>>;
+using IIncidentCreateFlowSender = IQueueWriter<FlowMessage<IncidentCreateFlowMessage>>;
 
 partial class GSupportBotBuilder
 {
     internal static IBotBuilder UseGSupportIncidentCreate(this IBotBuilder botBuilder)
         =>
         botBuilder.UseIncidentCreate(
-            GetIncidentCreateBotOption,
             GetCustomerSetSearchApi,
             GetContactSetSearchApi,
-            GetIncidentCreateApi);
+            GetIncidentCreateFlowSender);
 
     private static ICustomerSetSearchFunc GetCustomerSetSearchApi(IBotContext botContext)
         =>
         CreateStandardHttpHandlerDependency("CustomerSetSearchApi")
-        .CreateDataverseApiClient()
+        .UseDataverseApiClient()
         .UseCustomerSetSearchApi()
         .Resolve(botContext.ServiceProvider);
 
     private static IContactSetSearchFunc GetContactSetSearchApi(IBotContext botContext)
         =>
         CreateStandardHttpHandlerDependency("ContactSetSearchApi")
-        .CreateDataverseApiClient()
+        .UseDataverseApiClient()
         .UseContactSetSearchApi()
         .Resolve(botContext.ServiceProvider);
 
-    private static IIncidentCreateFunc GetIncidentCreateApi(IBotContext botContext)
+    private static IIncidentCreateFlowSender GetIncidentCreateFlowSender(IBotContext botContext)
         =>
-        CreateStandardHttpHandlerDependency("IncidentCreateApi")
-        .CreateDataverseApiClient()
-        .UseIncidentCreateApi()
+        Dependency.From(ResolveIncidentCreateQueueOption)
+        .UseQueueWriter<FlowMessage<IncidentCreateFlowMessage>>()
         .Resolve(botContext.ServiceProvider);
 
-    private static IncidentCreateBotOption GetIncidentCreateBotOption(IBotContext botContext)
+    private static QueueOption ResolveIncidentCreateQueueOption(IServiceProvider serviceProvider)
         =>
-        botContext.ServiceProvider.GetRequiredService<IConfiguration>().GetIncidentCreateBotOption();
+        serviceProvider.GetRequiredSection("IncidentCreateQueue").GetQueueOption();
 
-    private static IncidentCreateBotOption GetIncidentCreateBotOption(this IConfiguration configuration)
-    {
-        var baseUri = new Uri(configuration.GetDataverseApiClientOption().ServiceUrl);
-        var template = configuration.GetValue<string>("IncidentCardRelativeUrlTemplate");
-
-        var uri = new Uri(baseUri, template.OrEmpty()).AbsoluteUri;
-
-        return new(
-            incidentCardUrlTemplate: uri.ReplaceInvariant("%7B", "{").ReplaceInvariant("%7D", "}"));
-    }
+    private static QueueOption GetQueueOption(this IConfigurationSection section)
+        =>
+        new(
+            queueConnectionString: section["ConnectionString"],
+            queueName: section["Name"],
+            visibilityTimeout: section.GetValue<TimeSpan?>("VisibilityTimeout"),
+            timeToLive: section.GetValue<TimeSpan?>("TimeToLive"));
 }

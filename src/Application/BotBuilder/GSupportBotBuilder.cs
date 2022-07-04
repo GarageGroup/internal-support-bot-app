@@ -14,22 +14,9 @@ internal static partial class GSupportBotBuilder
         =>
         PrimaryHandler.UseStandardSocketsHttpHandler()
         .UseLogging(
-            sp => sp.GetRequiredService<ILoggerFactory>().CreateLogger(loggerCategoryName.OrEmpty()));
+            sp => sp.GetRequiredService<ILoggerFactory>().CreateLogger(loggerCategoryName));
 
-    private static Dependency<IDataverseApiClient> CreateDataverseApiClient(this Dependency<HttpMessageHandler> dependency)
+    private static IConfigurationSection GetRequiredSection(this IServiceProvider serviceProvider, string sectionName)
         =>
-        dependency.UseDataverseApiClient(
-            sp => sp.GetRequiredService<IConfiguration>().GetDataverseApiClientOption());
-
-    private static DataverseApiClientOption GetDataverseApiClientOption(this IConfiguration configuration)
-        =>
-        new(
-            serviceUrl: configuration.GetValue<string>("DataverseApiServiceUrl"),
-            authTenantId: configuration.GetValue<string>("DataverseApiAuthTenantId"),
-            authClientId: configuration.GetValue<string>("DataverseApiAuthClientId"),
-            authClientSecret: configuration.GetValue<string>("DataverseApiAuthClientSecret"));
-
-    private static string ReplaceInvariant(this string source, string oldValue, string newValue)
-        =>
-        source.Replace(oldValue, newValue, StringComparison.InvariantCultureIgnoreCase);
+        serviceProvider.GetRequiredService<IConfiguration>().GetRequiredSection(sectionName);
 }

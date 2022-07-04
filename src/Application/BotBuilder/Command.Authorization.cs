@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
+using GGroupp.Infra;
 using GGroupp.Infra.Bot.Builder;
 using GGroupp.Platform;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using PrimeFuncPack;
 
 namespace GGroupp.Internal.Support;
@@ -31,18 +30,12 @@ partial class GSupportBotBuilder
     private static IDataverseUserGetFunc GetDataverseUserGetApi(IBotContext botContext)
         =>
         CreateStandardHttpHandlerDependency("DataverseUserGetApi")
-        .CreateDataverseApiClient()
+        .UseDataverseApiClient()
         .UseUserGetApi()
         .Resolve(botContext.ServiceProvider);
 
     private static Dependency<IAzureUserGetFunc> CreateAzureUserGetDependency()
         =>
         CreateStandardHttpHandlerDependency("AzureUserGetApi")
-        .UseAzureUserMeGetApi(
-            sp => sp.GetRequiredService<IConfiguration>().GetAzureUserApiConfiguration());
-
-    private static AzureUserApiConfiguration GetAzureUserApiConfiguration(this IConfiguration configuration)
-        =>
-        new(
-            graphApiBaseAddress: configuration.GetValue<Uri>("GraphApiBaseAddressUrl"));
+        .UseAzureUserMeGetApi();
 }
