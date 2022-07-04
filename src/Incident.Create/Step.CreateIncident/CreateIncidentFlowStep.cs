@@ -30,5 +30,5 @@ internal static class CreateIncidentFlowStep
 
     private static IActivity CreateTemporaryActivity()
         =>
-        MessageFactory.Text("Идет создание инцидента...");
+        MessageFactory.Text("Создание инцидента выполняется...");
 }
