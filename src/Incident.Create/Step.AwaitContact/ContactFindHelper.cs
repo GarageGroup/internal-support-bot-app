@@ -10,7 +10,7 @@ namespace GGroupp.Internal.Support;
 
 using IContactSetSearchFunc = IAsyncValueFunc<ContactSetSearchIn, Result<ContactSetSearchOut, Failure<ContactSetSearchFailureCode>>>;
 
-internal static class ContactFindHelper
+internal static class ContactAwaitHelper
 {
     private const string ChooseOrSkip = "Выберите контакт или введите часть имени для поиска. Этот шаг можно пропустить";
 
@@ -26,7 +26,7 @@ internal static class ContactFindHelper
 
     private static readonly LookupValue SkipValue;
 
-    static ContactFindHelper()
+    static ContactAwaitHelper()
     {
         SkipId = Guid.Parse("6e271f6a-07b2-4887-af8d-938c66300387");
         SkipValue = new(SkipId, SkipButtonText);

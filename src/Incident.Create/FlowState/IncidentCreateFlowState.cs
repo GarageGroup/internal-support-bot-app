@@ -5,6 +5,9 @@ namespace GGroupp.Internal.Support;
 
 internal sealed record class IncidentCreateFlowState
 {
+    [JsonProperty("botUserId")]
+    public Guid? BotUserId { get; init; }
+
     [JsonProperty("ownerId")]
     public Guid OwnerId { get; init; }
 
