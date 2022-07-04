@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Threading;
 using GGroupp.Infra.Bot.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using PrimeFuncPack;
 
 namespace GGroupp.Internal.Support;
 
 partial class GSupportBotBuilder
 {
+    private const string CosmosStorageSectionName = "CosmosDb";
+
     internal static ICosmosStorage ResolveCosmosStorage(IServiceProvider serviceProvider)
         =>
         lazyCosmosStorageDependency.Value.Resolve(serviceProvider);
@@ -22,25 +23,25 @@ partial class GSupportBotBuilder
         =>
         CreateStandardHttpHandlerDependency("CosmosStorage")
         .UseCosmosApi(
-            sp => sp.GetRequiredService<IConfiguration>().GetCosmosApiOption())
+            sp => sp.GetRequiredSection(CosmosStorageSectionName).GetCosmosApiOption())
         .UseCosmosStorage(
-            sp => sp.GetRequiredService<IConfiguration>().GetCosmosStorageOption());
+            sp => sp.GetRequiredSection(CosmosStorageSectionName).GetCosmosStorageOption());
 
-    private static CosmosApiOption GetCosmosApiOption(this IConfiguration configuration)
+    private static CosmosApiOption GetCosmosApiOption(this IConfigurationSection section)
         =>
         new(
-            baseAddress: new(configuration.GetValue<string>("CosmosDbBaseAddressUrl")),
-            masterKey: configuration.GetValue<string>("CosmosDbMasterKey"),
-            databaseId: configuration.GetValue<string>("CosmosDbDatabaseId"));
+            baseAddress: new(section["BaseAddressUrl"]),
+            masterKey: section["MasterKey"],
+            databaseId: section["DatabaseId"]);
 
-    private static CosmosStorageOption GetCosmosStorageOption(this IConfiguration configuration)
+    private static CosmosStorageOption GetCosmosStorageOption(this IConfigurationSection section)
         =>
         new(
             containerTtlSeconds: new Dictionary<StorageItemType, int?>
             {
-                [StorageItemType.UserState] = configuration.GetTtlSeconds("CosmosDbUserStateContainerTtlHours"),
-                [StorageItemType.ConversationState] = configuration.GetTtlSeconds("CosmosDbConversationStateContainerTtlHours"),
-                [StorageItemType.Default] = configuration.GetTtlSeconds("CosmosDbBotStorageContainerTtlHours")
+                [StorageItemType.UserState] = section.GetTtlSeconds("UserStateContainerTtlHours"),
+                [StorageItemType.ConversationState] = section.GetTtlSeconds("ConversationStateContainerTtlHours"),
+                [StorageItemType.Default] = section.GetTtlSeconds("BotStorageContainerTtlHours")
             });
 
     private static int? GetTtlSeconds(this IConfiguration configuration, string ttlHoursKey)
