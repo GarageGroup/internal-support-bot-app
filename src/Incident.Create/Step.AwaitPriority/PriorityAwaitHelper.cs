@@ -5,11 +5,11 @@ using GGroupp.Infra.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
-internal static class PriorityGetHelper
+internal static class PriorityAwaitHelper
 {
     private static readonly ValueStepOption<PriorityValue> valueStepOption;
 
-    static PriorityGetHelper()
+    static PriorityAwaitHelper()
     {
         var caseTypes = new PriorityValue[]
         {

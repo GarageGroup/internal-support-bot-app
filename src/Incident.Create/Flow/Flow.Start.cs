@@ -19,13 +19,14 @@ partial class IncidentCreateChatFlow
         chatFlow.Start<IncidentCreateFlowState>(
             static () => new())
         .GetDescription()
-        .FindCustomer(
+        .GetBotUserId()
+        .AwaitCustomer(
             customerSetSearchFunc)
-        .FindContcat(
+        .AwaitContact(
             contactSetSearchFunc)
-        .GetTitle()
-        .GetCaseType()
-        .GetPriority()
+        .AwaitTitle()
+        .AwaitCaseType()
+        .AwaitPriority()
         .GetOwner()
         .ConfirmIncident()
         .CreateIncident(

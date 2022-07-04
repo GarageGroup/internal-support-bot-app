@@ -2,19 +2,18 @@ using GGroupp.Infra.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
-internal static class OwnerGetFlowStep
+internal static class BotUserIdGetFlowStep
 {
-    internal static ChatFlow<IncidentCreateFlowState> GetOwner(this ChatFlow<IncidentCreateFlowState> chatFlow)
+    internal static ChatFlow<IncidentCreateFlowState> GetBotUserId(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.ForwardValue(
-            OwnerGetHelper.GetOwnerValueOrBreakAsync,
+            BotUserIdGetHelper.GetBotUserValueOrBreakAsync,
             MapFlowState);
 
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, LookupValue ownerValue)
         =>
         flowState with
         {
-            OwnerId = ownerValue.Id, 
-            OwnerFullName = ownerValue.Name
+            BotUserId = ownerValue.Id
         };
 }

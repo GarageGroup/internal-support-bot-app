@@ -5,13 +5,13 @@ using Microsoft.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
-internal static class TitleGetFlowStep
+internal static class TitleAwaitFlowStep
 {
     private const int MaxTitleLength = 200;
 
     private const int DefaultTitleLength = 130;
 
-    internal static ChatFlow<IncidentCreateFlowState> GetTitle(this ChatFlow<IncidentCreateFlowState> chatFlow)
+    internal static ChatFlow<IncidentCreateFlowState> AwaitTitle(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.AwaitValue(
             GetStepOption,

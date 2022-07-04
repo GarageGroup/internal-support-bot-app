@@ -26,7 +26,7 @@ internal static class CreateIncidentFlowStep
             description: flowState.Description,
             caseTypeCode: flowState.CaseTypeCode,
             priorityCode: flowState.PriorityCode,
-            callerUserId: null);
+            callerUserId: flowState.BotUserId);
 
     private static IActivity CreateTemporaryActivity()
         =>

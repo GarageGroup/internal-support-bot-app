@@ -8,7 +8,7 @@ namespace GGroupp.Internal.Support;
 
 using ICustomerSetSearchFunc = IAsyncValueFunc<CustomerSetSearchIn, Result<CustomerSetSearchOut, Failure<CustomerSetSearchFailureCode>>>;
 
-internal static class CustomerFindHelper
+internal static class CustomerAwaitHelper
 {
     private const int MaxCustomerSetCount = 6;
 

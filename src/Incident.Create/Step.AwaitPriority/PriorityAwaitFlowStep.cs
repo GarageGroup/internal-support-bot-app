@@ -2,14 +2,14 @@ using GGroupp.Infra.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
-internal static class PriorityGetFlowStep
+internal static class PriorityAwaitFlowStep
 {
-    internal static ChatFlow<IncidentCreateFlowState> GetPriority(this ChatFlow<IncidentCreateFlowState> chatFlow)
+    internal static ChatFlow<IncidentCreateFlowState> AwaitPriority(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.AwaitValue(
-            PriorityGetHelper.GetValueStepOption,
-            PriorityGetHelper.ParseCaseTypeOrFailure,
-            PriorityGetHelper.CreateResultMessage,
+            PriorityAwaitHelper.GetValueStepOption,
+            PriorityAwaitHelper.ParseCaseTypeOrFailure,
+            PriorityAwaitHelper.CreateResultMessage,
             MapFlowState);
 
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, PriorityValue priorityValue)

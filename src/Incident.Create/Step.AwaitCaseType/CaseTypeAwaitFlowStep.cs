@@ -2,14 +2,14 @@ using GGroupp.Infra.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
-internal static class CaseTypeGetFlowStep
+internal static class CaseTypeAwaitFlowStep
 {
-    internal static ChatFlow<IncidentCreateFlowState> GetCaseType(this ChatFlow<IncidentCreateFlowState> chatFlow)
+    internal static ChatFlow<IncidentCreateFlowState> AwaitCaseType(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.AwaitValue(
-            CaseTypeGetHelper.GetValueStepOption,
-            CaseTypeGetHelper.ParseCaseTypeOrFailure,
-            CaseTypeGetHelper.CreateResultMessage,
+            CaseTypeAwaitHelper.GetValueStepOption,
+            CaseTypeAwaitHelper.ParseCaseTypeOrFailure,
+            CaseTypeAwaitHelper.CreateResultMessage,
             MapFlowState);
 
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, CaseTypeValue caseTypeValue)

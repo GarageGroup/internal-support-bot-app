@@ -5,15 +5,15 @@ namespace GGroupp.Internal.Support;
 
 using IContactSetSearchFunc = IAsyncValueFunc<ContactSetSearchIn, Result<ContactSetSearchOut, Failure<ContactSetSearchFailureCode>>>;
 
-internal static class ContactFindFlowStep
+internal static class ContactAwaitFlowStep
 {
-    internal static ChatFlow<IncidentCreateFlowState> FindContcat(
+    internal static ChatFlow<IncidentCreateFlowState> AwaitContact(
         this ChatFlow<IncidentCreateFlowState> chatFlow, IContactSetSearchFunc contactSetSearchFunc)
         =>
         chatFlow.AwaitLookupValue(
             contactSetSearchFunc.GetDefaultContactsAsync,
             contactSetSearchFunc.SearchContactsOrFailureAsync,
-            ContactFindHelper.CreateResultMessage,
+            ContactAwaitHelper.CreateResultMessage,
             MapFlowState);
 
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, LookupValue contactValue)

@@ -5,11 +5,11 @@ using GGroupp.Infra.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
-internal static class CaseTypeGetHelper
+internal static class CaseTypeAwaitHelper
 {
     private static readonly ValueStepOption<CaseTypeValue> valueStepOption;
 
-    static CaseTypeGetHelper()
+    static CaseTypeAwaitHelper()
     {
         var caseTypes = new CaseTypeValue[]
         {
