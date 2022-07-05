@@ -9,7 +9,7 @@ internal static class TitleGetFlowStep
 {
     private const int MaxTitleLength = 200;
 
-    private const int DefaultTitleLength = 130;
+    private const int DefaultTitleLength = 125;
 
     internal static ChatFlow<IncidentCreateFlowState> GetTitle(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
