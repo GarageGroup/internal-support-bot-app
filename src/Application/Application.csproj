@@ -8,12 +8,13 @@
     <InvariantGlobalization>false</InvariantGlobalization>
     <RootNamespace>GGroupp.Internal.Support</RootNamespace>
     <AssemblyName>GGroupp.Internal.Support.Bot.Application</AssemblyName>
-    <Version>2.3.0-preview.4</Version>
+    <Version>2.3.0-preview.5</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Support.Bot.App' " />
 
   <ItemGroup>
+    <PackageReference Include="GGroupp.Infra.Azure.Queue.Api" Version="1.1.0" />
     <PackageReference Include="GGroupp.Infra.Azure.Queue.ServiceBus.Api" Version="1.0.0" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Authorization.Dataverse" Version="1.4.2" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Info" Version="1.2.2" />
