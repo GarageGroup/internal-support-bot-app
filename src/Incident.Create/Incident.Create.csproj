@@ -14,7 +14,7 @@
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.2.0" />
     <PackageReference Include="GGroupp.Infra.Azure.Queue.Api.Abstractions" Version="1.1.0" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow.Step.Card" Version="1.2.5" />
-    <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow.Step.FlowMessage" Version="1.0.0" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow.Step.FlowMessage" Version="1.1.0" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow.Step.Lookup" Version="2.3.5" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.ChatFlow.Step.Value" Version="2.4.0" />
     <PackageReference Include="GGroupp.Internal.Support.ContactSet.Search.InOut" Version="1.0.1" />
