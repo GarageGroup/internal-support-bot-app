@@ -14,7 +14,7 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Support.Bot.App' " />
 
   <ItemGroup>
-    <PackageReference Include="GGroupp.Infra.Azure.Queue.ServiceBus.Api" Version="1.0.0-build.2" />
+    <PackageReference Include="GGroupp.Infra.Azure.Queue.ServiceBus.Api" Version="1.0.0" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Authorization.Dataverse" Version="1.4.2" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Info" Version="1.2.2" />
     <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Stop" Version="1.2.3" />
