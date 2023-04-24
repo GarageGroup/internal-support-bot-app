@@ -77,7 +77,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy to Azure
-      uses: azure/webapps-deploy@v2
+      uses: Azure/functions-action@v1
       with:
         app-name: 'func-internal-gsupport-test'
         publish-profile: ${{ secrets.TEST_BOTFUNC_PUBLISHPROFILE }}
