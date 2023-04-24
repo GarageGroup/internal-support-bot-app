@@ -1,0 +1,54 @@
+name: Deploy Bot App to Prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get version
+      id: get_version
+      run: echo "version_number=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_ENV
+
+    - name: Get current date time
+      id: date
+      run: echo "datetime=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+
+    - name: Download build output
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+        workflow: publish.yml
+        name: 'ggroupp-internal-support-bot-${{ env.version_number }}'
+        path: ./
+
+    - name: Extract build output
+      run: unzip publish.zip -d .
+
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure
+      uses: Azure/functions-action@v1
+      with:
+        app-name: 'func-internal-gsupport-prod'
+        publish-profile: ${{ secrets.PROD_BOTFUNC_PUBLISHPROFILE }}
+        package: './publish'
+
+    - name: Update Azure Function App Configuration
+      run: |
+        az functionapp config appsettings set --name func-internal-gsupport-prod \
+          --resource-group gr-internal-gsupport-prod \
+          --settings "BotInfo__BuildVersion"=${{ env.version_number }} \
+                     "BotInfo__BuildDateTime"=${{ env.datetime }} \
+                     "Swagger__ApiVersion"=${{ env.version_number }}
+
+    - name: Log out of Azure
+      run: az logout

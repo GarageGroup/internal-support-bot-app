@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <AzureFunctionsVersion>v4</AzureFunctionsVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <RootNamespace>GGroupp.Internal.Support</RootNamespace>
+    <AssemblyName>GGroupp.Internal.Support.AzureFunc</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="host.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="local.settings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Incident.Create\Incident.Create.Flow.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GGroupp.Infra.Azure.Hosting" Version="0.0.1-preview.4" />
+    <PackageReference Include="GGroupp.Infra.Azure.KeepWarm" Version="0.0.1" />
+    <PackageReference Include="GGroupp.Infra.Azure.KeepWarm.Generator" Version="0.0.1" />
+    <PackageReference Include="GGroupp.Infra.Azure.Services.AzureUser.Get.Api" Version="1.0.0" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Authorization.Dataverse" Version="2.0.2" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Info" Version="2.0.0" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Command.Stop" Version="2.0.0" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.Azure" Version="0.1.0" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.Azure.Generator" Version="0.1.0" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.CosmosApi" Version="1.1.0" />
+    <PackageReference Include="GGroupp.Infra.Bot.Builder.Integration.CosmosStorage" Version="1.2.0" />
+    <PackageReference Include="GGroupp.Infra.Dataverse.Api" Version="3.9.0" />
+    <PackageReference Include="GGroupp.Infra.Dataverse.DataverseUser.Get.Api" Version="1.0.0" />
+    <PackageReference Include="GGroupp.Internal.Support.Api" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+{
+    "version": "2.0",
+    "logging": {
+        "applicationInsights": {
+            "samplingSettings": {
+                "isEnabled": true,
+                "maxTelemetryItemsPerSecond" : 20,
+                "excludedTypes": "Request;Exception"
+            }
+        },
+        "logLevel": {
+            "default": "Information",
+            "Function": "Information",
+            "Microsoft.Hosting.Lifetime": "Information"
+        }
+    }
+}

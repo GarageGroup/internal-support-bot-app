@@ -1,18 +1,15 @@
 ﻿using GGroupp.Infra.Bot.Builder;
-using System;
 
 namespace GGroupp.Internal.Support;
-
-using IContactSetSearchFunc = IAsyncValueFunc<ContactSetSearchIn, Result<ContactSetSearchOut, Failure<ContactSetSearchFailureCode>>>;
 
 internal static class ContactAwaitFlowStep
 {
     internal static ChatFlow<IncidentCreateFlowState> AwaitContact(
-        this ChatFlow<IncidentCreateFlowState> chatFlow, IContactSetSearchFunc contactSetSearchFunc)
+        this ChatFlow<IncidentCreateFlowState> chatFlow, IContactSetSearchSupplier supportApi)
         =>
         chatFlow.AwaitLookupValue(
-            contactSetSearchFunc.GetDefaultContactsAsync,
-            contactSetSearchFunc.SearchContactsOrFailureAsync,
+            supportApi.GetDefaultContactsAsync,
+            supportApi.SearchContactsOrFailureAsync,
             ContactAwaitHelper.CreateResultMessage,
             MapFlowState);
 
