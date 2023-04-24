@@ -1,4 +1,5 @@
-name: Build bot application
+name: Build Bot App
+
 on:
   push:
     branches: [ '**' ]
@@ -8,22 +9,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
-        include-prerelease: false  
-        
-     # Add NuGet Sources
+        dotnet-version: '7.0.x'
 
-    - name: Add GGroupp NuGet Source
-      run: dotnet nuget add source ${{ secrets.GGROUPP_NUGET_SOURCE_URL }} -n ggroupp -u ${{ secrets.GGROUPP_NUGET_SOURCE_USER_NAME }} -p ${{ secrets.GGROUPP_NUGET_SOURCE_USER_PASSWORD }} --store-password-in-clear-text
+    - name: Add Garage Group NuGet Source
+      run: >
+        dotnet nuget add source ${{ secrets.GG_NUGET_SOURCE_URL }}
+        -n ggroupp
+        -u ${{ secrets.GG_NUGET_SOURCE_USER_NAME }}
+        -p ${{ secrets.GG_NUGET_SOURCE_USER_PASSWORD }}
+        --store-password-in-clear-text
 
-    # Application.csproj
-    
-    - name: Restore Application.csproj
-      run: dotnet restore ./src/*/Application.csproj
+    - name: Restore Internal.Support.Bot.sln
+      run: dotnet restore ./src/Internal.Support.Bot.sln
 
-    - name: Build Application.csproj
-      run: dotnet build ./src/*/Application.csproj --no-restore  -c Release
+    - name: Build Internal.Support.Bot.sln.sln
+      run: dotnet build ./src/Internal.Support.Bot.sln --no-restore  -c Release

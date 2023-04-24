@@ -1,37 +1,35 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GGroupp.Infra.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
-using ICustomerSetSearchFunc = IAsyncValueFunc<CustomerSetSearchIn, Result<CustomerSetSearchOut, Failure<CustomerSetSearchFailureCode>>>;
-
 internal static class CustomerAwaitHelper
 {
     private const int MaxCustomerSetCount = 6;
 
     internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchCustomersOrFailureAsync(
-        this ICustomerSetSearchFunc customerSetSearchFunc, string seachText, CancellationToken cancellationToken)
+        this ICustomerSetSearchSupplier supportApi, string seachText, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
             seachText, cancellationToken)
         .HandleCancellation()
         .Pipe(
-            static text => new CustomerSetSearchIn(
-                searchText: text,
-                top: MaxCustomerSetCount))
+            static text => new CustomerSetSearchIn(text)
+            {
+                Top = MaxCustomerSetCount
+            })
         .PipeValue(
-            customerSetSearchFunc.InvokeAsync)
+            supportApi.SearchCustomerSetAsync)
         .MapFailure(
             MapToFlowFailure)
         .Filter(
-            static @out => @out.Customers.Any(),
+            static @out => @out.Customers.IsNotEmpty,
             static _ => BotFlowFailure.From("Не удалось найти ни одного клиента. Попробуйте уточнить запрос"))
         .MapSuccess(
             static @out => new LookupValueSetOption(
-                items: @out.Customers.Select(MapCustomerItem).ToArray(),
+                items: @out.Customers.Map(MapCustomerItem),
                 choiceText: "Выберите клиента"));
 
     internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue customerValue)

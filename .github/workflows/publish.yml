@@ -1,0 +1,95 @@
+name: Publish Bot App
+
+on:
+  page_build:
+  release:
+    types:
+      - created
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Add Garage Group NuGet Source
+      run: >
+        dotnet nuget add source ${{ secrets.GG_NUGET_SOURCE_URL }}
+        -n ggroupp
+        -u ${{ secrets.GG_NUGET_SOURCE_USER_NAME }}
+        -p ${{ secrets.GG_NUGET_SOURCE_USER_PASSWORD }}
+        --store-password-in-clear-text
+
+    - name: Restore AzureFunc
+      run: dotnet restore ./src/*/AzureFunc.csproj
+
+    - name: Build AzureFunc
+      run: dotnet build ./src/*/AzureFunc.csproj --no-restore  -c Release
+
+    - name: Publish AzureFunc
+      run: dotnet publish ./src/*/AzureFunc.csproj --no-build  -c Release --output ./publish
+
+    - name: Get version
+      id: get_version
+      run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_ENV
+
+    - name: Archive publish folder
+      run: zip -r publish.zip ./publish
+
+    - name: Upload build output
+      uses: actions/upload-artifact@v3
+      with:
+        name: 'ggroupp-internal-support-bot-${{ env.version }}'
+        path: publish.zip
+
+  deploy-to-test:
+    runs-on: ubuntu-latest
+    needs: publish
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get version
+      id: get_version
+      run: echo "version_number=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_ENV
+
+    - name: Get current date time
+      id: date
+      run: echo "datetime=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+
+    - name: Download build output
+      uses: actions/download-artifact@v2
+      with:
+        name: 'ggroupp-internal-support-bot-${{ env.version_number }}'
+
+    - name: Extract build output
+      run: unzip publish.zip -d .
+
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'func-internal-gsupport-test'
+        publish-profile: ${{ secrets.TEST_BOTFUNC_PUBLISHPROFILE }}
+        package: './publish'
+
+    - name: Update Azure Function App Configuration
+      run: |
+        az functionapp config appsettings set --name func-internal-gsupport-test \
+          --resource-group gr-internal-gsupport-test \
+          --settings "BotInfo__BuildVersion"=${{ env.version_number }} \
+                     "BotInfo__BuildDateTime"=${{ env.datetime }} \
+                     "Swagger__ApiVersion"=${{ env.version_number }}
+
+    - name: Log out of Azure
+      run: az logout

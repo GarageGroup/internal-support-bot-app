@@ -1,14 +1,12 @@
-using GGroupp.Infra.Bot.Builder;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GGroupp.Infra.Bot.Builder;
+using Microsoft.Extensions.Logging;
 
 namespace GGroupp.Internal.Support;
-
-using IContactSetSearchFunc = IAsyncValueFunc<ContactSetSearchIn, Result<ContactSetSearchOut, Failure<ContactSetSearchFailureCode>>>;
 
 internal static class ContactAwaitHelper
 {
@@ -33,27 +31,27 @@ internal static class ContactAwaitHelper
     }
 
     internal static ValueTask<LookupValueSetOption> GetDefaultContactsAsync(
-        this IContactSetSearchFunc contactSetSearchFunc,
-        IChatFlowContext<IncidentCreateFlowState> context,
-        CancellationToken token)
+        this IContactSetSearchSupplier supportApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken token)
         =>
         AsyncPipeline.Pipe(
             context.FlowState.CustomerId, token)
         .Pipe(
             static customerId => new ContactSetSearchIn(
                 searchText: string.Empty,
-                customerId: customerId,
-                top: MaxCustomerSetCount))
+                customerId: customerId)
+            {
+                Top = MaxCustomerSetCount
+            })
         .PipeValue(
-            contactSetSearchFunc.InvokeAsync)
+            supportApi.SearchContactSetAsync)
         .Fold(
             static @out => new(
-                items: @out.Contacts.Select(MapContactItem).ToList().AddSkipValue(),
-                choiceText: @out.Contacts.Any() ? ChooseOrSkip : UnsuccessfulDefaultResultText),
+                items: @out.Contacts.AsEnumerable().Select(MapContactItem).ToList().AddSkipValue(),
+                choiceText: @out.Contacts.IsNotEmpty ? ChooseOrSkip : UnsuccessfulDefaultResultText),
             failure => MapSearchFailure(failure, context.Logger));
 
     internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchContactsOrFailureAsync(
-        this IContactSetSearchFunc contactSetSearchFunc,
+        this IContactSetSearchSupplier supportApi,
         IChatFlowContext<IncidentCreateFlowState> context,
         string seachText,
         CancellationToken cancellationToken)
@@ -64,16 +62,18 @@ internal static class ContactAwaitHelper
         .Pipe(
             flowState => new ContactSetSearchIn(
                 searchText: seachText,
-                customerId: flowState.CustomerId,
-                MaxCustomerSetCount))
+                customerId: flowState.CustomerId)
+            {
+                Top = MaxCustomerSetCount
+            })
         .PipeValue(
-            contactSetSearchFunc.InvokeAsync)
+            supportApi.SearchContactSetAsync)
         .MapFailure(
             MapToFlowFailure)
         .MapSuccess(
             static @out => new LookupValueSetOption(
-                items: @out.Contacts.Select(MapContactItem).ToList().AddSkipValue(),
-                choiceText: @out.Contacts.Any() ? ChooseOrSkip : UnsuccessfulSearchResultText));
+                items: @out.Contacts.AsEnumerable().Select(MapContactItem).ToList().AddSkipValue(),
+                choiceText: @out.Contacts.IsNotEmpty ? ChooseOrSkip : UnsuccessfulSearchResultText));
 
     internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue contactValue)
         =>
@@ -83,7 +83,7 @@ internal static class ContactAwaitHelper
         => 
         contactValue.Id != SkipId ? new(contactValue) : default;
 
-    private static IReadOnlyCollection<LookupValue> AddSkipValue(this List<LookupValue> lookupValues)
+    private static FlatArray<LookupValue> AddSkipValue(this List<LookupValue> lookupValues)
     {
         lookupValues.Add(SkipValue);
         return lookupValues;
