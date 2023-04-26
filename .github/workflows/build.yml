@@ -27,5 +27,5 @@ jobs:
     - name: Restore Internal.Support.Bot.sln
       run: dotnet restore ./src/Internal.Support.Bot.sln
 
-    - name: Build Internal.Support.Bot.sln.sln
+    - name: Build Internal.Support.Bot.sln
       run: dotnet build ./src/Internal.Support.Bot.sln --no-restore  -c Release
