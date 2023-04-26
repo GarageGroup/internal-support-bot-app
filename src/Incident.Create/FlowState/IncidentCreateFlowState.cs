@@ -8,6 +8,9 @@ internal sealed record class IncidentCreateFlowState
     [JsonProperty("botUserId")]
     public Guid? BotUserId { get; init; }
 
+    [JsonProperty("botUserName")]
+    public string? BotUserName { get; init; }
+
     [JsonProperty("ownerId")]
     public Guid OwnerId { get; init; }
 
@@ -43,4 +46,7 @@ internal sealed record class IncidentCreateFlowState
 
     [JsonProperty("priorityTitle")]
     public string? PriorityTitle { get; init; }
+
+    [JsonProperty("temporaryActivityId")]
+    public string? TemporaryActivityId { get; init; }
 }

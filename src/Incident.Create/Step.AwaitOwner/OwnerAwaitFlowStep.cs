@@ -18,8 +18,8 @@ internal static class OwnerAwaitFlowStep
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, LookupValue ownerValue)
         =>
         flowState with
-        { 
-            OwnerId = ownerValue.Id, 
+        {
+            OwnerId = ownerValue.Id,
             OwnerFullName = ownerValue.Name
         };
 }

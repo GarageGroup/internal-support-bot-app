@@ -10,6 +10,7 @@ internal static partial class IncidentCreateChatFlow
         =>
         chatFlow.Start<IncidentCreateFlowState>(
             static () => new())
+        .GetBotUser()
         .GetDescription()
         .AwaitCustomer(
             supportApi)

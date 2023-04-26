@@ -10,4 +10,7 @@ internal sealed record class IncidentLinkFlowState
 
     [JsonProperty("title")]
     public string? Title { get; init; }
+
+    [JsonProperty("temporaryActivityId")]
+    public string? TemporaryActivityId { get; init; }
 }

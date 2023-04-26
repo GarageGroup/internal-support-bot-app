@@ -2,12 +2,35 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using GGroupp.Infra.Bot.Builder;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Schema;
 
 namespace GGroupp.Internal.Support;
 
 internal static class IncidentCreateHelper
 {
-    internal static ValueTask<ChatFlowJump<IncidentLinkFlowState>> CreateIncidentOrBeakAsync(
+    private const string TemporaryText = "Создание обращения выполняется...";
+
+    internal static IActivity CreateTemporaryActivity(IChatFlowContext<IncidentCreateFlowState> context)
+    {
+        if (context.IsNotTelegramChannel())
+        {
+            return MessageFactory.Text(TemporaryText);
+        }
+
+        var telegramActivity = context.Activity.CreateReply();
+
+        telegramActivity.ChannelData = new TelegramChannelData(
+            parameters: new TelegramParameters(TemporaryText)
+            {
+                DisableNotification = true
+            })
+            .ToJObject();
+
+        return telegramActivity;
+    }
+
+    internal static ValueTask<ChatFlowJump<IncidentCreateOut>> CreateIncidentOrBeakAsync(
         this IIncidentCreateSupplier supportApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
@@ -23,21 +46,16 @@ internal static class IncidentCreateHelper
                 priorityCode: flowState.PriorityCode))
         .PipeValue(
             supportApi.CreateIncidentAsync)
-        .Map(
-            incident => new IncidentLinkFlowState
-            {
-                Title = incident.Title,
-                Id = incident.Id
-            },
+        .MapFailure(
             ToUnexpectedBreakState)
         .Fold(
             ChatFlowJump.Next,
-            ChatFlowJump.Break<IncidentLinkFlowState>);
+            ChatFlowJump.Break<IncidentCreateOut>);
 
     private static ChatFlowBreakState ToUnexpectedBreakState<TFailureCode>(Failure<TFailureCode> failure)
         where TFailureCode : struct
         =>
         ChatFlowBreakState.From(
-            userMessage: "При создании инцидента произошла непредвиденная ошибка. Обратитесь к администратору или повторите попытку позднее",
+            userMessage: "При создании обращения произошла непредвиденная ошибка. Обратитесь к администратору или повторите попытку позднее",
             logMessage: failure.FailureMessage);
 }

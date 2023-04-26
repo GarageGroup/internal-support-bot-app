@@ -13,7 +13,7 @@ internal static class IncidentConfirmFlowStep
     private static ConfirmationCardOption CreateOption(IChatFlowContext<IncidentCreateFlowState> context)
         =>
         new(
-            questionText: "Создать инцидент?",
+            questionText: "Создать обращение?",
             confirmButtonText: "Создать",
             cancelButtonText: "Отменить",
             cancelText: "Создание инцидента было отменено",
