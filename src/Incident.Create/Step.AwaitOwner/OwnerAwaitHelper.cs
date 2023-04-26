@@ -1,9 +1,7 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GGroupp.Infra.Bot.Builder;
-using Microsoft.Extensions.Logging;
 
 namespace GGroupp.Internal.Support;
 
@@ -21,13 +19,14 @@ internal static class OwnerAwaitHelper
         IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
-            default(Unit), cancellationToken)
-        .HandleCancellation()
-        .PipeValue(
-            context.BotUserProvider.InvokeAsync)
-        .Fold(
-            botUser => MapBotUser(botUser, context.Logger),
-            static _ => new LookupValueSetOption(default, DefaultChooseOwnerMessage));
+            context.FlowState, cancellationToken)
+        .Pipe(
+            static flowState => new LookupValueSetOption(
+                items: new LookupValue(
+                    id: flowState.BotUserId.GetValueOrDefault(),
+                    name: flowState.BotUserName?.OrNullIfWhiteSpace() ?? "Я (по умолчанию)")
+                    .AsFlatArray(),
+                choiceText: DefaultChooseOwnerMessage));
 
     internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchUsersOrFailureAsync(
         this IUserSetSearchSupplier supportApi,
@@ -59,57 +58,6 @@ internal static class OwnerAwaitHelper
     private static LookupValue MapUserItem(UserItemSearchOut item)
         =>
         new(item.Id, item.FullName);
-
-    private static LookupValueSetOption MapBotUser(BotUser botUser, ILogger logger)
-    {
-        return botUser.Claims.AsEnumerable()
-            .GetValueOrAbsent("DataverseSystemUserId")
-            .Fold(
-                ParseOrFailure,
-                CreateUserIdClaimMustBeSpecifiedFailure)
-            .MapSuccess(
-                CreateLookupValue)
-            .Fold(
-                CreateSuccessOption,
-                CreateFailureOption);
-            
-
-        static Result<Guid, Failure<Unit>> ParseOrFailure(string value)
-            =>
-            Guid.TryParse(value, out var guid) ? guid : Failure.Create($"DataverseUserId Claim {value} is not a Guid");
-
-        static Result<Guid, Failure<Unit>> CreateUserIdClaimMustBeSpecifiedFailure()
-            =>
-            Failure.Create("Dataverse user claim must be specified");
-
-        LookupValue CreateLookupValue(Guid userId)
-        {
-            var dataverseUserFullName = botUser.Claims.AsEnumerable().GetValueOrAbsent("DataverseSystemUserFullName").OrDefault();
-            if (string.IsNullOrEmpty(dataverseUserFullName) is false)
-            {
-                return new(userId, dataverseUserFullName);
-            }
-
-            if (string.IsNullOrEmpty(botUser.DisplayName) is false)
-            {
-                return new(userId, botUser.DisplayName);
-            }
-
-            return new(userId, "Я (по умолчанию)");
-        }
-
-        LookupValueSetOption CreateSuccessOption(LookupValue lookupValue)
-            =>
-            new(
-                items: new(lookupValue),
-                choiceText: DefaultChooseOwnerMessage);
-
-        LookupValueSetOption CreateFailureOption(Failure<Unit> failure)
-        {
-            logger.LogError("Bot user failure: {failureMessage}", failure.FailureMessage);
-            return new(default, choiceText: DefaultChooseOwnerMessage);
-        }
-    }
 
     private static BotFlowFailure MapToFlowFailure(Failure<UserSetSearchFailureCode> failure)
         =>

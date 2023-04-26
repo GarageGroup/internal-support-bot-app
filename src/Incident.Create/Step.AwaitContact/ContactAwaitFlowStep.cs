@@ -21,8 +21,7 @@ internal static class ContactAwaitFlowStep
         =>
         flowState with 
         { 
-            ContactId = contactValue.Id, 
+            ContactId = contactValue.Id,
             ContactFullName = contactValue.Name
         };
 }
-

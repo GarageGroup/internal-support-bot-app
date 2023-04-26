@@ -7,8 +7,6 @@ internal static class IncidentCreateFlowStep
     internal static ChatFlow<IncidentLinkFlowState> CreateIncident(
         this ChatFlow<IncidentCreateFlowState> chatFlow, IIncidentCreateSupplier supportApi)
         =>
-        chatFlow.SendActivity(
-            IncidentCreateHelper.CreateTypingActivity)
-        .ForwardValue(
+        chatFlow.SetTypingStatus().ForwardValue(
             supportApi.CreateIncidentOrBeakAsync);
 }

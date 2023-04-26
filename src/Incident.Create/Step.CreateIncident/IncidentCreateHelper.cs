@@ -2,19 +2,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using GGroupp.Infra.Bot.Builder;
-using Microsoft.Bot.Schema;
 
 namespace GGroupp.Internal.Support;
 
 internal static class IncidentCreateHelper
 {
-    internal static IActivity CreateTypingActivity(IChatFlowContext<IncidentCreateFlowState> _)
-        =>
-        new Activity
-        {
-            Type = ActivityTypes.Typing
-        };
-
     internal static ValueTask<ChatFlowJump<IncidentLinkFlowState>> CreateIncidentOrBeakAsync(
         this IIncidentCreateSupplier supportApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
