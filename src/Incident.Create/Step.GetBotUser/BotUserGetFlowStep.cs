@@ -14,7 +14,7 @@ internal static class BotUserGetFlowStep
         =>
         flowState with
         { 
-            OwnerId = userValue.Id, 
-            OwnerFullName = userValue.Name
+            BotUserId = userValue.Id, 
+            BotUserName = userValue.Name
         };
 }
