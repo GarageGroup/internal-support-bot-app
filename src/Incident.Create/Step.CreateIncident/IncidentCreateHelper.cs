@@ -56,6 +56,6 @@ internal static class IncidentCreateHelper
         where TFailureCode : struct
         =>
         ChatFlowBreakState.From(
-            userMessage: "При создании инцидента произошла непредвиденная ошибка. Обратитесь к администратору или повторите попытку позднее",
+            userMessage: "При создании обращения произошла непредвиденная ошибка. Обратитесь к администратору или повторите попытку позднее",
             logMessage: failure.FailureMessage);
 }

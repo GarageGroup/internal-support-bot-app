@@ -24,7 +24,7 @@ internal static class IncidentShowHelper
         =>
         new HeroCard
         {
-            Title = "Инцидент был создан успешно",
+            Title = "Обращение было создано успешно",
             Buttons = new CardAction[]
             {
                 new(ActionTypes.OpenUrl)
@@ -51,7 +51,7 @@ internal static class IncidentShowHelper
     private static TelegramChannelData CreateTelegramChannelData(IncidentLinkFlowState flowState, IncidentCreateFlowOption option)
         =>
         new(
-            parameters: new($"Инцидент <a href=\"{flowState.GetUrl(option)}\">{HttpUtility.HtmlEncode(flowState.Title)}</a> был создан успешно")
+            parameters: new($"Обращение <a href=\"{flowState.GetUrl(option)}\">{HttpUtility.HtmlEncode(flowState.Title)}</a> было создано успешно")
             {
                 ParseMode = TelegramParseMode.Html,
                 ReplyMarkup = new TelegramReplyKeyboardRemove()
