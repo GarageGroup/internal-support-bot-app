@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Web;
 using GGroupp.Infra.Bot.Builder;
-using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
 namespace GGroupp.Internal.Support;
@@ -12,13 +11,13 @@ internal static class IncidentShowHelper
     {
         if (context.IsNotTelegramChannel())
         {
-            return CreateHeroCardActivity(context.FlowState, option);
+            return CreateHeroCardActivity(context.FlowState, option).WithId(context.FlowState.TemporaryActivityId);
         }
 
-        var telegramReply = MessageFactory.Text(default);
+        var telegramReply = context.Activity.CreateReply();
         telegramReply.ChannelData = CreateTelegramChannelData(context.FlowState, option).ToJObject();
 
-        return telegramReply;
+        return telegramReply.WithId(context.FlowState.TemporaryActivityId);
     }
 
     private static IActivity CreateHeroCardActivity(IncidentLinkFlowState flowState, IncidentCreateFlowOption option)
@@ -37,6 +36,17 @@ internal static class IncidentShowHelper
         }
         .ToAttachment()
         .ToActivity();
+
+    private static IActivity WithId(this IActivity activity, string? id)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return activity;
+        }
+
+        activity.Id = id;
+        return activity;
+    }
 
     private static TelegramChannelData CreateTelegramChannelData(IncidentLinkFlowState flowState, IncidentCreateFlowOption option)
         =>

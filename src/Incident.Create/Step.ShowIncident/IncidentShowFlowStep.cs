@@ -8,7 +8,7 @@ internal static class IncidentShowFlowStep
     internal static ChatFlow<Unit> ShowIncident(
         this ChatFlow<IncidentLinkFlowState> chatFlow, IncidentCreateFlowOption option)
         =>
-        chatFlow.SendActivity(
+        chatFlow.ReplaceActivityOrSkip(
             option.CreateIncidentActivity)
         .MapFlowState(
             Unit.From);

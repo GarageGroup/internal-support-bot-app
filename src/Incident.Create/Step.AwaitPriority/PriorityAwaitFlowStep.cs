@@ -15,8 +15,8 @@ internal static class PriorityAwaitFlowStep
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, PriorityValue priorityValue)
         =>
         flowState with
-        { 
-            PriorityCode = priorityValue.Code, 
+        {
+            PriorityCode = priorityValue.Code,
             PriorityTitle = priorityValue.Name
         };
 }
