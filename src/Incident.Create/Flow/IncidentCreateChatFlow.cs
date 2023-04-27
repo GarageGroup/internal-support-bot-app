@@ -6,7 +6,7 @@ namespace GGroupp.Internal.Support;
 internal static partial class IncidentCreateChatFlow
 {
     private static ChatFlow<Unit> RunFlow(
-        this ChatFlow chatFlow, ISupportApi supportApi, IncidentCreateFlowOption option)
+        this ChatFlow chatFlow, ISupportApi supportApi, ISupportGptApi supportGptApi, IncidentCreateFlowOption option)
         =>
         chatFlow.Start<IncidentCreateFlowState>(
             static () => new())
@@ -16,6 +16,8 @@ internal static partial class IncidentCreateChatFlow
             supportApi)
         .AwaitContact(
             supportApi)
+        .CallGpt(
+            supportGptApi)
         .AwaitTitle()
         .AwaitCaseType()
         .AwaitPriority()

@@ -9,7 +9,7 @@ namespace GGroupp.Internal.Support;
 public static class IncidentCreateDependency
 {
     public static IBotBuilder MapIncidentCreateFlow(
-        this Dependency<ISupportApi, IncidentCreateFlowOption> dependency, IBotBuilder botBuilder)
+        this Dependency<ISupportApi, ISupportGptApi, IncidentCreateFlowOption> dependency, IBotBuilder botBuilder)
     {
         ArgumentNullException.ThrowIfNull(dependency);
         ArgumentNullException.ThrowIfNull(botBuilder);
@@ -21,6 +21,7 @@ public static class IncidentCreateDependency
             context.RunAsync(
                 dependency.ResolveFirst(context.ServiceProvider),
                 dependency.ResolveSecond(context.ServiceProvider),
+                dependency.ResolveThird(context.ServiceProvider),
                 cancellationToken);
     }
 }

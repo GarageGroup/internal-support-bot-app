@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using GGroupp.Infra.Bot.Builder;
-using Microsoft.Bot.Builder;
 
 namespace GGroupp.Internal.Support;
 
@@ -9,14 +8,11 @@ internal static class TitleAwaitFlowStep
 {
     private const int MaxTitleLength = 200;
 
-    private const int DefaultTitleLength = 125;
-
     internal static ChatFlow<IncidentCreateFlowState> AwaitTitle(this ChatFlow<IncidentCreateFlowState> chatFlow)
         =>
         chatFlow.AwaitValue(
             GetStepOption,
             ValidateText,
-            CreateResultMessage,
             static (flowState, title) => flowState with
             {
                 Title = title
@@ -30,33 +26,30 @@ internal static class TitleAwaitFlowStep
             _ => BotFlowFailure.From($"Длина заголовка не может быть больше {MaxTitleLength}")
         };
 
-    private static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, string suggestion)
-        =>
-        $"Заголовок: {context.EncodeTextWithStyle(suggestion, BotTextStyle.Bold)}";
-
     private static ValueStepOption<string> GetStepOption(IChatFlowContext<IncidentCreateFlowState> context)
-        =>
-        new(
-            messageText: "Укажите или выберите заголовок",
+    {
+        if (string.IsNullOrEmpty(context.FlowState.Gpt?.Title))
+        {
+            return new(
+                messageText: "Укажите заголовок");
+        }
+
+        return new(
+            messageText: "Укажите заголовок или подтвердите вариант, сгенерированный нейросетью",
             suggestions: new[]
             {
-                new[]
+                new KeyValuePair<string, string>[]
                 {
-                    GetTitleSuggestion(context.FlowState.Description)
+                    new("Подтвердить предложение нейросети", context.FlowState.Gpt.Title.TruncateTitle())
                 }
             });
+    }
 
-    private static KeyValuePair<string, string> GetTitleSuggestion(string? description)
+    private static string TruncateTitle(this string title)
         =>
-        new(
-            key: StringUtils.Ellipsis(description.OrEmpty(), DefaultTitleLength),
-            value: GetMaxLengthTitle(description));
-
-    private static string GetMaxLengthTitle(string? description)
-        =>
-        description switch
+        title.Length switch
         {
-            { Length: > MaxTitleLength } => description[..MaxTitleLength],
-            _ => description.OrEmpty()
+            > MaxTitleLength => title[..MaxTitleLength],
+            _ => title
         };
 }

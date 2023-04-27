@@ -1,5 +1,8 @@
+using System;
 using System.Net.Http;
 using GGroupp.Infra;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using PrimeFuncPack;
 
 namespace GGroupp.Internal.Support;
@@ -16,4 +19,8 @@ internal static partial class Application
     private static Dependency<IDataverseApiClient> UseDataverseApiClient()
         =>
         UseHttpMessageHandlerStandard("DataverseApi").UseDataverseApiClient(DataverseSectionName);
+
+    private static IConfiguration GetConfiguration(this IServiceProvider serviceProvider)
+        =>
+        serviceProvider.GetRequiredService<IConfiguration>();
 }

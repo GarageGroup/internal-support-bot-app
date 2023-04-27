@@ -16,11 +16,11 @@ internal static class IncidentCreateFlowStep
             supportApi.CreateIncidentOrBeakAsync,
             MapFlowState);
 
-    private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, ResourceResponse temporaryActivityResponse)
+    private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, ResourceResponse activityResponse)
         =>
         flowState with
         {
-            TemporaryActivityId = temporaryActivityResponse.Id
+            TemporaryActivityId = activityResponse.Id
         };
 
     private static IncidentLinkFlowState MapFlowState(IncidentCreateFlowState flowState, IncidentCreateOut incident)
