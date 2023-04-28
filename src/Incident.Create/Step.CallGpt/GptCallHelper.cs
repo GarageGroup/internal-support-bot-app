@@ -12,7 +12,7 @@ namespace GGroupp.Internal.Support;
 
 internal static class GptCallHelper
 {
-    private const string TemporaryText = "Обращение к ИИ для создания заголовка...";
+    private const string TemporaryText = "ИИ генерирует заголовок...";
 
     internal static IActivity CreateTemporaryActivity(IChatFlowContext<IncidentCreateFlowState> context)
     {
