@@ -9,9 +9,8 @@
             }
         },
         "logLevel": {
-            "default": "Information",
-            "Function": "Information",
-            "Function.KeepBotWarm": "Warning"
+            "default": "Warning",
+            "Function": "Information"
         }
     }
 }
