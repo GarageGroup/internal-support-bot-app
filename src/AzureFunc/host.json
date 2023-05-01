@@ -9,9 +9,9 @@
             }
         },
         "logLevel": {
-            "default": "Information",
-            "Function": "Information",
-            "Microsoft.Hosting.Lifetime": "Information"
+            "default": "Warning",
+            "Function": "Warning",
+            "Microsoft.Hosting.Lifetime": "Warning"
         }
     }
 }
