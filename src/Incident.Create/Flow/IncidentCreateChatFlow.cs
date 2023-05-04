@@ -24,6 +24,8 @@ internal static partial class IncidentCreateChatFlow
         .AwaitOwner(
             supportApi)
         .ConfirmIncident()
+        .TraceGpt(
+            option)
         .CreateIncident(
             supportApi)
         .ShowIncident(

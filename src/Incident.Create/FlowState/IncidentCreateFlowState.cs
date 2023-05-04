@@ -51,5 +51,5 @@ internal sealed record class IncidentCreateFlowState
     public string? TemporaryActivityId { get; init; }
 
     [JsonProperty("gpt")]
-    public IncidentGptFlowState? Gpt { get; init; }
+    public IncidentGptFlowState Gpt { get; init; }
 }

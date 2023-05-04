@@ -12,19 +12,17 @@ namespace GGroupp.Internal.Support;
 
 internal static class GptCallHelper
 {
-    private const string TemporaryText = "ИИ генерирует заголовок...";
-
-    internal static IActivity CreateTemporaryActivity(IChatFlowContext<IncidentCreateFlowState> context)
+    internal static IActivity? CreateTemporaryActivity(IChatFlowContext<IncidentCreateFlowState> context)
     {
         if (context.IsNotTelegramChannel())
         {
-            return MessageFactory.Text(TemporaryText);
+            return null;
         }
 
         var telegramActivity = context.Activity.CreateReply();
 
         telegramActivity.ChannelData = new TelegramChannelData(
-            parameters: new TelegramParameters(TemporaryText)
+            parameters: new("ИИ генерирует заголовок...")
             {
                 DisableNotification = true
             })
@@ -36,7 +34,7 @@ internal static class GptCallHelper
     internal static IActivity CreateResultActivity(IChatFlowContext<IncidentCreateFlowState> context)
     {
         var activity = InnerCreateActivity(context);
-        if (string.IsNullOrEmpty(context.FlowState.Gpt?.TemporaryActivityId))
+        if (string.IsNullOrEmpty(context.FlowState.Gpt.TemporaryActivityId))
         {
             return activity;
         }
@@ -46,9 +44,10 @@ internal static class GptCallHelper
 
         static IActivity InnerCreateActivity(IChatFlowContext<IncidentCreateFlowState> context)
         {
-            if (string.IsNullOrEmpty(context.FlowState.Gpt?.Title))
+            if (string.IsNullOrEmpty(context.FlowState.Gpt.Title))
             {
-                return MessageFactory.Text("Нейросеть не смогла подобрать заголовок");
+                var errorMessage = context.FlowState.Gpt.ErrorMessage.OrNullIfWhiteSpace() ?? "Нейросеть не смогла подобрать заголовок";
+                return MessageFactory.Text(errorMessage);
             }
 
             if (context.IsNotTelegramChannel())
@@ -60,7 +59,7 @@ internal static class GptCallHelper
             var encodedText = HttpUtility.HtmlEncode(context.FlowState.Gpt.Title);
 
             telegramActivity.ChannelData = new TelegramChannelData(
-                parameters: new TelegramParameters($"Нейросеть предлагает заголовок:\n\r<code>{encodedText}</code>")
+                parameters: new($"Нейросеть предлагает заголовок:\n\r<code>{encodedText}</code>")
                 {
                     ParseMode = TelegramParseMode.Html
                 })
@@ -92,29 +91,40 @@ internal static class GptCallHelper
             return context.FlowState;
         }
 
-        var gptFlowState = context.FlowState.Gpt ?? new();
-
         return context.FlowState with
         {
-            Gpt = gptFlowState with
+            Gpt = context.FlowState.Gpt with
             {
-                Title = @out.Title
+                Title = @out.Title,
+                SourceMessage = context.FlowState.Description
             }
         };
     }
 
-    private static IncidentCreateFlowState LogGptFailure(this IChatFlowContext<IncidentCreateFlowState> context, Failure<Unit> failure)
+    private static IncidentCreateFlowState LogGptFailure(
+        this IChatFlowContext<IncidentCreateFlowState> context, Failure<IncidentCompleteFailureCode> failure)
     {
         context.Logger.LogWarning("GptFailure: {gptFailure}", failure.FailureMessage);
 
         context.BotTelemetryClient.TrackEvent("CompleteIncidentGptFailure", new Dictionary<string, string>
         {
-            ["FlowId"] = context.ChatFlowId,
-            ["Event"] = "GptFailure",
-            ["Message"] = failure.FailureMessage,
-            ["SourceDescription"] = context.FlowState.Description.OrEmpty()
+            ["flowId"] = context.ChatFlowId,
+            ["event"] = "GptFailure",
+            ["message"] = failure.FailureMessage,
+            ["sourceDescription"] = context.FlowState.Description.OrEmpty()
         });
 
-        return context.FlowState;
+        return context.FlowState with
+        {
+            Gpt = context.FlowState.Gpt with
+            {
+                Title = null,
+                ErrorMessage = failure.FailureCode switch
+                {
+                    IncidentCompleteFailureCode.TooManyRequests => "Нейросеть в настоящий момент перегружена",
+                    _ => null
+                }
+            }
+        };
     }
 }

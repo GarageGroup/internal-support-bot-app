@@ -21,7 +21,7 @@ internal static class IncidentCreateHelper
         var telegramActivity = context.Activity.CreateReply();
 
         telegramActivity.ChannelData = new TelegramChannelData(
-            parameters: new TelegramParameters(TemporaryText)
+            parameters: new(TemporaryText)
             {
                 DisableNotification = true
             })

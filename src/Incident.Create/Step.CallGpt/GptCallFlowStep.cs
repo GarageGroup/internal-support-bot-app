@@ -7,10 +7,9 @@ internal static class GptCallFlowStep
 {
     internal static ChatFlow<IncidentCreateFlowState> CallGpt(this ChatFlow<IncidentCreateFlowState> chatFlow, ISupportGptApi gptApi)
         =>
-        chatFlow.SendActivityOrSkip(
+        chatFlow.SetTypingStatus(
             GptCallHelper.CreateTemporaryActivity,
             ApplyTemporaryActivityId)
-        .SetTypingStatus()
         .NextValue(
             gptApi.CompleteIncidentAsync)
         .ReplaceActivityOrSkip(
@@ -20,7 +19,7 @@ internal static class GptCallFlowStep
         =>
         flowState with
         {
-            Gpt = new()
+            Gpt = flowState.Gpt with
             {
                 TemporaryActivityId = activityResponse.Id
             }
