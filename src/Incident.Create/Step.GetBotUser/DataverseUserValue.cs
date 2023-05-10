@@ -1,6 +1,6 @@
 using System;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal sealed record class DataverseUserValue
 {

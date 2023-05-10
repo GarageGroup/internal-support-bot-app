@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal sealed record class IncidentCreateFlowState
 {

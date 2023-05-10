@@ -5,9 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PrimeFuncPack;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
-[KeepWarmFunction("KeepBotWarm", "0 */5 * * * *")]
 internal static partial class Application
 {
     private const string DataverseSectionName = "Dataverse";

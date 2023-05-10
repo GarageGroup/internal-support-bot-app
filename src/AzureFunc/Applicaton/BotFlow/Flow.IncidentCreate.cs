@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Extensions.Configuration;
 using PrimeFuncPack;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 partial class Application
 {

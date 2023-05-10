@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 partial class Application
 {

@@ -1,7 +1,7 @@
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Bot.Schema;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static class IncidentCreateFlowStep
 {
@@ -28,6 +28,7 @@ internal static class IncidentCreateFlowStep
         {
             Title = incident.Title,
             Id = incident.Id,
-            TemporaryActivityId = flowState.TemporaryActivityId
+            TemporaryActivityId = flowState.TemporaryActivityId,
+            Gpt = flowState.Gpt
         };
 }

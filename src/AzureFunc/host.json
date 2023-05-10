@@ -5,12 +5,8 @@
             "samplingSettings": {
                 "isEnabled": true,
                 "maxTelemetryItemsPerSecond" : 20,
-                "excludedTypes": "Request;Exception"
+                "excludedTypes": "Exception"
             }
-        },
-        "logLevel": {
-            "default": "Warning",
-            "Function": "Information"
         }
     }
 }

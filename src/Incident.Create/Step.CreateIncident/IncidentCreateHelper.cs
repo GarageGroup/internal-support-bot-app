@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static class IncidentCreateHelper
 {

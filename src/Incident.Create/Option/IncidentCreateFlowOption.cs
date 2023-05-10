@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 public sealed record class IncidentCreateFlowOption
 {

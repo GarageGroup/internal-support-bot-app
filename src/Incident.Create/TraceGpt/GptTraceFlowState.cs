@@ -1,11 +1,11 @@
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static class GptTraceFlowState
 {
-    internal static ChatFlow<IncidentCreateFlowState> TraceGpt(
-        this ChatFlow<IncidentCreateFlowState> chatFlow, IncidentCreateFlowOption option)
+    internal static ChatFlow<IncidentLinkFlowState> TraceGpt(
+        this ChatFlow<IncidentLinkFlowState> chatFlow, IncidentCreateFlowOption option)
         =>
         chatFlow.On(option.TraceGpt);
 }

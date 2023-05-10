@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal sealed record class IncidentLinkFlowState
 {
@@ -13,4 +13,7 @@ internal sealed record class IncidentLinkFlowState
 
     [JsonProperty("temporaryActivityId")]
     public string? TemporaryActivityId { get; init; }
+
+    [JsonProperty("gpt")]
+    public IncidentGptFlowState Gpt { get; init; }
 }

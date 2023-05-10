@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static class GptTraceHelper
 {
-    internal static void TraceGpt(this IncidentCreateFlowOption option, IChatFlowContext<IncidentCreateFlowState> context)
+    internal static void TraceGpt(this IncidentCreateFlowOption option, IChatFlowContext<IncidentLinkFlowState> context)
     {
         if (string.IsNullOrEmpty(context.FlowState.Gpt.Title))
         {

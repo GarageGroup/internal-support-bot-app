@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static class TitleAwaitHelper
 {

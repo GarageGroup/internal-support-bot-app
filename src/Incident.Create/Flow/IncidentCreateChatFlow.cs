@@ -1,7 +1,7 @@
 using System;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static partial class IncidentCreateChatFlow
 {
@@ -24,10 +24,10 @@ internal static partial class IncidentCreateChatFlow
         .AwaitOwner(
             supportApi)
         .ConfirmIncident()
-        .TraceGpt(
-            option)
         .CreateIncident(
             supportApi)
+        .TraceGpt(
+            option)
         .ShowIncident(
             option);
 }

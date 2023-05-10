@@ -1,8 +1,8 @@
 using System;
+using GarageGroup.Infra.Bot.Builder;
 using GGroupp.Infra;
-using GGroupp.Infra.Bot.Builder;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 partial class Application
 {
