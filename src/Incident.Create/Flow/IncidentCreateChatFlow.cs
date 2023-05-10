@@ -1,12 +1,12 @@
 using System;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static partial class IncidentCreateChatFlow
 {
     private static ChatFlow<Unit> RunFlow(
-        this ChatFlow chatFlow, ISupportApi supportApi, IncidentCreateFlowOption option)
+        this ChatFlow chatFlow, ISupportApi supportApi, ISupportGptApi supportGptApi, IncidentCreateFlowOption option)
         =>
         chatFlow.Start<IncidentCreateFlowState>(
             static () => new())
@@ -16,6 +16,8 @@ internal static partial class IncidentCreateChatFlow
             supportApi)
         .AwaitContact(
             supportApi)
+        .CallGpt(
+            supportGptApi)
         .AwaitTitle()
         .AwaitCaseType()
         .AwaitPriority()
@@ -24,6 +26,8 @@ internal static partial class IncidentCreateChatFlow
         .ConfirmIncident()
         .CreateIncident(
             supportApi)
+        .TraceGpt(
+            option)
         .ShowIncident(
             option);
 }

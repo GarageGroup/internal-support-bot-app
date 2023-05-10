@@ -1,8 +1,8 @@
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Bot.Builder;
 using Newtonsoft.Json.Linq;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static class DescriptionGetHelper
 {

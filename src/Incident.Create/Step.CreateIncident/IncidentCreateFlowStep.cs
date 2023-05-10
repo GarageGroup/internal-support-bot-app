@@ -1,26 +1,25 @@
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Bot.Schema;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 internal static class IncidentCreateFlowStep
 {
     internal static ChatFlow<IncidentLinkFlowState> CreateIncident(
         this ChatFlow<IncidentCreateFlowState> chatFlow, IIncidentCreateSupplier supportApi)
         =>
-        chatFlow.SendActivityOrSkip(
+        chatFlow.SetTypingStatus(
             IncidentCreateHelper.CreateTemporaryActivity,
             MapFlowState)
-        .SetTypingStatus()
         .ForwardValue(
             supportApi.CreateIncidentOrBeakAsync,
             MapFlowState);
 
-    private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, ResourceResponse temporaryActivityResponse)
+    private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, ResourceResponse activityResponse)
         =>
         flowState with
         {
-            TemporaryActivityId = temporaryActivityResponse.Id
+            TemporaryActivityId = activityResponse.Id
         };
 
     private static IncidentLinkFlowState MapFlowState(IncidentCreateFlowState flowState, IncidentCreateOut incident)
@@ -29,6 +28,7 @@ internal static class IncidentCreateFlowStep
         {
             Title = incident.Title,
             Id = incident.Id,
-            TemporaryActivityId = flowState.TemporaryActivityId
+            TemporaryActivityId = flowState.TemporaryActivityId,
+            Gpt = flowState.Gpt
         };
 }

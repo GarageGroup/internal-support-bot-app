@@ -1,15 +1,15 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 using PrimeFuncPack;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 public static class IncidentCreateDependency
 {
     public static IBotBuilder MapIncidentCreateFlow(
-        this Dependency<ISupportApi, IncidentCreateFlowOption> dependency, IBotBuilder botBuilder)
+        this Dependency<ISupportApi, ISupportGptApi, IncidentCreateFlowOption> dependency, IBotBuilder botBuilder)
     {
         ArgumentNullException.ThrowIfNull(dependency);
         ArgumentNullException.ThrowIfNull(botBuilder);
@@ -21,6 +21,7 @@ public static class IncidentCreateDependency
             context.RunAsync(
                 dependency.ResolveFirst(context.ServiceProvider),
                 dependency.ResolveSecond(context.ServiceProvider),
+                dependency.ResolveThird(context.ServiceProvider),
                 cancellationToken);
     }
 }

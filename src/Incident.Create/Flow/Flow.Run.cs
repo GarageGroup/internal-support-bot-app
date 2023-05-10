@@ -1,15 +1,23 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using GGroupp.Infra.Bot.Builder;
+using GarageGroup.Infra.Bot.Builder;
 
-namespace GGroupp.Internal.Support;
+namespace GarageGroup.Internal.Support;
 
 partial class IncidentCreateChatFlow
 {
     internal static ValueTask<Unit> RunAsync(
-        this IBotContext context, ISupportApi supportApi, IncidentCreateFlowOption option, CancellationToken cancellationToken)
+        this IBotContext context,
+        ISupportApi supportApi,
+        ISupportGptApi supportGptApi,
+        IncidentCreateFlowOption option,
+        CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(supportGptApi);
+        ArgumentNullException.ThrowIfNull(option);
+
         var turnContext = context.TurnContext;
         if (turnContext.IsNotMessageType())
         {
@@ -21,6 +29,6 @@ partial class IncidentCreateChatFlow
             return context.BotFlow.NextAsync(cancellationToken);
         }
 
-        return context.CreateChatFlow("IncidentCreate").RunFlow(supportApi, option).CompleteValueAsync(cancellationToken);
+        return context.CreateChatFlow("IncidentCreate").RunFlow(supportApi, supportGptApi, option).CompleteValueAsync(cancellationToken);
     }
 }
