@@ -47,8 +47,7 @@ jobs:
         az functionapp config appsettings set --name func-internal-gsupport-prod \
           --resource-group gr-internal-gsupport-prod \
           --settings "BotInfo__BuildVersion"=${{ env.version_number }} \
-                     "BotInfo__BuildDateTime"=${{ env.datetime }} \
-                     "Swagger__ApiVersion"=${{ env.version_number }}
+                     "BotInfo__BuildDateTime"=${{ env.datetime }}
 
     - name: Log out of Azure
       run: az logout
