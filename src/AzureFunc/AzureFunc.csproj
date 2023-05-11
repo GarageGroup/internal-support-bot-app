@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="GarageGroup.Infra.Azure.HealthCheck" Version="0.0.1" />
-    <PackageReference Include="GarageGroup.Infra.Azure.HealthCheck.Generator" Version="0.0.2" />
+    <PackageReference Include="GarageGroup.Infra.Azure.HealthCheck.Generator" Version="0.0.3" />
     <PackageReference Include="GarageGroup.Infra.Azure.Hosting" Version="0.0.1-preview.4" />
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.Authorization.Dataverse" Version="0.0.2" />
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.Command.Info" Version="0.0.1" />
