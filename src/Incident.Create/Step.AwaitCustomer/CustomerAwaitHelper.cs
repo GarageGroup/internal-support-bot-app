@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using GarageGroup.Infra.Bot.Builder;
-using GGroupp;
 
 namespace GarageGroup.Internal.Support;
 
