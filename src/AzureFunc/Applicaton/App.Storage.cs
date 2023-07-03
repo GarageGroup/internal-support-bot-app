@@ -12,7 +12,5 @@ partial class Application
 
     private static Dependency<ICosmosStorage> UseCosmosStorage()
         =>
-        UseHttpMessageHandlerStandard("CosmosStorage")
-        .UseCosmosApi("CosmosDb")
-        .UseCosmosStorageStandard("CosmosDb");
+        UseHttpMessageHandlerStandard("CosmosStorage").UseCosmosStorage("CosmosDb");
 }

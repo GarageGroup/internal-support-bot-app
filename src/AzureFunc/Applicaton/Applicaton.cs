@@ -1,7 +1,7 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using GarageGroup.Infra;
-using GGroupp.Infra;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +16,9 @@ internal static partial class Application
 
     private static Dependency<HttpMessageHandler> UseHttpMessageHandlerStandard(string loggerCategoryName)
         =>
-        PrimaryHandler.UseStandardSocketsHttpHandler().UseLogging(loggerCategoryName);
+        PrimaryHandler.UseStandardSocketsHttpHandler()
+        .UseLogging(loggerCategoryName)
+        .UsePollyStandard(HttpStatusCode.TooManyRequests);
 
     private static Dependency<IDataverseApiClient> UseDataverseApiClient()
         =>

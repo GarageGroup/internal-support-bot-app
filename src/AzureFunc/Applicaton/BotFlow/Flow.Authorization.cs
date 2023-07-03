@@ -1,6 +1,6 @@
 using System;
+using GarageGroup.Infra;
 using GarageGroup.Infra.Bot.Builder;
-using GGroupp.Infra;
 
 namespace GarageGroup.Internal.Support;
 
@@ -10,29 +10,25 @@ partial class Application
         =>
         botBuilder.UseDataverseAuthorization(
             ResolveBotAuthorizationOption,
-            GetAzureUserMeGetApi,
-            GetDataverseUserGetApi);
+            GetAzureUserApi,
+            GetDataverseUserApi);
 
-    private static IAzureUserMeGetFunc GetAzureUserMeGetApi(IBotContext botContext)
+    private static IAzureUserApi GetAzureUserApi(IBotContext botContext)
         =>
-        UseHttpMessageHandlerStandard("AzureUserMeGetApi").UseAzureUserMeGetApi().Resolve(botContext.ServiceProvider);
+        UseHttpMessageHandlerStandard("AzureUserApi").UseAzureUserApi().Resolve(botContext.ServiceProvider);
 
-    private static IDataverseUserGetFunc GetDataverseUserGetApi(IBotContext botContext)
+    private static IDataverseUserApi GetDataverseUserApi(IBotContext botContext)
         =>
-        UseDataverseApiClient().UseUserGetApi().Resolve(botContext.ServiceProvider);
+        UseDataverseApiClient().UseUserApi().Resolve(botContext.ServiceProvider);
 
     private static BotAuthorizationOption ResolveBotAuthorizationOption(this IBotContext context)
-    {
-        var configuration = context.ServiceProvider.GetConfiguration();
-        var domainName = configuration["DomainName"].OrNullIfEmpty() ?? "Garage Group";
-
-        return new(
-            oAuthConnectionName: configuration["OAuthConnectionName"].OrEmpty(),
+        =>
+        new(
+            oAuthConnectionName: context.ServiceProvider.GetConfiguration()["OAuthConnectionName"].OrEmpty(),
             enterText: $"""
-                Войдите в свою учетную запись {domainName}:
+                Войдите в свою учетную запись Garage Group:
                 1. Перейдите по ссылке
-                2. Авторизуйтесь под учетной записью {domainName}
+                2. Авторизуйтесь под учетной записью Garage Group
                 3. Скопируйте и отправьте полученный код в этот чат
                 """);
-    }
 }
