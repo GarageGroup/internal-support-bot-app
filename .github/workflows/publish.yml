@@ -34,7 +34,7 @@ jobs:
       run: dotnet test --no-restore  -c Release
 
     - name: Publish AzureFunc
-      run: dotnet publish ./src/*/AzureFunc.csproj --no-build  -c Release --output ./publish
+      run: dotnet publish ./src/*/*/AzureFunc.csproj --no-build  -c Release --output ./publish
 
     - name: Get version
       id: get_version
