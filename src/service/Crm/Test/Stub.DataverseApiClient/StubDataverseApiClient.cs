@@ -47,6 +47,18 @@ internal sealed class StubDataverseApiClient : IDataverseApiClient
         throw new NotImplementedException();
     }
 
+    ValueTask<Result<DataverseChangeSetExecuteOut<TOut>, Failure<DataverseFailureCode>>> IDataverseChangeSetExecuteSupplier.ExecuteChangeSetAsync<TIn, TOut>(
+        DataverseChangeSetExecuteIn<TIn> input, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    ValueTask<Result<Unit, Failure<DataverseFailureCode>>> IDataverseChangeSetExecuteSupplier.ExecuteChangeSetAsync<TIn>(
+        DataverseChangeSetExecuteIn<TIn> input, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
     ValueTask<Result<DataverseFetchXmlOut<TEntityJson>, Failure<DataverseFailureCode>>> IDataverseFetchXmlSupplier.FetchXmlAsync<TEntityJson>(
         DataverseFetchXmlIn input, CancellationToken cancellationToken)
     {
