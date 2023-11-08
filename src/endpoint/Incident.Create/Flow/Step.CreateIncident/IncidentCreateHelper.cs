@@ -43,7 +43,10 @@ internal static class IncidentCreateHelper
                 title: flowState.Title.OrEmpty(),
                 description: flowState.Description,
                 caseTypeCode: flowState.CaseTypeCode,
-                priorityCode: flowState.PriorityCode))
+                priorityCode: flowState.PriorityCode)
+            {
+                CallerUserId = flowState.BotUserId
+            })
         .PipeValue(
             supportApi.CreateIncidentAsync)
         .MapFailure(

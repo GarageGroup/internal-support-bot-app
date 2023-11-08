@@ -9,23 +9,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout GitHub Action
+      uses: actions/checkout@v4
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
-    - name: Add GarageGroup NuGet Source
+    - name: Add Garage Group NuGet Source
       run: >
-        dotnet nuget add source ${{ secrets.GG_NUGET_SOURCE_URL }}
+        dotnet nuget add source ${{ vars.GG_NUGET_SOURCE_URL }}
         -n garage
         -u ${{ secrets.GG_NUGET_SOURCE_USER_NAME }}
         -p ${{ secrets.GG_NUGET_SOURCE_USER_PASSWORD }}
         --store-password-in-clear-text
 
-    - name: Restore Internal.Support.Bot.sln
-      run: dotnet restore ./src/Internal.Support.Bot.sln
+    - name: Restore
+      run: dotnet restore
 
-    - name: Build Internal.Support.Bot.sln
-      run: dotnet build ./src/Internal.Support.Bot.sln --no-restore  -c Release
+    - name: Build
+      run: dotnet build --no-restore  -c Release
+
+    - name: Test
+      run: dotnet test --no-restore  -c Release

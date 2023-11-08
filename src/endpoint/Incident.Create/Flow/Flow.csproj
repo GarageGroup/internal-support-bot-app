@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
+    <AssemblyName>GarageGroup.Internal.Support.Endpoint.Incident.Create.Flow</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\service\Crm\Contract\Contract.csproj" />
+    <ProjectReference Include="..\..\..\service\Gpt\Contract\Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.3.0" />
+    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Extensions" Version="0.3.0" />
+    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Card" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Lookup" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Value" Version="0.2.0" />
+    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.0.2" />
+    <PackageReference Include="PrimeFuncPack.Primitives.Pipeline" Version="2.0.2" />
+  </ItemGroup>
+
+</Project>

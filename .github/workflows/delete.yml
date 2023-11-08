@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Checkout GitHub Action
+      uses: actions/checkout@v4
 
     - name: Get version
       id: get_version
-      run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_ENV
+      run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
     - uses: azure/login@v1
       with:
@@ -27,7 +27,7 @@ jobs:
         azcliversion: 2.30.0
         inlineScript: |
           blob_exists=$(az storage blob exists \
-            --name gg-internal-support-bot-func-${{ env.version }}.zip \
+            --name ${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
             --container-name artifacts \
             --account-name startifactblob \
             --auth-mode login --output tsv --query exists)
@@ -35,7 +35,7 @@ jobs:
           if [ $blob_exists = true ]
           then
             az storage blob delete \
-              --name gg-internal-support-bot-func-${{ env.version }}.zip \
+              --name ${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
               --container-name artifacts \
               --account-name startifactblob \
               --auth-mode login
