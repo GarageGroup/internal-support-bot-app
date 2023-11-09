@@ -5,6 +5,9 @@ namespace GarageGroup.Internal.Support;
 
 internal sealed record class IncidentCreateFlowState
 {
+    [JsonProperty("dbMinDate")]
+    public DateTime DbMinDate { get; init; }
+
     [JsonProperty("botUserId")]
     public Guid? BotUserId { get; init; }
 

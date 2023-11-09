@@ -18,13 +18,13 @@ partial class Application
         Dependency.From(
             ResolveIncidentCreateFlowOption)
         .With(
-            UseDataverseApiClient().UseCrmCustomerApi())
+            UseDataverseApi().With(UseSqlApi()).UseCrmCustomerApi())
         .With(
-            UseDataverseApiClient().UseCrmContactApi())
+            UseDataverseApi().UseCrmContactApi())
         .With(
-            UseDataverseApiClient().UseCrmUserApi())
+            UseDataverseApi().UseCrmUserApi())
         .With(
-            UseDataverseApiClient().UseCrmIncidentApi())
+            UseDataverseApi().UseCrmIncidentApi())
         .With(
             UseHttpMessageHandlerStandard("SupportGptApi").With(ResolveSupportGptApiOption).UseSupportGptApi())
         .MapIncidentCreateFlow(botBuilder);
@@ -38,7 +38,9 @@ partial class Application
 
         var uri = new Uri(baseUri, template.OrEmpty()).AbsoluteUri;
 
-        return new(uri.Replace("%7B", "{").Replace("%7D", "}"))
+        return new(
+            incidentCardUrlTemplate: uri.Replace("%7B", "{").Replace("%7D", "}"),
+            dbRequestPeriodInDays: configuration.GetValue<int>("DbRequestPeriodInDays"))
         {
             GptTraceData = configuration.GetGptTraceData()
         };

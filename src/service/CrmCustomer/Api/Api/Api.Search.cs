@@ -8,7 +8,7 @@ namespace GarageGroup.Internal.Support;
 
 partial class CrmCustomerApi
 {
-    public ValueTask<Result<CustomerSetSearchOut, Failure<CustomerSetSearchFailureCode>>> SearchAsync(
+    public ValueTask<Result<CustomerSetSearchOut, Failure<CustomerSetGetFailureCode>>> SearchAsync(
         CustomerSetSearchIn input, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
@@ -35,13 +35,13 @@ partial class CrmCustomerApi
             id: item.ObjectId,
             title: item.ExtensionData.AsEnumerable().GetValueOrAbsent("name").OrDefault()?.ToString());
 
-    private static CustomerSetSearchFailureCode MapFailureCode(DataverseFailureCode failureCode)
+    private static CustomerSetGetFailureCode MapFailureCode(DataverseFailureCode failureCode)
         =>
         failureCode switch
         {
-            DataverseFailureCode.UserNotEnabled => CustomerSetSearchFailureCode.NotAllowed,
-            DataverseFailureCode.SearchableEntityNotFound => CustomerSetSearchFailureCode.NotAllowed,
-            DataverseFailureCode.Throttling => CustomerSetSearchFailureCode.TooManyRequests,
+            DataverseFailureCode.UserNotEnabled => CustomerSetGetFailureCode.NotAllowed,
+            DataverseFailureCode.SearchableEntityNotFound => CustomerSetGetFailureCode.NotAllowed,
+            DataverseFailureCode.Throttling => CustomerSetGetFailureCode.TooManyRequests,
             _ => default
         };
 }

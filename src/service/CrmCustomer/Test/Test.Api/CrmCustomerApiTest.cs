@@ -8,6 +8,13 @@ namespace GarageGroup.Internal.Support.Service.CrmCustomer.Test;
 
 public static partial class CrmCustomerApiTest
 {
+    private static readonly LastCustomerSetGetIn SomeLastCustomerSetGetInput
+        =
+        new(
+            userId: Guid.Parse("cbe75335-98fa-41f1-a6b9-7aca6e31d03a"),
+            minCreationTime: new(2021, 11, 07, 03, 27, 45),
+            top: 3);
+
     private static readonly FlatArray<DataverseSearchItem> SomeDataverseItems
         =
         new DataverseSearchItem[]
@@ -26,13 +33,41 @@ public static partial class CrmCustomerApiTest
                 extensionData: default)
         };
 
-    private static Mock<IDataverseSearchSupplier> CreateMockDataverseApi(
-        Result<DataverseSearchOut, Failure<DataverseFailureCode>> result)
+    private static FlatArray<DbIncidentCustomer> SomeDbIncidentCustomers
+        =>
+        new DbIncidentCustomer[]
+        {
+            new()
+            {
+                CustomerId = Guid.Parse("070bf50d-ba93-42a6-8064-bea94ba1e017"),
+                CustomerName = "Customer One"
+            },
+            new()
+            {
+                CustomerId = Guid.Parse("39a7eef1-d2c3-4240-991a-3f237890a4de"),
+                CustomerName = "Customer Two"
+            }
+        };
+
+    private static Mock<IDataverseSearchSupplier> BuildMockDataverseApi(
+        in Result<DataverseSearchOut, Failure<DataverseFailureCode>> result)
     {
         var mock = new Mock<IDataverseSearchSupplier>();
 
         _ = mock
             .Setup(s => s.SearchAsync(It.IsAny<DataverseSearchIn>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+
+        return mock;
+    }
+
+    private static Mock<ISqlQueryEntitySetSupplier> BuildMockSqlApi(
+        in Result<FlatArray<DbIncidentCustomer>, Failure<Unit>> result)
+    {
+        var mock = new Mock<ISqlQueryEntitySetSupplier>();
+
+        _ = mock
+            .Setup(s => s.QueryEntitySetOrFailureAsync<DbIncidentCustomer>(It.IsAny<IDbQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(result);
 
         return mock;

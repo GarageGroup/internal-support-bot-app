@@ -1,6 +1,6 @@
 namespace GarageGroup.Internal.Support;
 
-public enum CustomerSetSearchFailureCode
+public enum CustomerSetGetFailureCode
 {
     Unknown,
 
