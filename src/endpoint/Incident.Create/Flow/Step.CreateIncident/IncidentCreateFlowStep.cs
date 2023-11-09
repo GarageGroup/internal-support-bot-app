@@ -6,13 +6,13 @@ namespace GarageGroup.Internal.Support;
 internal static class IncidentCreateFlowStep
 {
     internal static ChatFlow<IncidentLinkFlowState> CreateIncident(
-        this ChatFlow<IncidentCreateFlowState> chatFlow, IIncidentCreateSupplier supportApi)
+        this ChatFlow<IncidentCreateFlowState> chatFlow, ICrmIncidentApi crmIncidentApi)
         =>
         chatFlow.SetTypingStatus(
             IncidentCreateHelper.CreateTemporaryActivity,
             MapFlowState)
         .ForwardValue(
-            supportApi.CreateIncidentOrBeakAsync,
+            crmIncidentApi.CreateIncidentOrBeakAsync,
             MapFlowState);
 
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, ResourceResponse activityResponse)

@@ -10,7 +10,7 @@ internal static class CustomerAwaitHelper
     private const int MaxCustomerSetCount = 6;
 
     internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchCustomersOrFailureAsync(
-        this ICustomerSetSearchSupplier supportApi, string seachText, CancellationToken cancellationToken)
+        this ICrmCustomerApi crmCustomerApi, string seachText, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
             seachText, cancellationToken)
@@ -21,7 +21,7 @@ internal static class CustomerAwaitHelper
                 Top = MaxCustomerSetCount
             })
         .PipeValue(
-            supportApi.SearchCustomerSetAsync)
+            crmCustomerApi.SearchAsync)
         .MapFailure(
             MapToFlowFailure)
         .Filter(
@@ -36,7 +36,7 @@ internal static class CustomerAwaitHelper
         =>
         $"Клиент: {context.EncodeHtmlTextWithStyle(customerValue.Name, BotTextStyle.Bold)}";
 
-    private static LookupValue MapCustomerItem(CustomerItemSearchOut item)
+    private static LookupValue MapCustomerItem(CustomerItemOut item)
         =>
         new(item.Id, item.Title);
 

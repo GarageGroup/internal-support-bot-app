@@ -31,7 +31,7 @@ internal static class ContactAwaitHelper
     }
 
     internal static ValueTask<LookupValueSetOption> GetDefaultContactsAsync(
-        this IContactSetSearchSupplier supportApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken token)
+        this ICrmContactApi crmContactApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken token)
         =>
         AsyncPipeline.Pipe(
             context.FlowState.CustomerId, token)
@@ -43,7 +43,7 @@ internal static class ContactAwaitHelper
                 Top = MaxCustomerSetCount
             })
         .PipeValue(
-            supportApi.SearchContactSetAsync)
+            crmContactApi.SearchAsync)
         .Fold(
             static @out => new(
                 items: @out.Contacts.AsEnumerable().Select(MapContactItem).ToList().AddSkipValue(),
@@ -51,7 +51,7 @@ internal static class ContactAwaitHelper
             failure => MapSearchFailure(failure, context.Logger));
 
     internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchContactsOrFailureAsync(
-        this IContactSetSearchSupplier supportApi,
+        this ICrmContactApi crmContactApi,
         IChatFlowContext<IncidentCreateFlowState> context,
         string seachText,
         CancellationToken cancellationToken)
@@ -67,7 +67,7 @@ internal static class ContactAwaitHelper
                 Top = MaxCustomerSetCount
             })
         .PipeValue(
-            supportApi.SearchContactSetAsync)
+            crmContactApi.SearchAsync)
         .MapFailure(
             MapToFlowFailure)
         .MapSuccess(
@@ -89,7 +89,7 @@ internal static class ContactAwaitHelper
         return lookupValues;
     }
 
-    private static LookupValue MapContactItem(ContactItemSearchOut item)
+    private static LookupValue MapContactItem(ContactItemOut item)
         =>
         new(item.Id, item.FullName);
 

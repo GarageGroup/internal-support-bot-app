@@ -11,7 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\service\Crm\Contract\Contract.csproj" />
+    <ProjectReference Include="..\..\..\service\CrmContact\Contract\Contract.csproj" />
+    <ProjectReference Include="..\..\..\service\CrmCustomer\Contract\Contract.csproj" />
+    <ProjectReference Include="..\..\..\service\CrmIncident\Contract\Contract.csproj" />
+    <ProjectReference Include="..\..\..\service\CrmUser\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\Gpt\Contract\Contract.csproj" />
   </ItemGroup>
 

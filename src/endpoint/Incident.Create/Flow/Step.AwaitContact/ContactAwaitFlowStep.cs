@@ -5,11 +5,11 @@ namespace GarageGroup.Internal.Support;
 internal static class ContactAwaitFlowStep
 {
     internal static ChatFlow<IncidentCreateFlowState> AwaitContact(
-        this ChatFlow<IncidentCreateFlowState> chatFlow, IContactSetSearchSupplier supportApi)
+        this ChatFlow<IncidentCreateFlowState> chatFlow, ICrmContactApi crmContactApi)
         =>
         chatFlow.AwaitLookupValue(
-            supportApi.GetDefaultContactsAsync,
-            supportApi.SearchContactsOrFailureAsync,
+            crmContactApi.GetDefaultContactsAsync,
+            crmContactApi.SearchContactsOrFailureAsync,
             ContactAwaitHelper.CreateResultMessage,
             MapFlowState);
 

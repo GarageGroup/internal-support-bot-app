@@ -6,26 +6,32 @@ namespace GarageGroup.Internal.Support;
 internal static partial class IncidentCreateChatFlow
 {
     private static ChatFlow<Unit> RunFlow(
-        this ChatFlow chatFlow, ISupportApi supportApi, ISupportGptApi supportGptApi, IncidentCreateFlowOption option)
+        this ChatFlow chatFlow,
+        ICrmCustomerApi crmCustomerApi,
+        ICrmContactApi crmContactApi,
+        ICrmUserApi crmUserApi,
+        ICrmIncidentApi crmIncidentApi,
+        ISupportGptApi supportGptApi,
+        IncidentCreateFlowOption option)
         =>
         chatFlow.Start<IncidentCreateFlowState>(
             static () => new())
         .GetBotUser()
         .GetDescription()
         .AwaitCustomer(
-            supportApi)
+            crmCustomerApi)
         .AwaitContact(
-            supportApi)
+            crmContactApi)
         .CallGpt(
             supportGptApi)
         .AwaitTitle()
         .AwaitCaseType()
         .AwaitPriority()
         .AwaitOwner(
-            supportApi)
+            crmUserApi)
         .ConfirmIncident()
         .CreateIncident(
-            supportApi)
+            crmIncidentApi)
         .TraceGpt(
             option)
         .ShowIncident(

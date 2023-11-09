@@ -31,7 +31,7 @@ internal static class IncidentCreateHelper
     }
 
     internal static ValueTask<ChatFlowJump<IncidentCreateOut>> CreateIncidentOrBeakAsync(
-        this IIncidentCreateSupplier supportApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
+        this ICrmIncidentApi crmIncidentApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
             context.FlowState, cancellationToken)
@@ -48,7 +48,7 @@ internal static class IncidentCreateHelper
                 CallerUserId = flowState.BotUserId
             })
         .PipeValue(
-            supportApi.CreateIncidentAsync)
+            crmIncidentApi.CreateAsync)
         .MapFailure(
             ToUnexpectedBreakState)
         .Fold(

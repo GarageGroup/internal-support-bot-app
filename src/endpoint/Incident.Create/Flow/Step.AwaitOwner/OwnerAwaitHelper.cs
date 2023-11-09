@@ -29,7 +29,7 @@ internal static class OwnerAwaitHelper
                 choiceText: DefaultChooseOwnerMessage));
 
     internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchUsersOrFailureAsync(
-        this IUserSetSearchSupplier supportApi,
+        this ICrmUserApi crmUserApi,
         IChatFlowContext<IncidentCreateFlowState> context,
         string seachText,
         CancellationToken cancellationToken)
@@ -43,7 +43,7 @@ internal static class OwnerAwaitHelper
                 Top = MaxUserSetCount
             })
         .PipeValue(
-            supportApi.SearchUserSetAsync)
+            crmUserApi.SearchAsync)
         .MapFailure(
             MapToFlowFailure)
         .MapSuccess(
@@ -55,7 +55,7 @@ internal static class OwnerAwaitHelper
         =>
         $"Ответственный: {context.EncodeHtmlTextWithStyle(userValue.Name, BotTextStyle.Bold)}";
 
-    private static LookupValue MapUserItem(UserItemSearchOut item)
+    private static LookupValue MapUserItem(UserItemOut item)
         =>
         new(item.Id, item.FullName);
 

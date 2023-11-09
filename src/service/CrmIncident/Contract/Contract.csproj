@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
+    <AssemblyName>GarageGroup.Internal.Support.Service.CrmIncident.Contract</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PrimeFuncPack.Core.Failure" Version="2.0.1" />
+    <PackageReference Include="PrimeFuncPack.Core.Result" Version="2.0.2" />
+    <PackageReference Include="PrimeFuncPack.Primitives.Strings" Version="2.0.2" />
+  </ItemGroup>
+
+</Project>
