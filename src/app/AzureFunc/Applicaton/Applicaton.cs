@@ -22,7 +22,8 @@ internal static partial class Application
 
     private static Dependency<IDataverseApiClient> UseDataverseApiClient()
         =>
-        UseHttpMessageHandlerStandard("DataverseApi").UseDataverseApiClient(DataverseSectionName);
+        Dependency.From(
+            ServiceProviderServiceExtensions.GetRequiredService<IDataverseApiClient>);
 
     private static IConfiguration GetConfiguration(this IServiceProvider serviceProvider)
         =>

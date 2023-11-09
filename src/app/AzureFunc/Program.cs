@@ -8,7 +8,9 @@ static class Program
     static Task Main()
         =>
         Host.CreateDefaultBuilder()
-        .ConfigureFunctionsWorkerStandard()
+        .ConfigureFunctionsWorkerStandard(
+            useHostConfiguration: false,
+            configure: Application.Configure)
         .ConfigureBotBuilder(Application.ResolveCosmosStorage)
         .Build()
         .RunAsync();

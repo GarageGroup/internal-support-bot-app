@@ -9,7 +9,10 @@ partial class IncidentCreateChatFlow
 {
     internal static ValueTask<Unit> RunAsync(
         this IBotContext context,
-        ISupportApi supportApi,
+        ICrmCustomerApi crmCustomerApi,
+        ICrmContactApi crmContactApi,
+        ICrmUserApi crmUserApi,
+        ICrmIncidentApi crmIncidentApi,
         ISupportGptApi supportGptApi,
         IncidentCreateFlowOption option,
         CancellationToken cancellationToken)
@@ -29,6 +32,9 @@ partial class IncidentCreateChatFlow
             return context.BotFlow.NextAsync(cancellationToken);
         }
 
-        return context.CreateChatFlow("IncidentCreate").RunFlow(supportApi, supportGptApi, option).CompleteValueAsync(cancellationToken);
+        return context.CreateChatFlow("IncidentCreate")
+        .RunFlow(
+            crmCustomerApi, crmContactApi, crmUserApi, crmIncidentApi, supportGptApi, option)
+        .CompleteValueAsync(cancellationToken);
     }
 }

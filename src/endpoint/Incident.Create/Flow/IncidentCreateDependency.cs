@@ -9,7 +9,8 @@ namespace GarageGroup.Internal.Support;
 public static class IncidentCreateDependency
 {
     public static IBotBuilder MapIncidentCreateFlow(
-        this Dependency<ISupportApi, ISupportGptApi, IncidentCreateFlowOption> dependency, IBotBuilder botBuilder)
+        this Dependency<IncidentCreateFlowOption, ICrmCustomerApi, ICrmContactApi, ICrmUserApi, ICrmIncidentApi, ISupportGptApi> dependency,
+        IBotBuilder botBuilder)
     {
         ArgumentNullException.ThrowIfNull(dependency);
         ArgumentNullException.ThrowIfNull(botBuilder);
@@ -19,9 +20,12 @@ public static class IncidentCreateDependency
         ValueTask<Unit> InnerInvokeAsync(IBotContext context, CancellationToken cancellationToken)
             =>
             context.RunAsync(
-                dependency.ResolveFirst(context.ServiceProvider),
-                dependency.ResolveSecond(context.ServiceProvider),
-                dependency.ResolveThird(context.ServiceProvider),
-                cancellationToken);
+                option: dependency.ResolveFirst(context.ServiceProvider),
+                crmCustomerApi: dependency.ResolveSecond(context.ServiceProvider),
+                crmContactApi: dependency.ResolveThird(context.ServiceProvider),
+                crmUserApi: dependency.ResolveFourth(context.ServiceProvider),
+                crmIncidentApi: dependency.ResolveFifth(context.ServiceProvider),
+                supportGptApi: dependency.ResolveSixth(context.ServiceProvider),
+                cancellationToken: cancellationToken);
     }
 }
