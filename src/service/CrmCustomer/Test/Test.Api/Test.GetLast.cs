@@ -45,8 +45,8 @@ partial class CrmCustomerApiTest
             SelectedFields = new(
                 "i.customerid AS CustomerId",
                 "a.name AS CustomerName",
-                "MAX(i.createdon) AS CreatedOn",
-                "Max(CASE WHEN i.createdby = 'f51ceb91-f74d-4ea6-b179-c4af139d2f6f' THEN 1 ELSE 0 END) AS IsCurrentUserCreatedBy"),
+                "MAX(i.createdon) AS MaxCreatedOn",
+                "MAX(CASE WHEN i.createdby = 'f51ceb91-f74d-4ea6-b179-c4af139d2f6f' THEN i.createdon ELSE NULL END) AS MaxCurrentUserCreatedOn"),
             JoinedTables = new DbJoinedTable[]
             {
                 new(DbJoinType.Inner, "account", "a", new DbRawFilter("a.accountid = i.customerid"))
@@ -62,8 +62,8 @@ partial class CrmCustomerApiTest
             GroupByFields = new("i.customerid", "a.name"),
             Orders = new DbOrder[]
             {
-                new("IsCurrentUserCreatedBy", DbOrderType.Descending),
-                new("CreatedOn", DbOrderType.Descending)
+                new("MaxCurrentUserCreatedOn", DbOrderType.Descending),
+                new("MaxCreatedOn", DbOrderType.Descending)
             }
         };
 

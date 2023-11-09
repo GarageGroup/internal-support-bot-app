@@ -16,7 +16,7 @@ internal sealed partial record class DbIncidentCustomer : IDbEntity<DbIncidentCu
 
     private const string CreatedOnFieldName = $"{AliasName}.createdon";
 
-    private const string CreatedOnAlias = "CreatedOn";
+    private const string MaxCreatedOnAlias = "MaxCreatedOn";
 
-    private const string CreatedByCurrentUserAlias = "IsCurrentUserCreatedBy";
+    private const string MaxCurrentUserCreatedOnAlias = "MaxCurrentUserCreatedOn";
 }
