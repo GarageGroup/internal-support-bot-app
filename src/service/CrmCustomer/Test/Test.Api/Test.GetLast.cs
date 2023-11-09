@@ -51,14 +51,7 @@ partial class CrmCustomerApiTest
             {
                 new(DbJoinType.Inner, "account", "a", new DbRawFilter("a.accountid = i.customerid"))
             },
-            Filter = new DbCombinedFilter(DbLogicalOperator.And)
-            {
-                Filters = new IDbFilter[]
-                {
-                    new DbRawFilter("i.customerid IS NOT NULL"),
-                    new DbParameterFilter("i.createdon", DbFilterOperator.GreaterOrEqual, new DateTime(2023, 09, 17, 23, 16, 51), "minDate")
-                }
-            },
+            Filter = new DbParameterFilter("i.createdon", DbFilterOperator.GreaterOrEqual, new DateTime(2023, 09, 17, 23, 16, 51), "minDate"),
             GroupByFields = new("i.customerid", "a.name"),
             Orders = new DbOrder[]
             {

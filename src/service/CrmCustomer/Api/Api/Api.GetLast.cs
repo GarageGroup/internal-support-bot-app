@@ -17,12 +17,7 @@ partial class CrmCustomerApi
             {
                 Top = @in.Top,
                 SelectedFields = DbIncidentCustomer.BuildSelectedFields(@in.UserId),
-                Filter = new DbCombinedFilter(DbLogicalOperator.And)
-                {
-                    Filters = new(
-                        DbIncidentCustomer.CustomerIdNotNullFilter,
-                        DbIncidentCustomer.BuildDateFilter(@in.MinCreationTime))
-                },
+                Filter = DbIncidentCustomer.BuildDateFilter(@in.MinCreationTime),
                 Orders = DbIncidentCustomer.DefaultOrders
             })
         .PipeValue(

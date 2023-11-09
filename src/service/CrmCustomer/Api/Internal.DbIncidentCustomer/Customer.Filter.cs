@@ -5,10 +5,6 @@ namespace GarageGroup.Internal.Support;
 
 partial record class DbIncidentCustomer
 {
-    internal static readonly DbRawFilter CustomerIdNotNullFilter
-        =
-        new($"{CustomerIdFieldName} IS NOT NULL");
-
     internal static DbParameterFilter BuildDateFilter(DateTime minDate)
         =>
         new(CreatedOnFieldName, DbFilterOperator.GreaterOrEqual, minDate, "minDate");
