@@ -66,7 +66,7 @@ partial class Application
         {
             return new(
                 apiKey: gptApiSection["Key"].OrEmpty(),
-                model: incidentCompleteSection["Model"].OrEmpty(),
+                model: gptApiSection["Model"].OrEmpty(),
                 incidentComplete: incidentComplete);
         }
 
@@ -98,7 +98,7 @@ partial class Application
 
     private static bool IsAzureGpt(this IConfiguration configuration)
         =>
-        string.IsNullOrEmpty(configuration[$"{GptApiSectionName}:{IncidentCompleteSectionName}:Model"]);
+        string.IsNullOrEmpty(configuration[$"{GptApiSectionName}:Model"]);
 
     private static void AppendSectionValues(this Dictionary<string, string> traceData, IConfigurationSection section)
     {
