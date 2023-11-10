@@ -17,7 +17,6 @@
   <ItemGroup>
     <PackageReference Include="PrimeFuncPack.Core.FlatArray" Version="1.2.1" />
     <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.0.2" />
-    <PackageReference Include="PrimeFuncPack.Primitives.Strings" Version="2.0.2" />
   </ItemGroup>
 
 </Project>

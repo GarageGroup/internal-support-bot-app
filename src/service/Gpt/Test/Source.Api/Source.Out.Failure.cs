@@ -12,8 +12,8 @@ partial class SupportGptApiTestSource
         {
             var firstJson = new StubGptJsonOut
             {
-                Choices = new StubChoiceJson[]
-                {
+                Choices =
+                [
                     new()
                     {
                         Message = new()
@@ -30,7 +30,7 @@ partial class SupportGptApiTestSource
                         },
                         FinishReason = "stop"
                     }
-                }
+                ]
             }
             .ToJson();
 
@@ -40,12 +40,12 @@ partial class SupportGptApiTestSource
                 firstJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    $"An unexpected GPT finish reason: failed. Body: {firstJson}")
+                    $"An unexpected GPT finish reason: 'failed'. Body: '{firstJson}'")
             };
 
             var secondJson = new StubGptJsonOut
             {
-                Choices = Array.Empty<StubChoiceJson>()
+                Choices = []
             }
             .ToJson();
 
@@ -55,7 +55,7 @@ partial class SupportGptApiTestSource
                 secondJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    $"GPT result choices are absent. Body: {secondJson}")
+                    $"GPT result choices are absent. Body: '{secondJson}'")
             };
 
             var thirdJson = new StubGptJsonOut
@@ -70,7 +70,7 @@ partial class SupportGptApiTestSource
                 thirdJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    $"GPT result choices are absent. Body: {thirdJson}")
+                    $"GPT result choices are absent. Body: '{thirdJson}'")
             };
 
             var fourthJson = new StubFailureJson
@@ -88,7 +88,7 @@ partial class SupportGptApiTestSource
                 fourthJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    $"An unexpected http status code: BadRequest. Body: {fourthJson}")
+                    $"An unexpected http status code: BadRequest. Body: '{fourthJson}'")
             };
 
             yield return new object?[]
@@ -97,7 +97,7 @@ partial class SupportGptApiTestSource
                 "Some error content",
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    "An unexpected http status code: Unauthorized. Body: Some error content")
+                    "An unexpected http status code: Unauthorized. Body: 'Some error content'")
             };
 
             yield return new object?[]
@@ -106,7 +106,7 @@ partial class SupportGptApiTestSource
                 null,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    "An unexpected http status code: NotFound. Body: ")
+                    "An unexpected http status code: NotFound. Body: ''")
             };
 
             yield return new object?[]

@@ -1,8 +1,9 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Net.Mime;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,32 +36,35 @@ partial class SupportGptApi
         var sourceMessage = input.Message.Trim();
         var jsonIn = new ChatGptJsonIn
         {
-            Model = option.IncidentComplete.Model,
+            Model = option.Model,
             MaxTokens = option.IncidentComplete.MaxTokens,
             Temperature = option.IncidentComplete.Temperature,
             Top = 1,
             Messages = option.IncidentComplete.ChatMessages.Map(CreateChatMessageJson)
         };
 
-        var json = JsonSerializer.Serialize(jsonIn);
-        using var content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
-
         using var httpClient = CreateHttpClient();
+        using var httpRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            Content = JsonContent.Create(jsonIn, new MediaTypeHeaderValue(MediaTypeNames.Application.Json))
+        };
 
-        using var httpResponse = await httpClient.PostAsync(OpenAiCompletionsUrl, content, cancellationToken).ConfigureAwait(false);
+        using var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
         var httpResponseText = await httpResponse.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (httpResponse.StatusCode is HttpStatusCode.TooManyRequests)
         {
-            var errorMessage = ReadErrorMessage(httpResponseText);
-            return Failure.Create(IncidentCompleteFailureCode.TooManyRequests, errorMessage);
+            return Failure.Create(
+                failureCode: IncidentCompleteFailureCode.TooManyRequests,
+                failureMessage: ReadErrorMessage(httpResponseText));
         }
 
         if (httpResponse.IsSuccessStatusCode is false)
         {
             return Failure.Create(
-                IncidentCompleteFailureCode.Unknown,
-                $"An unexpected http status code: {httpResponse.StatusCode}. Body: {httpResponseText}");
+                failureCode: IncidentCompleteFailureCode.Unknown,
+                failureMessage: $"An unexpected http status code: {httpResponse.StatusCode}. Body: '{httpResponseText}'");
         }
 
         var jsonOut = JsonSerializer.Deserialize<ChatGptJsonOut>(httpResponseText);
@@ -69,7 +73,7 @@ partial class SupportGptApi
         {
             return Failure.Create(
                 IncidentCompleteFailureCode.Unknown,
-                $"GPT result choices are absent. Body: {httpResponseText}");
+                $"GPT result choices are absent. Body: '{httpResponseText}'");
         }
 
         var choice = jsonOut.Choices[0];
@@ -77,7 +81,7 @@ partial class SupportGptApi
         {
             return Failure.Create(
                 IncidentCompleteFailureCode.Unknown,
-                $"An unexpected GPT finish reason: {choice.FinishReason}. Body: {httpResponseText}");
+                $"An unexpected GPT finish reason: '{choice.FinishReason}'. Body: '{httpResponseText}'");
         }
 
         return new IncidentCompleteOut

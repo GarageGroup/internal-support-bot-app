@@ -4,13 +4,11 @@ namespace GarageGroup.Internal.Support;
 
 public sealed record class IncidentCompleteOption
 {
-    public IncidentCompleteOption(string model)
+    public IncidentCompleteOption(FlatArray<ChatMessageOption> chatMessages)
         =>
-        Model = model.OrEmpty();
+        ChatMessages = chatMessages;
 
-    public string Model { get; }
-
-    public required FlatArray<ChatMessageOption> ChatMessages { get; init; }
+    public FlatArray<ChatMessageOption> ChatMessages { get; }
 
     public int? MaxTokens { get; init; }
 

@@ -8,6 +8,7 @@ internal sealed record class StubGptJsonIn
     public StubMessageJson[]? Messages { get; init; }
 
     [JsonPropertyName("model")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Model { get; init; }
 
     [JsonPropertyName("max_tokens")]

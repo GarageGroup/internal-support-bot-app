@@ -5,9 +5,13 @@ namespace GarageGroup.Internal.Support;
 
 internal sealed partial class SupportGptApi : ISupportGptApi
 {
-    private const string OpenAiBaseAddressUrl = "https://api.openai.com/";
+    private const string OpenAiUrl = "https://api.openai.com/v1/chat/completions";
 
-    private const string OpenAiCompletionsUrl = "/v1/chat/completions";
+    private const string AzureAiUrlTemplate
+        =
+        "https://{0}.openai.azure.com/openai/deployments/{1}/chat/completions?api-version={2}";
+
+    private const string AzureAiApiKeyHeaderName = "api-key";
 
     private readonly HttpMessageHandler httpMessageHandler;
 
@@ -21,12 +25,20 @@ internal sealed partial class SupportGptApi : ISupportGptApi
 
     private HttpClient CreateHttpClient()
     {
-        var httpClient = new HttpClient(httpMessageHandler, false)
-        {
-            BaseAddress = new(OpenAiBaseAddressUrl)
-        };
+        var httpClient = new HttpClient(httpMessageHandler, false);
+        var azure = option.AzureGpt;
 
-        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {option.ApiKey}");
+        if (azure is null)
+        {
+            httpClient.BaseAddress = new(OpenAiUrl);
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {option.ApiKey}");
+        }
+        else
+        {
+            httpClient.BaseAddress = new(string.Format(AzureAiUrlTemplate, azure.ResourceName, azure.DeploymentId, azure.ApiVersion));
+            httpClient.DefaultRequestHeaders.Add(AzureAiApiKeyHeaderName, option.ApiKey);
+        }
+
         return httpClient;
     }
 
