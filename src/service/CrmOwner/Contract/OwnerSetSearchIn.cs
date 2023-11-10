@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GarageGroup.Internal.Support;
 
-public sealed record class UserSetSearchIn
+public sealed record class OwnerSetSearchIn
 {
-    public UserSetSearchIn([AllowNull] string searchText)
+    public OwnerSetSearchIn([AllowNull] string searchText)
         =>
         SearchText = searchText.OrEmpty();
 

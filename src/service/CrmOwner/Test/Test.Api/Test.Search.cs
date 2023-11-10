@@ -5,9 +5,9 @@ using GarageGroup.Infra;
 using Moq;
 using Xunit;
 
-namespace GarageGroup.Internal.Support.Service.CrmUser.Test;
+namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
-partial class CrmUserApiTest
+partial class CrmOwnerApiTest
 {
     [Fact]
     public static async Task SearchAsync_InputIsNull_ExpectArgumentNullException()
@@ -15,7 +15,7 @@ partial class CrmUserApiTest
         var dataverseOut = new DataverseSearchOut(1, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmUserApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var cancellationToken = new CancellationToken(canceled: false);
         var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
@@ -37,9 +37,9 @@ partial class CrmUserApiTest
         var dataverseOut = new DataverseSearchOut(17, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmUserApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
-        var input = new UserSetSearchIn(sourceSearchString)
+        var input = new OwnerSetSearchIn(sourceSearchString)
         {
             Top = sourceTop
         };
@@ -58,24 +58,24 @@ partial class CrmUserApiTest
     }
 
     [Theory]
-    [InlineData(DataverseFailureCode.Throttling, UserSetSearchFailureCode.TooManyRequests)]
-    [InlineData(DataverseFailureCode.UserNotEnabled, UserSetSearchFailureCode.NotAllowed)]
-    [InlineData(DataverseFailureCode.SearchableEntityNotFound, UserSetSearchFailureCode.NotAllowed)]
-    [InlineData(DataverseFailureCode.PrivilegeDenied, UserSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.PicklistValueOutOfRange, UserSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.RecordNotFound, UserSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.Unauthorized, UserSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.DuplicateRecord, UserSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.Unknown, UserSetSearchFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Throttling, OwnerSetGetFailureCode.TooManyRequests)]
+    [InlineData(DataverseFailureCode.UserNotEnabled, OwnerSetGetFailureCode.NotAllowed)]
+    [InlineData(DataverseFailureCode.SearchableEntityNotFound, OwnerSetGetFailureCode.NotAllowed)]
+    [InlineData(DataverseFailureCode.PrivilegeDenied, OwnerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.PicklistValueOutOfRange, OwnerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.RecordNotFound, OwnerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Unauthorized, OwnerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.DuplicateRecord, OwnerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Unknown, OwnerSetGetFailureCode.Unknown)]
     public static async Task SearchAsync_DataverseSearchResultIsFailure_ExpectFailure(
-        DataverseFailureCode sourceFailureCode, UserSetSearchFailureCode expectedFailureCode)
+        DataverseFailureCode sourceFailureCode, OwnerSetGetFailureCode expectedFailureCode)
     {
         var dataverseFailure = Failure.Create(sourceFailureCode, "Some error message");
         var mockDataverseApi = CreateMockDataverseApi(dataverseFailure);
 
-        var api = new CrmUserApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
-        var input = new UserSetSearchIn("Some search text")
+        var input = new OwnerSetSearchIn("Some search text")
         {
             Top = 5
         };
@@ -87,14 +87,14 @@ partial class CrmUserApiTest
     }
 
     [Theory]
-    [MemberData(nameof(CrmUserApiTestSource.OutputTestData), MemberType = typeof(CrmUserApiTestSource))]
+    [MemberData(nameof(CrmOwnerApiTestSource.OutputSearchTestData), MemberType = typeof(CrmOwnerApiTestSource))]
     public static async Task SearchAsync_DataverseSearchResultIsSuccess_ExpectSuccess(
-        DataverseSearchOut dataverseSearchOutput, UserSetSearchOut expected)
+        DataverseSearchOut dataverseSearchOutput, OwnerSetSearchOut expected)
     {
         var mockDataverseApi = CreateMockDataverseApi(dataverseSearchOutput);
-        var api = new CrmUserApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
-        var input = new UserSetSearchIn("Some Search Text")
+        var input = new OwnerSetSearchIn("Some Search Text")
         {
             Top = 5
         };

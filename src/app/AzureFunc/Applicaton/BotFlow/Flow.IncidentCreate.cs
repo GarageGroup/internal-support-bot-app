@@ -22,7 +22,7 @@ partial class Application
         .With(
             UseDataverseApi().With(UseSqlApi()).UseCrmContactApi())
         .With(
-            UseDataverseApi().UseCrmUserApi())
+            UseDataverseApi().With(UseSqlApi()).UseCrmOwnerApi())
         .With(
             UseDataverseApi().UseCrmIncidentApi())
         .With(

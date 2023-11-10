@@ -22,7 +22,7 @@
     <ProjectReference Include="..\..\service\CrmContact\Api\Api.csproj" />
     <ProjectReference Include="..\..\service\CrmCustomer\Api\Api.csproj" />
     <ProjectReference Include="..\..\service\CrmIncident\Api\Api.csproj" />
-    <ProjectReference Include="..\..\service\CrmUser\Api\Api.csproj" />
+    <ProjectReference Include="..\..\service\CrmOwner\Api\Api.csproj" />
     <ProjectReference Include="..\..\service\Gpt\Api\Api.csproj" />
   </ItemGroup>
 

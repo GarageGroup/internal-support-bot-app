@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GarageGroup.Internal.Support;
 
-public sealed record class UserItemOut
+public sealed record class OwnerItemOut
 {
-    public UserItemOut(Guid id, [AllowNull] string fullName)
+    public OwnerItemOut(Guid id, [AllowNull] string fullName)
     {
         Id = id;
         FullName = fullName.OrEmpty();

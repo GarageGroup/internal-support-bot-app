@@ -85,8 +85,8 @@ internal static class ContactAwaitHelper
 
     private static LookupValueSetOption MapSearchFailure(Failure<ContactSetGetFailureCode> failure, ILogger logger)
     {
-        logger.LogError("Search contacts failure: {failureCode} {failureMessage}", failure.FailureCode, failure.FailureMessage);
-        return new(items: new[] { SkipValue }, choiceText: ChooseOrSkip);
+        logger.LogError("Get last contacts failure: {failureCode} {failureMessage}", failure.FailureCode, failure.FailureMessage);
+        return new(items: SkipValue.AsFlatArray(), choiceText: ChooseOrSkip);
     }
 
     private static BotFlowFailure MapToFlowFailure(Failure<ContactSetGetFailureCode> failure)

@@ -8,8 +8,8 @@ partial record class DbIncidentCustomer
     public static FlatArray<string> BuildSelectedFields(Guid userId)
         =>
         QueryAll.SelectedFields.Concat(
-            $"MAX({CreatedOnFieldName}) AS {MaxCreatedOnAlias}",
-            $"MAX(CASE WHEN {AliasName}.createdby = '{userId:D}' THEN i.createdon ELSE NULL END) AS {MaxCurrentUserCreatedOnAlias}");
+            $"MAX({CreatedOnFieldName}) AS {MaxCreatedOnParameter}",
+            $"MAX(CASE WHEN {AliasName}.createdby = '{userId:D}' THEN i.createdon ELSE NULL END) AS {MaxCurrentUserCreatedOnParameter}");
 
     [DbSelect(All, AliasName, CustomerIdFieldName, GroupBy = true)]
     public Guid CustomerId { get; init; }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text.Json;
 using GarageGroup.Infra;
 
-namespace GarageGroup.Internal.Support.Service.CrmUser.Test;
+namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
-partial class CrmUserApiTestSource
+partial class CrmOwnerApiTestSource
 {
-    public static IEnumerable<object[]> OutputTestData
+    public static IEnumerable<object[]> OutputSearchTestData
         =>
         new object[][]
         {
@@ -15,7 +15,7 @@ partial class CrmUserApiTestSource
                 new DataverseSearchOut(
                     totalRecordCount: 1,
                     value: default),
-                default(UserSetSearchOut)
+                default(OwnerSetSearchOut)
             ],
             [
                 new DataverseSearchOut(
@@ -47,9 +47,9 @@ partial class CrmUserApiTestSource
                             entityName: "Third Entity Name",
                             extensionData: default)
                     }),
-                new UserSetSearchOut
+                new OwnerSetSearchOut
                 {
-                    Users = new UserItemOut[]
+                    Owners = new OwnerItemOut[]
                     {
                         new(Guid.Parse("d18417f9-3e5d-4836-8d7d-41cd44baafc4"), "First User Name"),
                         new(Guid.Parse("92fb1ea1-ecfd-40e2-8034-1ff38b1b2fe8"), string.Empty),

@@ -11,7 +11,7 @@ partial class IncidentCreateChatFlow
         this IBotContext context,
         ICrmCustomerApi crmCustomerApi,
         ICrmContactApi crmContactApi,
-        ICrmUserApi crmUserApi,
+        ICrmOwnerApi crmOwnerApi,
         ICrmIncidentApi crmIncidentApi,
         ISupportGptApi supportGptApi,
         IncidentCreateFlowOption option,
@@ -34,7 +34,7 @@ partial class IncidentCreateChatFlow
 
         return context.CreateChatFlow("IncidentCreate")
         .RunFlow(
-            crmCustomerApi, crmContactApi, crmUserApi, crmIncidentApi, supportGptApi, option)
+            crmCustomerApi, crmContactApi, crmOwnerApi, crmIncidentApi, supportGptApi, option)
         .CompleteValueAsync(cancellationToken);
     }
 }

@@ -9,7 +9,7 @@ internal static partial class IncidentCreateChatFlow
         this ChatFlow chatFlow,
         ICrmCustomerApi crmCustomerApi,
         ICrmContactApi crmContactApi,
-        ICrmUserApi crmUserApi,
+        ICrmOwnerApi crmOwnerApi,
         ICrmIncidentApi crmIncidentApi,
         ISupportGptApi supportGptApi,
         IncidentCreateFlowOption option)
@@ -31,7 +31,7 @@ internal static partial class IncidentCreateChatFlow
         .AwaitCaseType()
         .AwaitPriority()
         .AwaitOwner(
-            crmUserApi)
+            crmOwnerApi)
         .ConfirmIncident()
         .CreateIncident(
             crmIncidentApi)

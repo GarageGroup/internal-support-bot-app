@@ -7,8 +7,8 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>false</IsPackable>
-    <RootNamespace>GarageGroup.Internal.Support.Service.CrmUser.Test</RootNamespace>
-    <AssemblyName>GarageGroup.Internal.Support.Service.CrmUser.Test</AssemblyName>
+    <RootNamespace>GarageGroup.Internal.Support.Service.CrmOwner.Test</RootNamespace>
+    <AssemblyName>GarageGroup.Internal.Support.Service.CrmOwner.Test</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

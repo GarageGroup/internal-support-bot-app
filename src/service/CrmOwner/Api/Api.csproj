@@ -7,7 +7,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
-    <AssemblyName>GarageGroup.Internal.Support.Service.CrmUser.Api</AssemblyName>
+    <AssemblyName>GarageGroup.Internal.Support.Service.CrmOwner.Api</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +17,8 @@
   <ItemGroup>
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.3.0" />
     <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Abstractions.Search" Version="3.8.2" />
+    <PackageReference Include="GarageGroup.Infra.Sql.Api.Abstractions.QueryEntitySet" Version="2.0.0" />
+    <PackageReference Include="GarageGroup.Infra.Sql.Api.Core.DbRequest" Version="2.0.0" />
     <PackageReference Include="PrimeFuncPack.Core.Optional" Version="2.1.0" />
     <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.0.2" />
   </ItemGroup>
