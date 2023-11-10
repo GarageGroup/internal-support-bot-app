@@ -13,7 +13,11 @@ internal sealed partial class CrmOwnerApi : ICrmOwnerApi
 
     private readonly IDataverseSearchSupplier dataverseApi;
 
-    internal CrmOwnerApi(IDataverseSearchSupplier dataverseApi)
-        =>
+    private readonly ISqlQueryEntitySetSupplier sqlApi;
+
+    internal CrmOwnerApi(IDataverseSearchSupplier dataverseApi, ISqlQueryEntitySetSupplier sqlApi)
+    {
         this.dataverseApi = dataverseApi;
+        this.sqlApi = sqlApi;
+    }
 }

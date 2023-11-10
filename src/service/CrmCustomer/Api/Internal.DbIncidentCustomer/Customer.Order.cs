@@ -8,6 +8,6 @@ partial record class DbIncidentCustomer
     internal static readonly FlatArray<DbOrder> DefaultOrders
         =
         new(
-            new(MaxCurrentUserCreatedOnAlias, DbOrderType.Descending),
-            new(MaxCreatedOnAlias, DbOrderType.Descending));
+            new(MaxCurrentUserCreatedOnParameter, DbOrderType.Descending),
+            new(MaxCreatedOnParameter, DbOrderType.Descending));
 }

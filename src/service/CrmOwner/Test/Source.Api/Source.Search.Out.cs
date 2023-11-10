@@ -7,7 +7,7 @@ namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
 partial class CrmOwnerApiTestSource
 {
-    public static IEnumerable<object[]> OutputTestData
+    public static IEnumerable<object[]> OutputSearchTestData
         =>
         new object[][]
         {

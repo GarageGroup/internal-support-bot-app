@@ -15,7 +15,7 @@ partial class CrmOwnerApiTest
         var dataverseOut = new DataverseSearchOut(1, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmOwnerApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var cancellationToken = new CancellationToken(canceled: false);
         var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
@@ -37,7 +37,7 @@ partial class CrmOwnerApiTest
         var dataverseOut = new DataverseSearchOut(17, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmOwnerApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var input = new OwnerSetSearchIn(sourceSearchString)
         {
@@ -73,7 +73,7 @@ partial class CrmOwnerApiTest
         var dataverseFailure = Failure.Create(sourceFailureCode, "Some error message");
         var mockDataverseApi = CreateMockDataverseApi(dataverseFailure);
 
-        var api = new CrmOwnerApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var input = new OwnerSetSearchIn("Some search text")
         {
@@ -87,12 +87,12 @@ partial class CrmOwnerApiTest
     }
 
     [Theory]
-    [MemberData(nameof(CrmOwnerApiTestSource.OutputTestData), MemberType = typeof(CrmOwnerApiTestSource))]
+    [MemberData(nameof(CrmOwnerApiTestSource.OutputSearchTestData), MemberType = typeof(CrmOwnerApiTestSource))]
     public static async Task SearchAsync_DataverseSearchResultIsSuccess_ExpectSuccess(
         DataverseSearchOut dataverseSearchOutput, OwnerSetSearchOut expected)
     {
         var mockDataverseApi = CreateMockDataverseApi(dataverseSearchOutput);
-        var api = new CrmOwnerApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var input = new OwnerSetSearchIn("Some Search Text")
         {
