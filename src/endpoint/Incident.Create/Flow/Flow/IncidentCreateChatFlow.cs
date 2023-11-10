@@ -15,7 +15,10 @@ internal static partial class IncidentCreateChatFlow
         IncidentCreateFlowOption option)
         =>
         chatFlow.Start<IncidentCreateFlowState>(
-            static () => new())
+            () => new()
+            {
+                DbMinDate = DateTime.UtcNow.AddDays(-option.DbRequestPeriodInDays).Date
+            })
         .GetBotUser()
         .GetDescription()
         .AwaitCustomer(

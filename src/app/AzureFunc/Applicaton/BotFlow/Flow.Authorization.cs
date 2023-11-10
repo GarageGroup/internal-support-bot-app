@@ -19,7 +19,7 @@ partial class Application
 
     private static IDataverseUserApi GetDataverseUserApi(IBotContext botContext)
         =>
-        UseDataverseApiClient().UseUserApi().Resolve(botContext.ServiceProvider);
+        UseDataverseApi().UseUserApi().Resolve(botContext.ServiceProvider);
 
     private static BotAuthorizationOption ResolveBotAuthorizationOption(this IBotContext context)
         =>

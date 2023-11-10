@@ -20,10 +20,15 @@ internal static partial class Application
         .UseLogging(loggerCategoryName)
         .UsePollyStandard(HttpStatusCode.TooManyRequests);
 
-    private static Dependency<IDataverseApiClient> UseDataverseApiClient()
+    private static Dependency<IDataverseApiClient> UseDataverseApi()
         =>
         Dependency.From(
             ServiceProviderServiceExtensions.GetRequiredService<IDataverseApiClient>);
+
+    private static Dependency<ISqlApi> UseSqlApi()
+        =>
+        Dependency.From(
+            ServiceProviderServiceExtensions.GetRequiredService<ISqlApi>);
 
     private static IConfiguration GetConfiguration(this IServiceProvider serviceProvider)
         =>

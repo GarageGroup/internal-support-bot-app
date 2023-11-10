@@ -13,9 +13,9 @@ partial class CrmCustomerApiTest
     public static async Task SearchAsync_InputIsNull_ExpectArgumentNullException()
     {
         var dataverseOut = new DataverseSearchOut(1, SomeDataverseItems);
-        var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseOut);
 
-        var api = new CrmCustomerApi(mockDataverseApi.Object);
+        var api = new CrmCustomerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var cancellationToken = new CancellationToken(canceled: false);
         var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
@@ -35,9 +35,9 @@ partial class CrmCustomerApiTest
         string? sourceSearchString, int? sourceTop, string expectedSearchString)
     {
         var dataverseOut = new DataverseSearchOut(17, SomeDataverseItems);
-        var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseOut);
 
-        var api = new CrmCustomerApi(mockDataverseApi.Object);
+        var api = new CrmCustomerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var input = new CustomerSetSearchIn(sourceSearchString)
         {
@@ -45,7 +45,6 @@ partial class CrmCustomerApiTest
         };
 
         var cancellationToken = new CancellationToken(canceled: false);
-
         _ = await api.SearchAsync(input, cancellationToken);
 
         var expected = new DataverseSearchIn(expectedSearchString)
@@ -58,22 +57,24 @@ partial class CrmCustomerApiTest
     }
 
     [Theory]
-    [InlineData(DataverseFailureCode.Throttling, CustomerSetSearchFailureCode.TooManyRequests)]
-    [InlineData(DataverseFailureCode.UserNotEnabled, CustomerSetSearchFailureCode.NotAllowed)]
-    [InlineData(DataverseFailureCode.SearchableEntityNotFound, CustomerSetSearchFailureCode.NotAllowed)]
-    [InlineData(DataverseFailureCode.PrivilegeDenied, CustomerSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.PicklistValueOutOfRange, CustomerSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.RecordNotFound, CustomerSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.Unauthorized, CustomerSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.DuplicateRecord, CustomerSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.Unknown, CustomerSetSearchFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Throttling, CustomerSetGetFailureCode.TooManyRequests)]
+    [InlineData(DataverseFailureCode.UserNotEnabled, CustomerSetGetFailureCode.NotAllowed)]
+    [InlineData(DataverseFailureCode.SearchableEntityNotFound, CustomerSetGetFailureCode.NotAllowed)]
+    [InlineData(DataverseFailureCode.PrivilegeDenied, CustomerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.PicklistValueOutOfRange, CustomerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.RecordNotFound, CustomerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Unauthorized, CustomerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.DuplicateRecord, CustomerSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Unknown, CustomerSetGetFailureCode.Unknown)]
     public static async Task SearchAsync_DataverseSearchResultIsFailure_ExpectFailure(
-        DataverseFailureCode sourceFailureCode, CustomerSetSearchFailureCode expectedFailureCode)
+        DataverseFailureCode sourceFailureCode, CustomerSetGetFailureCode expectedFailureCode)
     {
-        var dataverseFailure = Failure.Create(sourceFailureCode, "Some failure message");
-        var mockDataverseApi = CreateMockDataverseApi(dataverseFailure);
+        var sourceException = new Exception("Some error text");
+        var dataverseFailure = sourceException.ToFailure(sourceFailureCode, "Some failure message");
 
-        var api = new CrmCustomerApi(mockDataverseApi.Object);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseFailure);
+
+        var api = new CrmCustomerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var input = new CustomerSetSearchIn("Some search text")
         {
@@ -81,18 +82,18 @@ partial class CrmCustomerApiTest
         };
 
         var actual = await api.SearchAsync(input, CancellationToken.None);
-        var expected = Failure.Create(expectedFailureCode, "Some failure message");
+        var expected = Failure.Create(expectedFailureCode, "Some failure message", sourceException);
 
         Assert.StrictEqual(expected, actual);
     }
 
     [Theory]
-    [MemberData(nameof(CrmCustomerApiTestSource.OutputTestData), MemberType = typeof(CrmCustomerApiTestSource))]
+    [MemberData(nameof(CrmCustomerApiTestSource.OutputSearchTestData), MemberType = typeof(CrmCustomerApiTestSource))]
     public static async Task SearchAsync_DataverseSearchResultIsSuccess_ExpectSuccess(
         DataverseSearchOut dataverseSearchOutput, CustomerSetSearchOut expected)
     {
-        var mockDataverseApi = CreateMockDataverseApi(dataverseSearchOutput);
-        var api = new CrmCustomerApi(mockDataverseApi.Object);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseSearchOutput);
+        var api = new CrmCustomerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var input = new CustomerSetSearchIn("Some Search Text");
         var actual = await api.SearchAsync(input, CancellationToken.None);
