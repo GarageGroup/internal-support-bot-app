@@ -42,20 +42,24 @@ partial class CrmOwnerApiTest
         var expectedQuery = new DbSelectQuery("incident", "i")
         {
             Top = 11,
-            SelectedFields = new("i.ownerid AS OwnerId", "i.owneridname AS OwnerName", "MAX(i.createdon) AS MaxCreatedOn"),
+            SelectedFields = new("i.ownerid AS OwnerId", "u.fullname AS OwnerName", "MAX(i.createdon) AS MaxCreatedOn"),
             Filter = new DbCombinedFilter(DbLogicalOperator.And)
             {
                 Filters = new IDbFilter[]
                 {
-                    new DbRawFilter(
-                        "i.ownerid IS NOT NULL"),
                     new DbParameterFilter(
                         "i.ownerid", DbFilterOperator.Inequal, Guid.Parse("71cbe0d9-a715-4bf3-bb0c-bb02e343d569"), "currentUserId"),
                     new DbParameterFilter(
-                        "i.customerid", DbFilterOperator.Equal, Guid.Parse("4a8f89de-3a0f-4952-9a92-7421b2a72405"), "customerId")
+                        "i.customerid", DbFilterOperator.Equal, Guid.Parse("4a8f89de-3a0f-4952-9a92-7421b2a72405"), "customerId"),
+                    new DbRawFilter(
+                        "u.isdisabled = 0")
                 }
             },
-            GroupByFields = new("i.ownerid", "i.owneridname"),
+            JoinedTables = new DbJoinedTable[]
+            {
+                new(DbJoinType.Inner, "systemuser", "u", new DbRawFilter("u.systemuserid = i.ownerid"))
+            },
+            GroupByFields = new("i.ownerid", "u.fullname"),
             Orders = new DbOrder[]
             {
                 new("MaxCreatedOn", DbOrderType.Descending)
