@@ -13,6 +13,6 @@ partial record class DbIncidentOwner
     [DbSelect(All, AliasName, OwnerIdFieldName, GroupBy = true)]
     public Guid OwnerId { get; init; }
 
-    [DbSelect(All, AliasName, $"{AliasName}.owneridname", GroupBy = true)]
+    [DbSelect(All, UserAlias, $"{UserAlias}.fullname", GroupBy = true)]
     public string? OwnerName { get; init; }
 }

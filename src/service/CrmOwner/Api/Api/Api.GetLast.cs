@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GarageGroup.Infra;
@@ -21,9 +20,9 @@ partial class CrmOwnerApi
                 Filter = new DbCombinedFilter(DbLogicalOperator.And)
                 {
                     Filters = new(
-                        DbIncidentOwner.OwnerNotNullFilter,
                         DbIncidentOwner.BuildCurrentUserIdFilter(@in.UserId),
-                        DbIncidentOwner.BuildCustomerIdFilter(@in.CustomerId))
+                        DbIncidentOwner.BuildCustomerIdFilter(@in.CustomerId),
+                        DbIncidentOwner.EnabledUserFilter)
                 },
                 Orders = DbIncidentOwner.DefaultOrders
             })

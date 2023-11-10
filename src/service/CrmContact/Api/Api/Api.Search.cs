@@ -17,7 +17,7 @@ partial class CrmContactApi
             static @in => new DataverseSearchIn($"*{@in.SearchText}*")
             {
                 Entities = ContactSetSearchEntities,
-                Filter = $"parentcustomerid eq '{@in.CustomerId:D}'",
+                Filter = new DataverseComparisonFilter("parentcustomerid", DataverseComparisonOperator.Equal, @in.CustomerId),
                 Top = @in.Top 
             })
         .PipeValue(

@@ -5,9 +5,9 @@ namespace GarageGroup.Internal.Support;
 
 partial record class DbIncidentOwner
 {
-    internal static readonly DbRawFilter OwnerNotNullFilter
+    internal static readonly DbRawFilter EnabledUserFilter
         =
-        new($"{OwnerIdFieldName} IS NOT NULL");
+        new($"{UserAlias}.isdisabled = 0");
 
     internal static DbParameterFilter BuildCurrentUserIdFilter(Guid currentUserId)
         =>
