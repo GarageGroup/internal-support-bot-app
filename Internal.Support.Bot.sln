@@ -47,13 +47,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\service\CrmConta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "src\service\CrmContact\Test\Test.csproj", "{897511EC-27DE-4A86-B0D3-5DA5DCD0C36C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CrmUser", "CrmUser", "{A1B43D14-F416-47D4-BCDB-2E047124F563}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CrmOwner", "CrmOwner", "{A1B43D14-F416-47D4-BCDB-2E047124F563}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "src\service\CrmUser\Contract\Contract.csproj", "{9FCF0D94-88CA-405F-864A-710E7380B892}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "src\service\CrmOwner\Contract\Contract.csproj", "{9FCF0D94-88CA-405F-864A-710E7380B892}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\service\CrmUser\Api\Api.csproj", "{45AA67DF-491D-493F-AB04-5D17D82A12BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\service\CrmOwner\Api\Api.csproj", "{45AA67DF-491D-493F-AB04-5D17D82A12BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "src\service\CrmUser\Test\Test.csproj", "{CAC26758-7536-4892-A55C-C21B9BB0B193}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "src\service\CrmOwner\Test\Test.csproj", "{CAC26758-7536-4892-A55C-C21B9BB0B193}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

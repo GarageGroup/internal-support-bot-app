@@ -6,7 +6,7 @@ using GarageGroup.Infra;
 
 namespace GarageGroup.Internal.Support;
 
-partial class CrmUserApi
+partial class CrmOwnerApi
 {
     public ValueTask<Result<UserSetSearchOut, Failure<UserSetSearchFailureCode>>> SearchAsync(
         UserSetSearchIn input, CancellationToken cancellationToken)

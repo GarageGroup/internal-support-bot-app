@@ -5,13 +5,13 @@ namespace GarageGroup.Internal.Support;
 internal static class OwnerAwaitFlowStep
 {
     internal static ChatFlow<IncidentCreateFlowState> AwaitOwner(
-        this ChatFlow<IncidentCreateFlowState> chatFlow, ICrmUserApi crmUserApi)
+        this ChatFlow<IncidentCreateFlowState> chatFlow, ICrmOwnerApi crmOwnerApi)
         =>
         chatFlow.SendText(
             _ => "Нужно выбрать ответственного")
         .AwaitLookupValue(
             OwnerAwaitHelper.GetDefaultOwnerAsync,
-            crmUserApi.SearchUsersOrFailureAsync,
+            crmOwnerApi.SearchUsersOrFailureAsync,
             OwnerAwaitHelper.CreateResultMessage,
             MapFlowState);
 

@@ -3,19 +3,19 @@ using System.Runtime.CompilerServices;
 using GarageGroup.Infra;
 using PrimeFuncPack;
 
-[assembly: InternalsVisibleTo("GarageGroup.Internal.Support.Service.CrmUser.Test")]
+[assembly: InternalsVisibleTo("GarageGroup.Internal.Support.Service.CrmOwner.Test")]
 
 namespace GarageGroup.Internal.Support;
 
-public static class CrmUserApiDependency
+public static class CrmOwnerApiDependency
 {
-    public static Dependency<ICrmUserApi> UseCrmUserApi<TDataverseApi>(this Dependency<TDataverseApi> dependency)
+    public static Dependency<ICrmOwnerApi> UseCrmOwnerApi<TDataverseApi>(this Dependency<TDataverseApi> dependency)
         where TDataverseApi : IDataverseSearchSupplier
     {
         ArgumentNullException.ThrowIfNull(dependency);
-        return dependency.Map<ICrmUserApi>(CreateApi);
+        return dependency.Map<ICrmOwnerApi>(CreateApi);
 
-        static CrmUserApi CreateApi(TDataverseApi dataverseApi)
+        static CrmOwnerApi CreateApi(TDataverseApi dataverseApi)
         {
             ArgumentNullException.ThrowIfNull(dataverseApi);
             return new(dataverseApi);

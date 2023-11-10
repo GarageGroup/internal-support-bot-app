@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace GarageGroup.Internal.Support;
 
-public interface ICrmUserApi
+public interface ICrmOwnerApi
 {
     ValueTask<Result<UserSetSearchOut, Failure<UserSetSearchFailureCode>>> SearchAsync(
         UserSetSearchIn input, CancellationToken cancellationToken);

@@ -4,9 +4,9 @@ using System.Threading;
 using GarageGroup.Infra;
 using Moq;
 
-namespace GarageGroup.Internal.Support.Service.CrmUser.Test;
+namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
-public static partial class CrmUserApiTest
+public static partial class CrmOwnerApiTest
 {
     private static readonly FlatArray<DataverseSearchItem> SomeDataverseItems
         =

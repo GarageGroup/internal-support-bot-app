@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using GarageGroup.Infra;
 
-namespace GarageGroup.Internal.Support.Service.CrmUser.Test;
+namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
-partial class CrmUserApiTestSource
+partial class CrmOwnerApiTestSource
 {
     public static IEnumerable<object[]> OutputTestData
         =>

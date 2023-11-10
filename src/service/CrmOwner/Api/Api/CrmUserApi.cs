@@ -3,17 +3,17 @@ using GarageGroup.Infra;
 
 namespace GarageGroup.Internal.Support;
 
-internal sealed partial class CrmUserApi : ICrmUserApi
+internal sealed partial class CrmOwnerApi : ICrmOwnerApi
 {
     private static readonly FlatArray<string> UserSetSearchEntities;
 
-    static CrmUserApi()
+    static CrmOwnerApi()
         =>
         UserSetSearchEntities = new("systemuser");
 
     private readonly IDataverseSearchSupplier dataverseApi;
 
-    internal CrmUserApi(IDataverseSearchSupplier dataverseApi)
+    internal CrmOwnerApi(IDataverseSearchSupplier dataverseApi)
         =>
         this.dataverseApi = dataverseApi;
 }

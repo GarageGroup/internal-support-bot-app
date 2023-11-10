@@ -5,9 +5,9 @@ using GarageGroup.Infra;
 using Moq;
 using Xunit;
 
-namespace GarageGroup.Internal.Support.Service.CrmUser.Test;
+namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
-partial class CrmUserApiTest
+partial class CrmOwnerApiTest
 {
     [Fact]
     public static async Task SearchAsync_InputIsNull_ExpectArgumentNullException()
@@ -15,7 +15,7 @@ partial class CrmUserApiTest
         var dataverseOut = new DataverseSearchOut(1, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmUserApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object);
 
         var cancellationToken = new CancellationToken(canceled: false);
         var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
@@ -37,7 +37,7 @@ partial class CrmUserApiTest
         var dataverseOut = new DataverseSearchOut(17, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmUserApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object);
 
         var input = new UserSetSearchIn(sourceSearchString)
         {
@@ -73,7 +73,7 @@ partial class CrmUserApiTest
         var dataverseFailure = Failure.Create(sourceFailureCode, "Some error message");
         var mockDataverseApi = CreateMockDataverseApi(dataverseFailure);
 
-        var api = new CrmUserApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object);
 
         var input = new UserSetSearchIn("Some search text")
         {
@@ -87,12 +87,12 @@ partial class CrmUserApiTest
     }
 
     [Theory]
-    [MemberData(nameof(CrmUserApiTestSource.OutputTestData), MemberType = typeof(CrmUserApiTestSource))]
+    [MemberData(nameof(CrmOwnerApiTestSource.OutputTestData), MemberType = typeof(CrmOwnerApiTestSource))]
     public static async Task SearchAsync_DataverseSearchResultIsSuccess_ExpectSuccess(
         DataverseSearchOut dataverseSearchOutput, UserSetSearchOut expected)
     {
         var mockDataverseApi = CreateMockDataverseApi(dataverseSearchOutput);
-        var api = new CrmUserApi(mockDataverseApi.Object);
+        var api = new CrmOwnerApi(mockDataverseApi.Object);
 
         var input = new UserSetSearchIn("Some Search Text")
         {

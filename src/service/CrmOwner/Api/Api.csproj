@@ -7,7 +7,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
-    <AssemblyName>GarageGroup.Internal.Support.Service.CrmUser.Api</AssemblyName>
+    <AssemblyName>GarageGroup.Internal.Support.Service.CrmOwner.Api</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

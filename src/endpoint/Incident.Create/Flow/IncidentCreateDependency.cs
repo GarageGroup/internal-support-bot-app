@@ -9,7 +9,7 @@ namespace GarageGroup.Internal.Support;
 public static class IncidentCreateDependency
 {
     public static IBotBuilder MapIncidentCreateFlow(
-        this Dependency<IncidentCreateFlowOption, ICrmCustomerApi, ICrmContactApi, ICrmUserApi, ICrmIncidentApi, ISupportGptApi> dependency,
+        this Dependency<IncidentCreateFlowOption, ICrmCustomerApi, ICrmContactApi, ICrmOwnerApi, ICrmIncidentApi, ISupportGptApi> dependency,
         IBotBuilder botBuilder)
     {
         ArgumentNullException.ThrowIfNull(dependency);
@@ -23,7 +23,7 @@ public static class IncidentCreateDependency
                 option: dependency.ResolveFirst(context.ServiceProvider),
                 crmCustomerApi: dependency.ResolveSecond(context.ServiceProvider),
                 crmContactApi: dependency.ResolveThird(context.ServiceProvider),
-                crmUserApi: dependency.ResolveFourth(context.ServiceProvider),
+                crmOwnerApi: dependency.ResolveFourth(context.ServiceProvider),
                 crmIncidentApi: dependency.ResolveFifth(context.ServiceProvider),
                 supportGptApi: dependency.ResolveSixth(context.ServiceProvider),
                 cancellationToken: cancellationToken);
