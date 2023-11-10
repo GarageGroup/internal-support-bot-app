@@ -9,12 +9,6 @@ namespace GarageGroup.Internal.Support;
 
 partial class Application
 {
-    private const string GptApiSectionName = "GptApi";
-
-    private const string GptApiAzureSectionName = "Azure";
-
-    private const string IncidentCompleteSectionName = "IncidentComplete";
-
     private static IBotBuilder UseIncidentCreateFlow(this IBotBuilder botBuilder)
         =>
         Dependency.From(
@@ -55,8 +49,6 @@ partial class Application
         var gptApiSection = configuration.GetRequiredSection(GptApiSectionName);
         var incidentCompleteSection = gptApiSection.GetRequiredSection(IncidentCompleteSectionName);
 
-        var apiKey = gptApiSection["Key"].OrEmpty();
-        var model = gptApiSection["Model"];
         var incidentComplete = new IncidentCompleteOption(
             chatMessages: new(
                 new(
@@ -70,18 +62,17 @@ partial class Application
             Temperature = incidentCompleteSection.GetValue<decimal?>("Temperature")
         };
 
-        if (string.IsNullOrWhiteSpace(model) is false)
+        if (configuration.IsAzureGpt() is false)
         {
             return new(
-                apiKey: apiKey,
-                model: model,
+                apiKey: gptApiSection["Key"].OrEmpty(),
+                model: incidentCompleteSection["Model"].OrEmpty(),
                 incidentComplete: incidentComplete);
         }
 
         var azureSection = gptApiSection.GetRequiredSection(GptApiAzureSectionName);
-
         return new(
-            apiKey: apiKey,
+            apiKey: azureSection["Key"].OrEmpty(),
             azureGpt: new(
                 resourceName: azureSection["ResourceName"].OrEmpty(),
                 deploymentId: azureSection["DeploymentId"].OrEmpty(),
@@ -95,11 +86,19 @@ partial class Application
         var traceData = new Dictionary<string, string>();
 
         traceData.AppendSectionValues(gptApiSection);
-        traceData.AppendSectionValues(gptApiSection.GetSection(GptApiAzureSectionName));
-        traceData.AppendSectionValues(gptApiSection.GetSection(IncidentCompleteSectionName));
 
+        if (configuration.IsAzureGpt())
+        {
+            traceData.AppendSectionValues(gptApiSection.GetSection(GptApiAzureSectionName));
+        }
+
+        traceData.AppendSectionValues(gptApiSection.GetSection(IncidentCompleteSectionName));
         return traceData.ToFlatArray();
     }
+
+    private static bool IsAzureGpt(this IConfiguration configuration)
+        =>
+        string.IsNullOrEmpty(configuration[$"{GptApiSectionName}:{IncidentCompleteSectionName}:Model"]);
 
     private static void AppendSectionValues(this Dictionary<string, string> traceData, IConfigurationSection section)
     {
