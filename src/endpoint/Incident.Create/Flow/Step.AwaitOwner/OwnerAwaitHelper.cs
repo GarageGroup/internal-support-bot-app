@@ -38,7 +38,7 @@ internal static class OwnerAwaitHelper
             context.FlowState, cancellationToken)
         .HandleCancellation()
         .Pipe(
-            flowState => new UserSetSearchIn(seachText)
+            flowState => new OwnerSetSearchIn(seachText)
             {
                 Top = MaxUserSetCount
             })
@@ -48,24 +48,24 @@ internal static class OwnerAwaitHelper
             MapToFlowFailure)
         .MapSuccess(
             static @out => new LookupValueSetOption(
-                items: @out.Users.Map(MapUserItem),
-                choiceText: @out.Users.IsNotEmpty ? ChooseOwnerMessage : UnsuccessfulSearchResultText));
+                items: @out.Owners.Map(MapUserItem),
+                choiceText: @out.Owners.IsNotEmpty ? ChooseOwnerMessage : UnsuccessfulSearchResultText));
 
     internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue userValue)
         =>
         $"Ответственный: {context.EncodeHtmlTextWithStyle(userValue.Name, BotTextStyle.Bold)}";
 
-    private static LookupValue MapUserItem(UserItemOut item)
+    private static LookupValue MapUserItem(OwnerItemOut item)
         =>
         new(item.Id, item.FullName);
 
-    private static BotFlowFailure MapToFlowFailure(Failure<UserSetSearchFailureCode> failure)
+    private static BotFlowFailure MapToFlowFailure(Failure<OwnerSetGetFailureCode> failure)
         =>
         (failure.FailureCode switch
         {
-            UserSetSearchFailureCode.NotAllowed
+            OwnerSetGetFailureCode.NotAllowed
                 => "При поиске пользователей произошла ошибка. У вашей учетной записи не достаточно разрешений. Обратитесь к администратору приложения",
-            UserSetSearchFailureCode.TooManyRequests
+            OwnerSetGetFailureCode.TooManyRequests
                 => "Слишком много обращений к сервису. Попробуйте повторить попытку через несколько секунд",
             _
                 => "При поиске пользователей произошла непредвиденная ошибка. Обратитесь к администратору или повторите попытку позднее"

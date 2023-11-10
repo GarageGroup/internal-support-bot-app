@@ -8,15 +8,15 @@ namespace GarageGroup.Internal.Support;
 
 partial class CrmOwnerApi
 {
-    public ValueTask<Result<UserSetSearchOut, Failure<UserSetSearchFailureCode>>> SearchAsync(
-        UserSetSearchIn input, CancellationToken cancellationToken)
+    public ValueTask<Result<OwnerSetSearchOut, Failure<OwnerSetGetFailureCode>>> SearchAsync(
+        OwnerSetSearchIn input, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
             input ?? throw new ArgumentNullException(nameof(input)), cancellationToken)
         .Pipe(
             static @in => new DataverseSearchIn($"*{@in.SearchText}*")
             {
-                Entities = UserSetSearchEntities,
+                Entities = OwnerSetSearchEntities,
                 Top = @in.Top
             })
         .PipeValue(
@@ -24,24 +24,24 @@ partial class CrmOwnerApi
         .MapFailure(
             static failure => failure.MapFailureCode(MapFailureCode))
         .MapSuccess(
-            static success => new UserSetSearchOut
+            static success => new OwnerSetSearchOut
             {
-                Users = success.Value.Map(MapUserItem)
+                Owners = success.Value.Map(MapOwnerItem)
             });
 
-    private static UserItemOut MapUserItem(DataverseSearchItem item)
+    private static OwnerItemOut MapOwnerItem(DataverseSearchItem item)
         =>
         new(
             id: item.ObjectId,
             fullName: item.ExtensionData.AsEnumerable().GetValueOrAbsent("fullname").OrDefault()?.ToString());
 
-    private static UserSetSearchFailureCode MapFailureCode(DataverseFailureCode failureCode)
+    private static OwnerSetGetFailureCode MapFailureCode(DataverseFailureCode failureCode)
         =>
         failureCode switch
         {
-            DataverseFailureCode.UserNotEnabled => UserSetSearchFailureCode.NotAllowed,
-            DataverseFailureCode.SearchableEntityNotFound => UserSetSearchFailureCode.NotAllowed,
-            DataverseFailureCode.Throttling => UserSetSearchFailureCode.TooManyRequests,
+            DataverseFailureCode.UserNotEnabled => OwnerSetGetFailureCode.NotAllowed,
+            DataverseFailureCode.SearchableEntityNotFound => OwnerSetGetFailureCode.NotAllowed,
+            DataverseFailureCode.Throttling => OwnerSetGetFailureCode.TooManyRequests,
             _ => default
         };
 }

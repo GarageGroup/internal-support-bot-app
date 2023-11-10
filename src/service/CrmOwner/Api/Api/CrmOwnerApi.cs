@@ -5,11 +5,11 @@ namespace GarageGroup.Internal.Support;
 
 internal sealed partial class CrmOwnerApi : ICrmOwnerApi
 {
-    private static readonly FlatArray<string> UserSetSearchEntities;
+    private static readonly FlatArray<string> OwnerSetSearchEntities;
 
     static CrmOwnerApi()
         =>
-        UserSetSearchEntities = new("systemuser");
+        OwnerSetSearchEntities = new("systemuser");
 
     private readonly IDataverseSearchSupplier dataverseApi;
 
