@@ -16,13 +16,6 @@ internal static class CustomerAwaitHelper
 
     private const int MaxCustomerSetCount = 6;
 
-    private static readonly CustomerSetSearchIn DefaultCustomerSetSearchInput
-        =
-        new(null)
-        {
-            Top = MaxCustomerSetCount
-        };
-
     internal static ValueTask<LookupValueSetOption> GetLastCustomersAsync(
         this ICrmCustomerApi crmCustomerApi,
         IChatFlowContext<IncidentCreateFlowState> context,

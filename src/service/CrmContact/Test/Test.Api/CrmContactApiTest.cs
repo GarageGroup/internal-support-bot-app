@@ -17,6 +17,13 @@ public static partial class CrmContactApiTest
             Top = 5
         };
 
+    private static readonly LastContactSetGetIn SomeLastContactSetGetInput
+        =
+        new(
+            customerId: Guid.Parse("70bbc008-558d-434c-a8e2-ea17ee121791"),
+            userId: Guid.Parse("41113f2a-8a51-4d45-9623-750195e4618c"),
+            top: 3);
+
     private static readonly FlatArray<DataverseSearchItem> SomeDataverseItems
         =
         new DataverseSearchItem[]
@@ -35,13 +42,41 @@ public static partial class CrmContactApiTest
                 extensionData: default)
         };
 
+    private static FlatArray<DbContact> SomeDbContacts
+        =>
+        new DbContact[]
+        {
+            new()
+            {
+                Id = Guid.Parse("4cbbd503-f1f7-4b32-bf0a-52248eae50bd"),
+                Name = "First Contact"
+            },
+            new()
+            {
+                Id = Guid.Parse("121d8c04-7407-4228-b7b7-c3ad0b362fcf"),
+                Name = "Second Contact"
+            }
+        };
+
     private static Mock<IDataverseSearchSupplier> CreateMockDataverseApi(
-        Result<DataverseSearchOut, Failure<DataverseFailureCode>> result)
+        in Result<DataverseSearchOut, Failure<DataverseFailureCode>> result)
     {
         var mock = new Mock<IDataverseSearchSupplier>();
 
         _ = mock
             .Setup(s => s.SearchAsync(It.IsAny<DataverseSearchIn>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+
+        return mock;
+    }
+
+    private static Mock<ISqlQueryEntitySetSupplier> BuildMockSqlApi(
+        in Result<FlatArray<DbContact>, Failure<Unit>> result)
+    {
+        var mock = new Mock<ISqlQueryEntitySetSupplier>();
+
+        _ = mock
+            .Setup(s => s.QueryEntitySetOrFailureAsync<DbContact>(It.IsAny<IDbQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(result);
 
         return mock;

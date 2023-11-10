@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GarageGroup.Infra.Bot.Builder;
@@ -34,19 +32,17 @@ internal static class ContactAwaitHelper
         this ICrmContactApi crmContactApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken token)
         =>
         AsyncPipeline.Pipe(
-            context.FlowState.CustomerId, token)
+            context.FlowState, token)
         .Pipe(
-            static customerId => new ContactSetSearchIn(
-                searchText: string.Empty,
-                customerId: customerId)
-            {
-                Top = MaxCustomerSetCount
-            })
+            static state => new LastContactSetGetIn(
+                customerId: state.CustomerId,
+                userId: state.BotUserId.GetValueOrDefault(),
+                top: MaxCustomerSetCount))
         .PipeValue(
-            crmContactApi.SearchAsync)
+            crmContactApi.GetLastAsync)
         .Fold(
             static @out => new(
-                items: @out.Contacts.AsEnumerable().Select(MapContactItem).ToList().AddSkipValue(),
+                items: @out.Contacts.Map(MapContactItem).Concat(SkipValue),
                 choiceText: @out.Contacts.IsNotEmpty ? ChooseOrSkip : UnsuccessfulDefaultResultText),
             failure => MapSearchFailure(failure, context.Logger));
 
@@ -72,7 +68,7 @@ internal static class ContactAwaitHelper
             MapToFlowFailure)
         .MapSuccess(
             static @out => new LookupValueSetOption(
-                items: @out.Contacts.AsEnumerable().Select(MapContactItem).ToList().AddSkipValue(),
+                items: @out.Contacts.Map(MapContactItem).Concat(SkipValue),
                 choiceText: @out.Contacts.IsNotEmpty ? ChooseOrSkip : UnsuccessfulSearchResultText));
 
     internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, LookupValue contactValue)
@@ -83,29 +79,23 @@ internal static class ContactAwaitHelper
         => 
         contactValue.Id != SkipId ? new(contactValue) : default;
 
-    private static FlatArray<LookupValue> AddSkipValue(this List<LookupValue> lookupValues)
-    {
-        lookupValues.Add(SkipValue);
-        return lookupValues;
-    }
-
     private static LookupValue MapContactItem(ContactItemOut item)
         =>
         new(item.Id, item.FullName);
 
-    private static LookupValueSetOption MapSearchFailure(Failure<ContactSetSearchFailureCode> failure, ILogger logger)
+    private static LookupValueSetOption MapSearchFailure(Failure<ContactSetGetFailureCode> failure, ILogger logger)
     {
         logger.LogError("Search contacts failure: {failureCode} {failureMessage}", failure.FailureCode, failure.FailureMessage);
         return new(items: new[] { SkipValue }, choiceText: ChooseOrSkip);
     }
 
-    private static BotFlowFailure MapToFlowFailure(Failure<ContactSetSearchFailureCode> failure)
+    private static BotFlowFailure MapToFlowFailure(Failure<ContactSetGetFailureCode> failure)
         =>
         (failure.FailureCode switch
         {
-            ContactSetSearchFailureCode.NotAllowed
+            ContactSetGetFailureCode.NotAllowed
                 => "При поиске контактов произошла ошибка. У вашей учетной записи не достаточно разрешений. Обратитесь к администратору приложения",
-            ContactSetSearchFailureCode.TooManyRequests
+            ContactSetGetFailureCode.TooManyRequests
                 => "Слишком много обращений к сервису. Попробуйте повторить попытку через несколько секунд",
             _
                 => "При поиске контактов произошла непредвиденная ошибка. Обратитесь к администратору или повторите попытку позднее"
