@@ -15,7 +15,7 @@ partial class CrmContactApiTest
         var dataverseOut = new DataverseSearchOut(1, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmContactApi(mockDataverseApi.Object);
+        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var cancellationToken = new CancellationToken(canceled: false);
         var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
@@ -37,7 +37,7 @@ partial class CrmContactApiTest
         var dataverseOut = new DataverseSearchOut(17, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmContactApi(mockDataverseApi.Object);
+        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var input = new ContactSetSearchIn(
             searchText: sourceSearchString,
@@ -61,22 +61,22 @@ partial class CrmContactApiTest
     }
 
     [Theory]
-    [InlineData(DataverseFailureCode.Throttling, ContactSetSearchFailureCode.TooManyRequests)]
-    [InlineData(DataverseFailureCode.UserNotEnabled, ContactSetSearchFailureCode.NotAllowed)]
-    [InlineData(DataverseFailureCode.SearchableEntityNotFound, ContactSetSearchFailureCode.NotAllowed)]
-    [InlineData(DataverseFailureCode.PrivilegeDenied, ContactSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.PicklistValueOutOfRange, ContactSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.RecordNotFound, ContactSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.Unauthorized, ContactSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.DuplicateRecord, ContactSetSearchFailureCode.Unknown)]
-    [InlineData(DataverseFailureCode.Unknown, ContactSetSearchFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Throttling, ContactSetGetFailureCode.TooManyRequests)]
+    [InlineData(DataverseFailureCode.UserNotEnabled, ContactSetGetFailureCode.NotAllowed)]
+    [InlineData(DataverseFailureCode.SearchableEntityNotFound, ContactSetGetFailureCode.NotAllowed)]
+    [InlineData(DataverseFailureCode.PrivilegeDenied, ContactSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.PicklistValueOutOfRange, ContactSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.RecordNotFound, ContactSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Unauthorized, ContactSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.DuplicateRecord, ContactSetGetFailureCode.Unknown)]
+    [InlineData(DataverseFailureCode.Unknown, ContactSetGetFailureCode.Unknown)]
     public static async Task SearchAsync_DataverseSearchResultIsFailure_ExpectFailure(
-        DataverseFailureCode sourceFailureCode, ContactSetSearchFailureCode expectedFailureCode)
+        DataverseFailureCode sourceFailureCode, ContactSetGetFailureCode expectedFailureCode)
     {
         var dataverseFailure = Failure.Create(sourceFailureCode, "Some Failure message");
         var mockDataverseApi = CreateMockDataverseApi(dataverseFailure);
 
-        var api = new CrmContactApi(mockDataverseApi.Object);
+        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var actual = await api.SearchAsync(SomeContactSetSearchInput, CancellationToken.None);
         var expected = Failure.Create(expectedFailureCode, "Some Failure message");
@@ -85,12 +85,12 @@ partial class CrmContactApiTest
     }
 
     [Theory]
-    [MemberData(nameof(CrmContactApiTestSource.OutputTestData), MemberType = typeof(CrmContactApiTestSource))]
+    [MemberData(nameof(CrmContactApiTestSource.OutputSearchTestData), MemberType = typeof(CrmContactApiTestSource))]
     public static async Task SearchAsync_DataverseSearchResultIsSuccess_ExpectSuccess(
         DataverseSearchOut dataverseSearchOutput, ContactSetSearchOut expected)
     {
         var mockDataverseApi = CreateMockDataverseApi(dataverseSearchOutput);
-        var api = new CrmContactApi(mockDataverseApi.Object);
+        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var actual = await api.SearchAsync(SomeContactSetSearchInput, CancellationToken.None);
 

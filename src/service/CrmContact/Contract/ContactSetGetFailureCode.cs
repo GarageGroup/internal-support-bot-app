@@ -1,6 +1,6 @@
 namespace GarageGroup.Internal.Support;
 
-public enum ContactSetSearchFailureCode
+public enum ContactSetGetFailureCode
 {
     Unknown,
 

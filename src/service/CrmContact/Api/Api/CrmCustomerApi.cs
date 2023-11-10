@@ -13,7 +13,11 @@ internal sealed partial class CrmContactApi : ICrmContactApi
 
     private readonly IDataverseSearchSupplier dataverseApi;
 
-    internal CrmContactApi(IDataverseSearchSupplier dataverseApi)
-        =>
+    private readonly ISqlQueryEntitySetSupplier sqlApi;
+
+    internal CrmContactApi(IDataverseSearchSupplier dataverseApi, ISqlQueryEntitySetSupplier sqlApi)
+    {
         this.dataverseApi = dataverseApi;
+        this.sqlApi = sqlApi;
+    }
 }

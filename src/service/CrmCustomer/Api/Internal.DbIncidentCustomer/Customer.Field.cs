@@ -11,7 +11,7 @@ partial record class DbIncidentCustomer
             $"MAX({CreatedOnFieldName}) AS {MaxCreatedOnAlias}",
             $"MAX(CASE WHEN {AliasName}.createdby = '{userId:D}' THEN i.createdon ELSE NULL END) AS {MaxCurrentUserCreatedOnAlias}");
 
-    [DbSelect(All, AliasName, $"{CustomerIdFieldName}", GroupBy = true)]
+    [DbSelect(All, AliasName, CustomerIdFieldName, GroupBy = true)]
     public Guid CustomerId { get; init; }
 
     [DbSelect(All, AccountAlias, $"{AccountAlias}.name", GroupBy = true)]
