@@ -9,6 +9,7 @@ internal sealed record class ChatGptJsonIn
     public FlatArray<ChatMessageJson> Messages { get; init; }
 
     [JsonPropertyName("model")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Model { get; init; }
 
     [JsonPropertyName("max_tokens")]

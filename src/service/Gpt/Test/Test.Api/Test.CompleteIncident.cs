@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -64,9 +65,14 @@ partial class SupportGptApiTest
     }
 
     [Theory]
-    [MemberData(nameof(SupportGptApiTestSource.InputTestData), MemberType = typeof(SupportGptApiTestSource))]
+    [MemberData(nameof(SupportGptApiTestSource.InputOpenAiTestData), MemberType = typeof(SupportGptApiTestSource))]
+    [MemberData(nameof(SupportGptApiTestSource.InputAzureTestData), MemberType = typeof(SupportGptApiTestSource))]
     public static async Task CompleteIncidentAsync_InputMessageIsNotWhiteSpace_ExpectMessageHandlerCalledOnce(
-        SupportGptApiOption option, IncidentCompleteIn input, string expectedContent, string expectedAuthorization)
+        SupportGptApiOption option,
+        IncidentCompleteIn input,
+        string expectedUrl,
+        string expectedContent,
+        KeyValuePair<string, string> expectedApiKeyHeader)
     {
         using var response = CreateSuccessResponse(SomeResponseMessage);
         using var messageHandler = new MockHttpMessageHandler(response, OnRequestSentAsync);
@@ -83,15 +89,17 @@ partial class SupportGptApiTest
             Assert.Equal(HttpMethod.Post, actual.Method);
 
             var actualRequestUrl = actual.RequestUri?.ToString();
-            Assert.Equal("https://api.openai.com/v1/chat/completions", actualRequestUrl, ignoreCase: true);
+            Assert.Equal(expectedUrl, actualRequestUrl, ignoreCase: true);
 
             Assert.NotNull(actual.Content);
 
             var actualContent = await actual.Content.ReadAsStringAsync();
             Assert.Equal(expectedContent, actualContent);
 
-            var actualAuthorization = actual.Headers.Authorization?.ToString();
-            Assert.Equal(expectedAuthorization, actualAuthorization);
+            actual.Headers.Contains(expectedApiKeyHeader.Key);
+
+            var actualApiKey = actual.Headers.GetValues(expectedApiKeyHeader.Key);
+            Assert.Equal([expectedApiKeyHeader.Value], actualApiKey);
         }
     }
 

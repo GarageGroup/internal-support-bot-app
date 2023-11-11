@@ -15,10 +15,16 @@ public static partial class SupportGptApiTest
         =
         new(
             apiKey: "Some API key",
+            azureGpt: new(
+                resourceName: "some-resoure-name",
+                deploymentId: "some-deployment-id",
+                apiVersion: "some-api-version"),
             incidentComplete: new(
-                model: "some-gpt-model")
+                chatMessages: new ChatMessageOption[]
+                {
+                    new("some-role", "Some message: {0}")
+                })
             {
-                ChatMessages = new ChatMessageOption("some-role", "Some message: {0}").AsFlatArray(),
                 MaxTokens = 150,
                 Temperature = 0.7m
             });
@@ -31,8 +37,8 @@ public static partial class SupportGptApiTest
     {
         var outJson = new StubGptJsonOut
         {
-            Choices = new StubChoiceJson[]
-            {
+            Choices =
+            [
                 new()
                 {
                     Message = new()
@@ -41,7 +47,7 @@ public static partial class SupportGptApiTest
                     },
                     FinishReason = "stop"
                 }
-            }
+            ]
         };
 
         var json = JsonSerializer.Serialize(outJson);

@@ -7,15 +7,14 @@ partial class SupportGptApiTestSource
 {
     public static IEnumerable<object[]> OutputSuccessTestData
         =>
-        new[]
+        new object[][]
         {
-            new object[]
-            {
+            [
                 HttpStatusCode.OK,
                 new StubGptJsonOut
                 {
-                    Choices = new StubChoiceJson[]
-                    {
+                    Choices =
+                    [
                         new()
                         {
                             Message = new()
@@ -24,21 +23,20 @@ partial class SupportGptApiTestSource
                             },
                             FinishReason = "stop"
                         }
-                    }
+                    ]
                 }
                 .ToJson(),
                 new IncidentCompleteOut
                 {
                     Title = "Some response \"message\""
                 }
-            },
-            new object[]
-            {
+            ],
+            [
                 HttpStatusCode.OK,
                 new StubGptJsonOut
                 {
-                    Choices = new StubChoiceJson[]
-                    {
+                    Choices =
+                    [
                         new()
                         {
                             Message = new()
@@ -55,21 +53,20 @@ partial class SupportGptApiTestSource
                             },
                             FinishReason = "stop"
                         }
-                    }
+                    ]
                 }
                 .ToJson(),
                 new IncidentCompleteOut
                 {
                     Title = null
                 }
-            },
-            new object[]
-            {
+            ],
+            [
                 HttpStatusCode.OK,
                 new StubGptJsonOut
                 {
-                    Choices = new StubChoiceJson[]
-                    {
+                    Choices =
+                    [
                         new()
                         {
                             Message = new()
@@ -78,21 +75,20 @@ partial class SupportGptApiTestSource
                             },
                             FinishReason = "stop"
                         }
-                    }
+                    ]
                 }
                 .ToJson(),
                 new IncidentCompleteOut
                 {
                     Title = "Some response message"
                 }
-            },
-            new object[]
-            {
+            ],
+            [
                 HttpStatusCode.Accepted,
                 new StubGptJsonOut
                 {
-                    Choices = new StubChoiceJson[]
-                    {
+                    Choices =
+                    [
                         new()
                         {
                             Message = new()
@@ -101,21 +97,20 @@ partial class SupportGptApiTestSource
                             },
                             FinishReason = "stop"
                         }
-                    }
+                    ]
                 }
                 .ToJson(),
                 new IncidentCompleteOut
                 {
                     Title = "Some response \"message"
                 }
-            },
-            new object[]
-            {
+            ],
+            [
                 HttpStatusCode.OK,
                 new StubGptJsonOut
                 {
-                    Choices = new StubChoiceJson[]
-                    {
+                    Choices =
+                    [
                         new()
                         {
                             Message = new()
@@ -124,13 +119,13 @@ partial class SupportGptApiTestSource
                             },
                             FinishReason = "stop"
                         }
-                    }
+                    ]
                 }
                 .ToJson(),
                 new IncidentCompleteOut
                 {
                     Title = null
                 }
-            }
+            ]
         };
 }

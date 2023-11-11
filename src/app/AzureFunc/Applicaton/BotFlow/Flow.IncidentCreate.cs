@@ -9,10 +9,6 @@ namespace GarageGroup.Internal.Support;
 
 partial class Application
 {
-    private const string GptApiSectionName = "GptApi";
-
-    private const string IncidentCompleteSectionName = "IncidentComplete";
-
     private static IBotBuilder UseIncidentCreateFlow(this IBotBuilder botBuilder)
         =>
         Dependency.From(
@@ -53,37 +49,76 @@ partial class Application
         var gptApiSection = configuration.GetRequiredSection(GptApiSectionName);
         var incidentCompleteSection = gptApiSection.GetRequiredSection(IncidentCompleteSectionName);
 
+        var incidentComplete = new IncidentCompleteOption(
+            chatMessages: new(
+                new(
+                    role: "system",
+                    contentTemplate: incidentCompleteSection["SystemTemplate"].OrEmpty()),
+                new(
+                    role: "user",
+                    contentTemplate: incidentCompleteSection["UserTemplate"].OrEmpty())))
+        {
+            MaxTokens = incidentCompleteSection.GetValue<int?>("MaxTokens"),
+            Temperature = incidentCompleteSection.GetValue<decimal?>("Temperature")
+        };
+
+        if (configuration.IsAzureGpt() is false)
+        {
+            return new(
+                apiKey: gptApiSection["Key"].OrEmpty(),
+                model: gptApiSection["Model"].OrEmpty(),
+                incidentComplete: incidentComplete);
+        }
+
+        var azureSection = gptApiSection.GetRequiredSection(GptApiAzureSectionName);
         return new(
-            apiKey: gptApiSection["Key"].OrEmpty(),
-            incidentComplete: new IncidentCompleteOption(
-                model: incidentCompleteSection["Model"].OrEmpty())
-            {
-                MaxTokens = incidentCompleteSection.GetValue<int?>("MaxTokens"),
-                Temperature = incidentCompleteSection.GetValue<decimal?>("Temperature"),
-                ChatMessages = new(
-                    new(
-                        role: "system",
-                        contentTemplate: incidentCompleteSection["SystemTemplate"].OrEmpty()),
-                    new(
-                        role: "user",
-                        contentTemplate: incidentCompleteSection["UserTemplate"].OrEmpty()))
-            });
+            apiKey: azureSection["Key"].OrEmpty(),
+            azureGpt: new(
+                resourceName: azureSection["ResourceName"].OrEmpty(),
+                deploymentId: azureSection["DeploymentId"].OrEmpty(),
+                apiVersion: azureSection["ApiVersion"].OrEmpty()),
+            incidentComplete: incidentComplete);
     }
 
     private static FlatArray<KeyValuePair<string, string>> GetGptTraceData(this IConfiguration configuration)
     {
-        var section = configuration.GetRequiredSection(GptApiSectionName).GetRequiredSection(IncidentCompleteSectionName);
+        var gptApiSection = configuration.GetRequiredSection(GptApiSectionName);
         var traceData = new Dictionary<string, string>();
+
+        traceData.AppendSectionValues(gptApiSection);
+
+        if (configuration.IsAzureGpt())
+        {
+            traceData.AppendSectionValues(gptApiSection.GetSection(GptApiAzureSectionName));
+        }
+
+        traceData.AppendSectionValues(gptApiSection.GetSection(IncidentCompleteSectionName));
+        return traceData.ToFlatArray();
+    }
+
+    private static bool IsAzureGpt(this IConfiguration configuration)
+        =>
+        string.IsNullOrEmpty(configuration[$"{GptApiSectionName}:Model"]);
+
+    private static void AppendSectionValues(this Dictionary<string, string> traceData, IConfigurationSection section)
+    {
+        if (section.Exists() is false)
+        {
+            return;
+        }
 
         foreach (var child in section.GetChildren())
         {
+            if (string.Equals("key", child.Key, StringComparison.InvariantCultureIgnoreCase))
+            {
+                continue;
+            }
+
             if (string.IsNullOrEmpty(child.Value) is false)
             {
                 traceData[child.Key.FromLowerCase()] = child.Value;
             }
         }
-
-        return traceData.ToFlatArray();
     }
 
     private static string FromLowerCase(this string source)
