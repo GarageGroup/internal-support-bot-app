@@ -5,21 +5,11 @@ using System.Threading.Tasks;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
-internal sealed class MockHttpMessageHandler : HttpMessageHandler
+internal sealed class MockHttpMessageHandler(HttpResponseMessage response, Func<HttpRequestMessage, Task>? callbackAsync = null) : HttpMessageHandler
 {
-    private readonly HttpResponseMessage response;
-
-    private readonly Func<HttpRequestMessage, Task>? callbackAsync;
-
     private int callsCount = 0;
 
     private Exception? innerException = null;
-
-    internal MockHttpMessageHandler(HttpResponseMessage response, Func<HttpRequestMessage, Task>? callbackAsync = null)
-    {
-        this.response = response;
-        this.callbackAsync = callbackAsync;
-    }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

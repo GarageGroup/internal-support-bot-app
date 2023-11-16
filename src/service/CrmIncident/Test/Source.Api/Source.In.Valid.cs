@@ -18,10 +18,8 @@ partial class CrmIncidentApiTestSource
                     title: "Some title",
                     description: "Some description",
                     caseTypeCode: IncidentCaseTypeCode.Question,
-                    priorityCode: IncidentPriorityCode.Low)
-                {
-                    CallerUserId = Guid.Parse("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")
-                },
+                    priorityCode: IncidentPriorityCode.Low,
+                    callerUserId: Guid.Parse("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")),
                 new DataverseEntityCreateIn<IncidentJsonCreateIn>(
                     entityPluralName: "incidents",
                     selectFields: new("title"),
@@ -45,10 +43,8 @@ partial class CrmIncidentApiTestSource
                     title: string.Empty,
                     description: "Some Description",
                     caseTypeCode: IncidentCaseTypeCode.Request,
-                    priorityCode: IncidentPriorityCode.Hight)
-                {
-                    CallerUserId = Guid.Parse("144326e7-5aa8-4792-b8aa-d125b6f7f6b5")
-                },
+                    priorityCode: IncidentPriorityCode.Hight,
+                    callerUserId: Guid.Parse("144326e7-5aa8-4792-b8aa-d125b6f7f6b5")),
                 new DataverseEntityCreateIn<IncidentJsonCreateIn>(
                     entityPluralName: "incidents",
                     selectFields: new("title"),
@@ -72,10 +68,8 @@ partial class CrmIncidentApiTestSource
                     title: "Some Title",
                     description: string.Empty,
                     caseTypeCode: IncidentCaseTypeCode.Problem,
-                    priorityCode: IncidentPriorityCode.Normal)
-                {
-                    CallerUserId = null
-                },
+                    priorityCode: IncidentPriorityCode.Normal,
+                    callerUserId: Guid.Parse("a6093320-cdf2-43d7-bf42-21825c303721")),
                 new DataverseEntityCreateIn<IncidentJsonCreateIn>(
                     entityPluralName: "incidents",
                     selectFields: new("title"),

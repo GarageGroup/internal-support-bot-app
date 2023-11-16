@@ -5,7 +5,7 @@ using GarageGroup.Infra;
 
 namespace GarageGroup.Internal.Support;
 
-partial class CrmIncidentApi<TDataverseApi>
+partial class CrmIncidentApi
 {
     public ValueTask<Result<IncidentCreateOut, Failure<IncidentCreateFailureCode>>> CreateAsync(
         IncidentCreateIn input, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ partial class CrmIncidentApi<TDataverseApi>
         .Pipe(
             IncidentJsonCreateIn.BuildDataverseCreateInput)
         .PipeValue(
-            GetDataverseApi(input.CallerUserId).CreateEntityAsync<IncidentJsonCreateIn, IncidentJsonCreateOut>)
+            dataverseApi.Impersonate(input.CallerUserId).CreateEntityAsync<IncidentJsonCreateIn, IncidentJsonCreateOut>)
         .MapFailure(
             static failure => failure.MapFailureCode(ToIncidentCreateFailureCode))
         .MapSuccess(

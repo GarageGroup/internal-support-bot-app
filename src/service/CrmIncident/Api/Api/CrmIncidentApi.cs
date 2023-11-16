@@ -1,22 +1,9 @@
-﻿using System;
-using GarageGroup.Infra;
+﻿using GarageGroup.Infra;
 
 namespace GarageGroup.Internal.Support;
 
-internal sealed partial class CrmIncidentApi<TDataverseApi> : ICrmIncidentApi
-    where TDataverseApi : IDataverseEntityCreateSupplier, IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>
+using TDataverseApi = IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>;
+
+internal sealed partial class CrmIncidentApi(TDataverseApi dataverseApi) : ICrmIncidentApi
 {
-    private readonly TDataverseApi dataverseApi;
-
-    internal CrmIncidentApi(TDataverseApi dataverseApi)
-        =>
-        this.dataverseApi = dataverseApi;
-
-    private IDataverseEntityCreateSupplier GetDataverseApi(Guid? callerUserId)
-        =>
-        callerUserId switch
-        {
-            null => dataverseApi,
-            _ => dataverseApi.Impersonate(callerUserId.Value)
-        };
 }
