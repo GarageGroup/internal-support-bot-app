@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using GarageGroup.Infra;
 using Moq;
-
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace GarageGroup.Internal.Support.Service.CrmIncident.Test;
 
@@ -19,7 +16,8 @@ public static partial class CrmIncidentApiTest
             title: "title",
             description: "decription",
             caseTypeCode: IncidentCaseTypeCode.Question,
-            priorityCode: IncidentPriorityCode.Normal);
+            priorityCode: IncidentPriorityCode.Normal,
+            callerUserId: Guid.Parse("d40c9c6c-ba5f-4264-aaad-542f11caf4f6"));
 
     private static readonly IncidentJsonCreateOut SomeIncidentJsonOutput
         =
@@ -29,22 +27,26 @@ public static partial class CrmIncidentApiTest
             Title = "Some Incident title"
         };
 
-    private static Mock<IStubDataverseApi> CreateMockDataverseApi(
+    private static Mock<IDataverseEntityCreateSupplier> BuildMockDataverseCreateSupplier(
         Result<DataverseEntityCreateOut<IncidentJsonCreateOut>, Failure<DataverseFailureCode>> result)
     {
-        var mock = new Mock<IStubDataverseApi>();
+        var mock = new Mock<IDataverseEntityCreateSupplier>();
 
         _ = mock.Setup(
             static api => api.CreateEntityAsync<IncidentJsonCreateIn, IncidentJsonCreateOut>(
                 It.IsAny<DataverseEntityCreateIn<IncidentJsonCreateIn>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(result);
 
-        _ = mock.Setup(static api => api.Impersonate(It.IsAny<Guid>())).Returns(mock.Object);
-
         return mock;
     }
 
-    internal interface IStubDataverseApi : IDataverseEntityCreateSupplier, IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>
+    private static Mock<IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>> BuildMockDataverseApi(
+        IDataverseEntityCreateSupplier dataverseCreateSupplier)
     {
+        var mock = new Mock<IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>>();
+
+        _ = mock.Setup(static api => api.Impersonate(It.IsAny<Guid>())).Returns(dataverseCreateSupplier);
+
+        return mock;
     }
 }

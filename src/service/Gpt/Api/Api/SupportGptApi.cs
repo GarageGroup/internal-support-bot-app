@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace GarageGroup.Internal.Support;
 
-internal sealed partial class SupportGptApi : ISupportGptApi
+internal sealed partial class SupportGptApi(HttpMessageHandler httpMessageHandler, SupportGptApiOption option) : ISupportGptApi
 {
     private const string OpenAiUrl = "https://api.openai.com/v1/chat/completions";
 
@@ -12,16 +12,6 @@ internal sealed partial class SupportGptApi : ISupportGptApi
         "https://{0}.openai.azure.com/openai/deployments/{1}/chat/completions?api-version={2}";
 
     private const string AzureAiApiKeyHeaderName = "api-key";
-
-    private readonly HttpMessageHandler httpMessageHandler;
-
-    private readonly SupportGptApiOption option;
-
-    internal SupportGptApi(HttpMessageHandler httpMessageHandler, SupportGptApiOption option)
-    {
-        this.httpMessageHandler = httpMessageHandler;
-        this.option = option;
-    }
 
     private HttpClient CreateHttpClient()
     {

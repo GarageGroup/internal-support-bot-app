@@ -10,12 +10,12 @@ namespace GarageGroup.Internal.Support;
 public static class CrmIncidentApiDependency
 {
     public static Dependency<ICrmIncidentApi> UseCrmIncidentApi<TDataverseApi>(this Dependency<TDataverseApi> dependency)
-        where TDataverseApi : IDataverseEntityCreateSupplier, IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>
+        where TDataverseApi : IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>
     {
         ArgumentNullException.ThrowIfNull(dependency);
         return dependency.Map<ICrmIncidentApi>(CreateApi);
 
-        static CrmIncidentApi<TDataverseApi> CreateApi(TDataverseApi dataverseApi)
+        static CrmIncidentApi CreateApi(TDataverseApi dataverseApi)
         {
             ArgumentNullException.ThrowIfNull(dataverseApi);
             return new(dataverseApi);

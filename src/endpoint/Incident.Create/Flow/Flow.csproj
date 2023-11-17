@@ -23,7 +23,7 @@
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Extensions" Version="0.3.0" />
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Card" Version="0.2.0" />
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Lookup" Version="0.2.0" />
-    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Value" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Value" Version="0.2.1" />
     <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.0.2" />
     <PackageReference Include="PrimeFuncPack.Primitives.Pipeline" Version="2.0.2" />
   </ItemGroup>
