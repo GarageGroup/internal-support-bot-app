@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using GarageGroup.Infra.Bot.Builder;
 
 namespace GarageGroup.Internal.Support;
@@ -23,14 +24,24 @@ internal static class TitleAwaitHelper
             return new("Укажите заголовок");
         }
 
+        var messageBuilder = new StringBuilder("Укажите заголовок или используйте сгенерированный вариант:\n\r");
+
+        if (context.IsNotTelegramChannel())
+        {
+            messageBuilder = messageBuilder.Append(context.FlowState.Gpt.Title);
+        }
+        else
+        {
+            messageBuilder = messageBuilder.Append("<code>").Append(context.FlowState.Gpt.Title).Append("</code>");
+        }
+
         return new(
-            messageText: "Укажите заголовок или подтвердите вариант, сгенерированный нейросетью",
-            suggestions: new[]
+            messageText: messageBuilder.ToString(),
+            suggestions: new KeyValuePair<string, string>[][]
             {
-                new KeyValuePair<string, string>[]
-                {
-                    new("Подтвердить предложение нейросети", context.FlowState.Gpt.Title.TruncateTitle())
-                }
+                [
+                    new("Использовать сгенерированный заголовок", context.FlowState.Gpt.Title.TruncateTitle())
+                ]
             });
     }
 
