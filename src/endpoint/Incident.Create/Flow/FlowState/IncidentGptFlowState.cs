@@ -10,9 +10,6 @@ internal readonly record struct IncidentGptFlowState
     [JsonProperty("sourceMessage")]
     public string? SourceMessage { get; init; }
 
-    [JsonProperty("temporaryActivityId")]
-    public string? TemporaryActivityId { get; init; }
-
     [JsonProperty("errorMessage")]
     public string? ErrorMessage { get; init; }
 }
