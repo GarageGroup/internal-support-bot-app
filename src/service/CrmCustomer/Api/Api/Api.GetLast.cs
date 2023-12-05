@@ -27,15 +27,11 @@ partial class CrmCustomerApi
             {
                 Customers = success.Map(MapCustomer)
             },
-            static failure => failure.MapFailureCode(AsUnknownFailureCode));
+            static failure => failure.WithFailureCode(CustomerSetGetFailureCode.Unknown));
 
     private static CustomerItemOut MapCustomer(DbIncidentCustomer dbIncidentCustomer)
         =>
         new(
             id: dbIncidentCustomer.CustomerId,
             title: dbIncidentCustomer.CustomerName);
-
-    private static CustomerSetGetFailureCode AsUnknownFailureCode(Unit _)
-        =>
-        CustomerSetGetFailureCode.Unknown;
 }

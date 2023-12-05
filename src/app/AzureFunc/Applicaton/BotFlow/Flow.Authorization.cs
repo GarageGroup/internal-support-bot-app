@@ -15,7 +15,11 @@ partial class Application
 
     private static IAzureUserApi GetAzureUserApi(IBotContext botContext)
         =>
-        UseHttpMessageHandlerStandard("AzureUserApi").UseAzureUserApi().Resolve(botContext.ServiceProvider);
+        PrimaryHandler.UseStandardSocketsHttpHandler()
+        .UseLogging("AzureUserApi")
+        .UsePollyStandard()
+        .UseAzureUserApi()
+        .Resolve(botContext.ServiceProvider);
 
     private static IDataverseUserApi GetDataverseUserApi(IBotContext botContext)
         =>

@@ -1,6 +1,4 @@
 using System;
-using System.Net;
-using System.Net.Http;
 using GarageGroup.Infra;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
@@ -21,12 +19,6 @@ internal static partial class Application
     private const string IncidentCompleteSectionName = "IncidentComplete";
 
     private const string BotEntityName = "BotRequest";
-
-    private static Dependency<HttpMessageHandler> UseHttpMessageHandlerStandard(string loggerCategoryName)
-        =>
-        PrimaryHandler.UseStandardSocketsHttpHandler()
-        .UseLogging(loggerCategoryName)
-        .UsePollyStandard(HttpStatusCode.TooManyRequests);
 
     private static Dependency<IDataverseApiClient> UseDataverseApi()
         =>

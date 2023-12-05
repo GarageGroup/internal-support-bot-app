@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using GarageGroup.Infra;
 using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Extensions.Configuration;
 using PrimeFuncPack;
@@ -22,8 +23,16 @@ partial class Application
         .With(
             UseDataverseApi().UseCrmIncidentApi())
         .With(
-            UseHttpMessageHandlerStandard("SupportGptApi").With(ResolveSupportGptApiOption).UseSupportGptApi())
+            UseSupportGptApi())
         .MapIncidentCreateFlow(botBuilder);
+
+    private static Dependency<ISupportGptApi> UseSupportGptApi()
+        =>
+        PrimaryHandler.UseStandardSocketsHttpHandler()
+        .UseLogging("SupportGptApi")
+        .UsePollyStandard()
+        .With(ResolveSupportGptApiOption)
+        .UseSupportGptApi();
 
     private static IncidentCreateFlowOption ResolveIncidentCreateFlowOption(IServiceProvider serviceProvider)
     {
@@ -71,6 +80,7 @@ partial class Application
         }
 
         var azureSection = gptApiSection.GetRequiredSection(GptApiAzureSectionName);
+
         return new(
             apiKey: azureSection["Key"].OrEmpty(),
             azureGpt: new(

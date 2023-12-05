@@ -29,21 +29,20 @@
   <ItemGroup>
     <PackageReference Include="GarageGroup.Infra.Azure.DurableTask" Version="0.3.0" />
     <PackageReference Include="GarageGroup.Infra.Azure.HealthCheck" Version="0.6.0" />
-    <PackageReference Include="GarageGroup.Infra.Azure.Hosting" Version="0.4.0" />
+    <PackageReference Include="GarageGroup.Infra.Azure.Hosting" Version="0.5.1" />
     <PackageReference Include="GarageGroup.Infra.Azure.Services.AzureUser.Api" Version="0.1.1" />
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.Authorization.Dataverse" Version="0.4.0" />
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.Command.Info" Version="0.2.0" />
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.Command.Stop" Version="0.2.0" />
-    <PackageReference Include="GarageGroup.Infra.Bot.Builder.Integration.CosmosStorage" Version="0.2.0" />
     <PackageReference Include="GarageGroup.Infra.Bot.Builder.Integration.Handler" Version="0.4.0" />
-    <PackageReference Include="GarageGroup.Infra.Dataverse.Api" Version="3.12.0" />
+    <PackageReference Include="GarageGroup.Infra.Bot.Builder.Integration.Storage.CosmosDb" Version="0.4.0" />
+    <PackageReference Include="GarageGroup.Infra.Dataverse.Api" Version="3.13.0" />
     <PackageReference Include="GarageGroup.Infra.Dataverse.DataverseUser.Api" Version="1.3.0" />
     <PackageReference Include="GarageGroup.Infra.Http.Polly" Version="1.1.1" />
-    <PackageReference Include="GarageGroup.Infra.Sql.Api" Version="2.1.0" />
-    <PackageReference Include="GarageGroup.Infra.Sql.Api.Provider.Microsoft" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.14.1" OutputItemType="Analyzer" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
-    <PackageReference Include="PrimeFuncPack.DependencyRegistry" Version="1.2.1" />
+    <PackageReference Include="GarageGroup.Infra.Sql.Api" Version="2.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Sql.Api.Provider.Dataverse" Version="0.0.1" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.16.3" OutputItemType="Analyzer" />
+    <PackageReference Include="PrimeFuncPack.DependencyRegistry" Version="2.1.0" />
   </ItemGroup>
 
 </Project>

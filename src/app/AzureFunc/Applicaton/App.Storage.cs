@@ -1,4 +1,5 @@
 using System;
+using GarageGroup.Infra;
 using GarageGroup.Infra.Bot.Builder;
 using PrimeFuncPack;
 
@@ -12,5 +13,9 @@ partial class Application
 
     private static Dependency<ICosmosStorage> UseCosmosStorage()
         =>
-        UseHttpMessageHandlerStandard("CosmosStorage").UseCosmosStorage("CosmosDb");
+        PrimaryHandler.UseStandardSocketsHttpHandler()
+        .UseLogging("CosmosStorage")
+        .UseTokenCredentialResource()
+        .UsePollyStandard()
+        .UseCosmosStorage("CosmosDb");
 }

@@ -33,15 +33,11 @@ partial class CrmOwnerApi
             {
                 Owners = success.Map(MapOwner)
             },
-            static failure => failure.MapFailureCode(AsUnknownFailureCode));
+            static failure => failure.WithFailureCode(OwnerSetGetFailureCode.Unknown));
 
     private static OwnerItemOut MapOwner(DbIncidentOwner dbIncidentOwner)
         =>
         new(
             id: dbIncidentOwner.OwnerId,
             fullName: dbIncidentOwner.OwnerName);
-
-    private static OwnerSetGetFailureCode AsUnknownFailureCode(Unit _)
-        =>
-        OwnerSetGetFailureCode.Unknown;
 }
