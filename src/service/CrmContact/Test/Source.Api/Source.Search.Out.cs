@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using GarageGroup.Infra;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.CrmContact.Test;
 
 partial class CrmContactApiTestSource
 {
-    public static IEnumerable<object[]> OutputSearchTestData
+    public static TheoryData<DataverseSearchOut, ContactSetSearchOut> OutputSearchTestData
         =>
-        new object[][]
+        new()
         {
-            [
-                new DataverseSearchOut(
+            {
+                new(
                     totalRecordCount: 1,
                     value: default),
-                default(ContactSetSearchOut)
-            ],
-            [
-                new DataverseSearchOut(
+                default
+            },
+            {
+                new(
                     totalRecordCount: -1,
                     value: new DataverseSearchItem[]
                     {
@@ -35,7 +35,7 @@ partial class CrmContactApiTestSource
                                 new("fullName", new(JsonSerializer.SerializeToElement("Some value"))),
                                 new("fullname", new(JsonSerializer.SerializeToElement("Some Full Name")))))
                     }),
-                new ContactSetSearchOut
+                new()
                 {
                     Contacts = new ContactItemOut[]
                     {
@@ -43,6 +43,6 @@ partial class CrmContactApiTestSource
                         new(Guid.Parse("eaf4a5e1-3303-4ec1-84cd-626b3828b13b"), "Some Full Name")
                     }
                 }
-            ]
+            }
         };
 }

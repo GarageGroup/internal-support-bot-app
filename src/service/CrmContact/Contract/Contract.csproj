@@ -11,10 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PrimeFuncPack.Core.Failure" Version="2.0.1" />
-    <PackageReference Include="PrimeFuncPack.Core.FlatArray" Version="1.2.1" />
+    <PackageReference Include="PrimeFuncPack.Core.Failure" Version="2.2.0" />
+    <PackageReference Include="PrimeFuncPack.Core.FlatArray" Version="1.2.2" />
     <PackageReference Include="PrimeFuncPack.Core.Result" Version="2.0.2" />
-    <PackageReference Include="PrimeFuncPack.Primitives.Strings" Version="2.0.2" />
+    <PackageReference Include="PrimeFuncPack.Primitives.Strings" Version="2.0.3" />
   </ItemGroup>
 
 </Project>

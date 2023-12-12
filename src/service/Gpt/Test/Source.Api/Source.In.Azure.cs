@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
 partial class SupportGptApiTestSource
 {
-    public static IEnumerable<object[]> InputAzureTestData
+    public static TheoryData<SupportGptApiOption, IncidentCompleteIn, string, string, KeyValuePair<string, string>> InputAzureTestData
         =>
-        new object[][]
+        new()
         {
-            [
-                new SupportGptApiOption(
+            {
+                new(
                     apiKey: "SomeKey",
                     azureGpt: new(
                         resourceName: "some-resource-name",
                         deploymentId: "some-deployment-id",
                         apiVersion: "some-api-version"),
                     incidentComplete: new(default)),
-                new IncidentCompleteIn("Some customer request"),
+                new("Some customer request"),
                 "https://some-resource-name.openai.azure.com/openai/deployments/some-deployment-id/chat/completions?api-version=some-api-version",
                 new StubGptJsonIn
                 {
@@ -24,10 +25,10 @@ partial class SupportGptApiTestSource
                     Top = 1
                 }
                 .ToJson(),
-                new KeyValuePair<string, string>("api-key", "SomeKey")
-            ],
-            [
-                new SupportGptApiOption(
+                new("api-key", "SomeKey")
+            },
+            {
+                new(
                     apiKey: "Some API key",
                     azureGpt: new(
                         resourceName: "some-resource-name",
@@ -42,7 +43,7 @@ partial class SupportGptApiTestSource
                         MaxTokens = 150,
                         Temperature = 0.7m
                     }),
-                new IncidentCompleteIn("Some request message"),
+                new("Some request message"),
                 "https://some-resource-name.openai.azure.com/openai/deployments/some-deployment-id/chat/completions?api-version=2023-07-01-preview",
                 new StubGptJsonIn
                 {
@@ -59,10 +60,10 @@ partial class SupportGptApiTestSource
                     Temperature = 0.7m
                 }
                 .ToJson(),
-                new KeyValuePair<string, string>("api-key", "Some API key")
-            ],
-            [
-                new SupportGptApiOption(
+                new("api-key", "Some API key")
+            },
+            {
+                new(
                     apiKey: "Some API Key",
                     azureGpt: new(
                         resourceName: "someResource",
@@ -74,7 +75,7 @@ partial class SupportGptApiTestSource
                             new("role-first", "Some first message"),
                             new("role-second", "{0}: Some second message")
                         })),
-                new IncidentCompleteIn("\nSome customer request\t"),
+                new("\nSome customer request\t"),
                 "https://someResource.openai.azure.com/openai/deployments/someDeployment/chat/completions?api-version=2023-07-01-preview",
                 new StubGptJsonIn
                 {
@@ -94,7 +95,7 @@ partial class SupportGptApiTestSource
                     Top = 1
                 }
                 .ToJson(),
-                new KeyValuePair<string, string>("api-key", "Some API Key")
-            ]
+                new("api-key", "Some API Key")
+            }
         };
 }

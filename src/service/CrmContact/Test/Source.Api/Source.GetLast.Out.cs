@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.CrmContact.Test;
 
 partial class CrmContactApiTestSource
 {
-    public static IEnumerable<object[]> OutputLastGetTestData
+    public static TheoryData<FlatArray<DbContact>, LastContactSetGetOut> OutputLastGetTestData
         =>
-        new object[][]
+        new()
         {
-            [
-                default(FlatArray<DbContact>),
-                default(LastContactSetGetOut)
-            ],
-            [
+            {
+                default,
+                default
+            },
+            {
                 new DbContact[]
                 {
                     new()
@@ -27,7 +27,7 @@ partial class CrmContactApiTestSource
                         Name = null
                     }
                 },
-                new LastContactSetGetOut
+                new()
                 {
                     Contacts = new ContactItemOut[]
                     {
@@ -35,6 +35,6 @@ partial class CrmContactApiTestSource
                         new(Guid.Parse("7f38b958-1f3a-4664-bd8f-91e38027b04d"), string.Empty)
                     }
                 }
-            ]
+            }
         };
 }

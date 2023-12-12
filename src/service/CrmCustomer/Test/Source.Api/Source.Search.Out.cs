@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using GarageGroup.Infra;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.CrmCustomer.Test;
 
 partial class CrmCustomerApiTestSource
 {
-    public static IEnumerable<object[]> OutputSearchTestData
+    public static TheoryData<DataverseSearchOut, CustomerSetSearchOut> OutputSearchTestData
         =>
-        new object[][]
+        new()
         {
-            [
-                new DataverseSearchOut(
+            {
+                new(
                     totalRecordCount: 1,
                     value: default),
-                default(CustomerSetSearchOut)
-            ],
-            [
-                new DataverseSearchOut(
+                default
+            },
+            {
+                new(
                     totalRecordCount: -1,
                     value: new DataverseSearchItem[]
                     {
@@ -35,7 +35,7 @@ partial class CrmCustomerApiTestSource
                             entityName: "Another entity name",
                             extensionData: default)
                     }),
-                new CustomerSetSearchOut
+                new()
                 {
                     Customers = new CustomerItemOut[]
                     {
@@ -43,6 +43,6 @@ partial class CrmCustomerApiTestSource
                         new(Guid.Parse("e481f466-cdae-414a-a94f-7e4cfca32f4b"), string.Empty)
                     }
                 }
-            ]
+            }
         };
 }

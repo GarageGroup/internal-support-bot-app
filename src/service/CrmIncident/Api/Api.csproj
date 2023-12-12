@@ -16,9 +16,9 @@
 
   <ItemGroup>
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.3.0" />
-    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Abstractions.EntityCreate" Version="3.10.2" />
+    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Abstractions.EntityCreate" Version="3.11.0" />
     <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Abstractions.Impersonate" Version="2.1.1" />
-    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.0.2" />
+    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.1.0" />
   </ItemGroup>
 
 </Project>

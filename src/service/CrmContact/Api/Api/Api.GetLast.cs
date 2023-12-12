@@ -27,15 +27,11 @@ partial class CrmContactApi
             {
                 Contacts = success.Map(MapContact)
             },
-            static failure => failure.MapFailureCode(AsUnknownFailureCode));
+            static failure => failure.WithFailureCode(ContactSetGetFailureCode.Unknown));
 
     private static ContactItemOut MapContact(DbContact dbContact)
         =>
         new(
             id: dbContact.Id,
             fullName: dbContact.Name);
-
-    private static ContactSetGetFailureCode AsUnknownFailureCode(Unit _)
-        =>
-        ContactSetGetFailureCode.Unknown;
 }

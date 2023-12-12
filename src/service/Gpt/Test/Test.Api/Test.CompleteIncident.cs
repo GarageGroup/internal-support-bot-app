@@ -48,14 +48,14 @@ partial class SupportGptApiTest
     [InlineData(TestData.EmptyString)]
     [InlineData(TestData.MixedWhiteSpacesString)]
     public static async Task CompleteIncidentAsync_InputMessageIsNullOrWhiteSpace_ExpectDefaultIncidentCompletion(
-        string inputMessage)
+        string? inputMessage)
     {
         using var response = CreateSuccessResponse(SomeResponseMessage);
         using var messageHandler = new MockHttpMessageHandler(response);
 
         var api = CreateSupportGptApi(messageHandler, SomeOption);
 
-        var input = new IncidentCompleteIn(inputMessage);
+        var input = new IncidentCompleteIn(inputMessage!);
         var cancellationToken = new CancellationToken(canceled: false);
 
         var actual = await api.CompleteIncidentAsync(input, cancellationToken);

@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using GarageGroup.Infra;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
 partial class CrmOwnerApiTestSource
 {
-    public static IEnumerable<object[]> OutputSearchTestData
+    public static TheoryData<DataverseSearchOut, OwnerSetSearchOut> OutputSearchTestData
         =>
-        new object[][]
+        new()
         {
-            [
-                new DataverseSearchOut(
+            {
+                new(
                     totalRecordCount: 1,
                     value: default),
-                default(OwnerSetSearchOut)
-            ],
-            [
-                new DataverseSearchOut(
+                default
+            },
+            {
+                new(
                     totalRecordCount: -1,
                     value: new DataverseSearchItem[]
                     {
@@ -47,7 +48,7 @@ partial class CrmOwnerApiTestSource
                             entityName: "Third Entity Name",
                             extensionData: default)
                     }),
-                new OwnerSetSearchOut
+                new()
                 {
                     Owners = new OwnerItemOut[]
                     {
@@ -56,6 +57,6 @@ partial class CrmOwnerApiTestSource
                         new(Guid.Parse("e589b17c-b33a-4c32-bacf-f2795192066f"), string.Empty)
                     }
                 }
-            ]
+            }
         };
 }
