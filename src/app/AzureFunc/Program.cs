@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using GarageGroup.Infra;
 using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,8 +10,7 @@ static class Program
 {
     static Task Main()
         =>
-        Host.CreateDefaultBuilder()
-        .ConfigureFunctionsWorkerStandard(
+        FunctionHost.CreateFunctionsWorkerBuilderStandard(
             useHostConfiguration: false,
             configure: Application.Configure)
         .ConfigureBotBuilder(
