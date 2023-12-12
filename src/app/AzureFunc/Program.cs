@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using GarageGroup.Infra.Bot.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace GarageGroup.Internal.Support;
@@ -11,7 +13,8 @@ static class Program
         .ConfigureFunctionsWorkerStandard(
             useHostConfiguration: false,
             configure: Application.Configure)
-        .ConfigureBotBuilder(Application.ResolveCosmosStorage)
+        .ConfigureBotBuilder(
+            storageResolver: ServiceProviderServiceExtensions.GetRequiredService<ICosmosStorage>)
         .Build()
         .RunAsync();
 }

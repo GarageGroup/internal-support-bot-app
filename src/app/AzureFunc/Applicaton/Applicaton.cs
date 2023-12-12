@@ -1,13 +1,12 @@
 using System;
 using GarageGroup.Infra;
-using Microsoft.Azure.Functions.Worker;
+using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PrimeFuncPack;
 
 namespace GarageGroup.Internal.Support;
 
-[HealthCheckFunc("HealthCheck", AuthLevel = AuthorizationLevel.Function)]
 internal static partial class Application
 {
     private const string DataverseSectionName = "Dataverse";
@@ -29,6 +28,11 @@ internal static partial class Application
         =>
         Dependency.From(
             ServiceProviderServiceExtensions.GetRequiredService<ISqlApi>);
+
+    private static Dependency<ICosmosStorage> UseCosmosStorage()
+        =>
+        Dependency.From(
+            ServiceProviderServiceExtensions.GetRequiredService<ICosmosStorage>);
 
     private static IConfiguration GetConfiguration(this IServiceProvider serviceProvider)
         =>
