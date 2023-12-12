@@ -1,15 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
 partial class SupportGptApiTestSource
 {
-    public static IEnumerable<object?[]> OutputFailureTestData
+    public static TheoryData<HttpStatusCode, string?, Failure<IncidentCompleteFailureCode>> OutputFailureTestData
     {
         get
         {
+            var data = new TheoryData<HttpStatusCode, string?, Failure<IncidentCompleteFailureCode>>();
+
             var firstJson = new StubGptJsonOut
             {
                 Choices =
@@ -34,14 +36,12 @@ partial class SupportGptApiTestSource
             }
             .ToJson();
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.OK,
                 firstJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    $"An unexpected GPT finish reason: 'failed'. Body: '{firstJson}'")
-            };
+                    $"An unexpected GPT finish reason: 'failed'. Body: '{firstJson}'"));
 
             var secondJson = new StubGptJsonOut
             {
@@ -49,14 +49,12 @@ partial class SupportGptApiTestSource
             }
             .ToJson();
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.OK,
                 secondJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    $"GPT result choices are absent. Body: '{secondJson}'")
-            };
+                    $"GPT result choices are absent. Body: '{secondJson}'"));
 
             var thirdJson = new StubGptJsonOut
             {
@@ -64,14 +62,12 @@ partial class SupportGptApiTestSource
             }
             .ToJson();
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.OK,
                 thirdJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    $"GPT result choices are absent. Body: '{thirdJson}'")
-            };
+                    $"GPT result choices are absent. Body: '{thirdJson}'"));
 
             var fourthJson = new StubFailureJson
             {
@@ -82,35 +78,28 @@ partial class SupportGptApiTestSource
             }
             .ToJson();
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.BadRequest,
                 fourthJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    $"An unexpected http status code: BadRequest. Body: '{fourthJson}'")
-            };
+                    $"An unexpected http status code: BadRequest. Body: '{fourthJson}'"));
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.Unauthorized,
                 "Some error content",
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    "An unexpected http status code: Unauthorized. Body: 'Some error content'")
-            };
+                    "An unexpected http status code: Unauthorized. Body: 'Some error content'"));
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.NotFound,
                 null,
                 Failure.Create(
                     IncidentCompleteFailureCode.Unknown,
-                    "An unexpected http status code: NotFound. Body: ''")
-            };
+                    "An unexpected http status code: NotFound. Body: ''"));
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.TooManyRequests,
                 new StubFailureJson
                 {
@@ -122,8 +111,7 @@ partial class SupportGptApiTestSource
                 .ToJson(),
                 Failure.Create(
                     IncidentCompleteFailureCode.TooManyRequests,
-                    "Some error message")
-            };
+                    "Some error message"));
 
             var fifthJson = new StubFailureJson
             {
@@ -134,23 +122,21 @@ partial class SupportGptApiTestSource
             }
             .ToJson();
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.TooManyRequests,
                 fifthJson,
                 Failure.Create(
                     IncidentCompleteFailureCode.TooManyRequests,
-                    fifthJson)
-            };
+                    fifthJson));
 
-            yield return new object?[]
-            {
+            data.Add(
                 HttpStatusCode.TooManyRequests,
                 null,
                 Failure.Create(
                     IncidentCompleteFailureCode.TooManyRequests,
-                    string.Empty)
-            };
+                    string.Empty));
+
+            return data;
         }
     }
 }

@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
 partial class CrmOwnerApiTestSource
 {
-    public static IEnumerable<object[]> OutputLastGetTestData
+    public static TheoryData<FlatArray<DbIncidentOwner>, LastOwnerSetGetOut> OutputLastGetTestData
         =>
-        new object[][]
+        new()
         {
-            [
-                default(FlatArray<DbIncidentOwner>),
-                default(LastOwnerSetGetOut)
-            ],
-            [
+            {
+                default,
+                default
+            },
+            {
                 new DbIncidentOwner[]
                 {
                     new()
@@ -32,7 +32,7 @@ partial class CrmOwnerApiTestSource
                         OwnerName = "Charlotte Wilson"
                     }
                 },
-                new LastOwnerSetGetOut
+                new()
                 {
                     Owners = new OwnerItemOut[]
                     {
@@ -41,6 +41,6 @@ partial class CrmOwnerApiTestSource
                         new(Guid.Parse("5bfdf682-cde0-404d-8461-80cfd795c403"), "Charlotte Wilson")
                     }
                 }
-            ]
+            }
         };
 }

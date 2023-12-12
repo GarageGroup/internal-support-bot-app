@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.CrmCustomer.Test;
 
 partial class CrmCustomerApiTestSource
 {
-    public static IEnumerable<object[]> OutputLastGetTestData
+    public static TheoryData<FlatArray<DbIncidentCustomer>, LastCustomerSetGetOut> OutputLastGetTestData
         =>
-        new object[][]
+        new()
         {
-            [
-                default(FlatArray<DbIncidentCustomer>),
-                default(LastCustomerSetGetOut)
-            ],
-            [
+            {
+                default,
+                default
+            },
+            {
                 new DbIncidentCustomer[]
                 {
                     new()
@@ -32,7 +32,7 @@ partial class CrmCustomerApiTestSource
                         CustomerName = "Jane Doe"
                     }
                 },
-                new LastCustomerSetGetOut
+                new()
                 {
                     Customers = new CustomerItemOut[]
                     {
@@ -41,6 +41,6 @@ partial class CrmCustomerApiTestSource
                         new(Guid.Parse("4cbbd503-f1f7-4b32-bf0a-52248eae50bd"), "Jane Doe")
                     }
                 }
-            ]
+            }
         };
 }

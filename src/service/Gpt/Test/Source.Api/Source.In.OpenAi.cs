@@ -1,19 +1,20 @@
 using System.Collections.Generic;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
 partial class SupportGptApiTestSource
 {
-    public static IEnumerable<object[]> InputOpenAiTestData
+    public static TheoryData<SupportGptApiOption, IncidentCompleteIn, string, string, KeyValuePair<string, string>> InputOpenAiTestData
         =>
-        new object[][]
+        new()
         {
-            [
-                new SupportGptApiOption(
+            {
+                new(
                     apiKey: "Some Key",
                     model: "some-model",
                     incidentComplete: new(default)),
-                new IncidentCompleteIn("Some customer request"),
+                new("Some customer request"),
                 "https://api.openai.com/v1/chat/completions",
                 new StubGptJsonIn
                 {
@@ -22,10 +23,10 @@ partial class SupportGptApiTestSource
                     Top = 1
                 }
                 .ToJson(),
-                new KeyValuePair<string, string>("Authorization", "Bearer Some Key")
-            ],
-            [
-                new SupportGptApiOption(
+                new("Authorization", "Bearer Some Key")
+            },
+            {
+                new(
                     apiKey: "Some API key",
                     model: "some-gpt-model",
                     incidentComplete: new(
@@ -37,7 +38,7 @@ partial class SupportGptApiTestSource
                         MaxTokens = 150,
                         Temperature = 0.7m
                     }),
-                new IncidentCompleteIn("Some request message"),
+                new("Some request message"),
                 "https://api.openai.com/v1/chat/completions",
                 new StubGptJsonIn
                 {
@@ -55,10 +56,10 @@ partial class SupportGptApiTestSource
                     Temperature = 0.7m
                 }
                 .ToJson(),
-                new KeyValuePair<string, string>("Authorization", "Bearer Some API key")
-            ],
-            [
-                new SupportGptApiOption(
+                new("Authorization", "Bearer Some API key")
+            },
+            {
+                new(
                     apiKey: "SomeKey",
                     model: "some-model",
                     incidentComplete: new(
@@ -67,7 +68,7 @@ partial class SupportGptApiTestSource
                             new("role-first", "Some first message"),
                             new("role-second", "{0}: Some second message")
                         })),
-                new IncidentCompleteIn("\nSome customer request\t"),
+                new("\nSome customer request\t"),
                 "https://api.openai.com/v1/chat/completions",
                 new StubGptJsonIn
                 {
@@ -88,7 +89,7 @@ partial class SupportGptApiTestSource
                     Top = 1
                 }
                 .ToJson(),
-                new KeyValuePair<string, string>("Authorization", "Bearer SomeKey")
-            ]
+                new("Authorization", "Bearer SomeKey")
+            }
         };
 }

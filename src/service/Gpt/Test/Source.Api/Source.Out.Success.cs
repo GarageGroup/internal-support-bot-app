@@ -1,15 +1,15 @@
-using System.Collections.Generic;
 using System.Net;
+using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
 partial class SupportGptApiTestSource
 {
-    public static IEnumerable<object[]> OutputSuccessTestData
+    public static TheoryData<HttpStatusCode, string, IncidentCompleteOut> OutputSuccessTestData
         =>
-        new object[][]
+        new()
         {
-            [
+            {
                 HttpStatusCode.OK,
                 new StubGptJsonOut
                 {
@@ -26,12 +26,12 @@ partial class SupportGptApiTestSource
                     ]
                 }
                 .ToJson(),
-                new IncidentCompleteOut
+                new()
                 {
                     Title = "Some response \"message\""
                 }
-            ],
-            [
+            },
+            {
                 HttpStatusCode.OK,
                 new StubGptJsonOut
                 {
@@ -56,12 +56,12 @@ partial class SupportGptApiTestSource
                     ]
                 }
                 .ToJson(),
-                new IncidentCompleteOut
+                new()
                 {
                     Title = null
                 }
-            ],
-            [
+            },
+            {
                 HttpStatusCode.OK,
                 new StubGptJsonOut
                 {
@@ -78,12 +78,12 @@ partial class SupportGptApiTestSource
                     ]
                 }
                 .ToJson(),
-                new IncidentCompleteOut
+                new()
                 {
                     Title = "Some response message"
                 }
-            ],
-            [
+            },
+            {
                 HttpStatusCode.Accepted,
                 new StubGptJsonOut
                 {
@@ -100,12 +100,12 @@ partial class SupportGptApiTestSource
                     ]
                 }
                 .ToJson(),
-                new IncidentCompleteOut
+                new()
                 {
                     Title = "Some response \"message"
                 }
-            ],
-            [
+            },
+            {
                 HttpStatusCode.OK,
                 new StubGptJsonOut
                 {
@@ -122,10 +122,10 @@ partial class SupportGptApiTestSource
                     ]
                 }
                 .ToJson(),
-                new IncidentCompleteOut
+                new()
                 {
                     Title = null
                 }
-            ]
+            }
         };
 }
