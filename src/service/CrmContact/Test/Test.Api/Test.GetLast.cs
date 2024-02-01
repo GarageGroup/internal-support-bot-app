@@ -32,8 +32,8 @@ partial class CrmContactApiTest
         var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
         var input = new LastContactSetGetIn(
-            customerId: Guid.Parse("24cae7f6-ecf5-40f9-aba5-4fb122141e85"),
-            userId: Guid.Parse("15d86420-b8c1-4e9e-b652-2e7195447a3a"),
+            customerId: new("24cae7f6-ecf5-40f9-aba5-4fb122141e85"),
+            userId: new("15d86420-b8c1-4e9e-b652-2e7195447a3a"),
             top: 15);
 
         var cancellationToken = new CancellationToken(canceled: false);
@@ -42,23 +42,25 @@ partial class CrmContactApiTest
         var expectedQuery = new DbSelectQuery("contact", "c")
         {
             Top = 15,
-            SelectedFields = new(
+            SelectedFields =
+            [
                 "c.contactid AS Id",
                 "c.fullname AS Name",
                 "(SELECT MAX(i.createdon) FROM incident i WHERE i.primarycontactid = c.contactid" +
                     " AND i.createdby = '15d86420-b8c1-4e9e-b652-2e7195447a3a') AS LastCurrentUserIncidentDate",
-                "(SELECT MAX(i.createdon) FROM incident i WHERE i.primarycontactid = c.contactid) AS LastIncidentDate"),
+                "(SELECT MAX(i.createdon) FROM incident i WHERE i.primarycontactid = c.contactid) AS LastIncidentDate"
+            ],
             Filter = new DbParameterFilter(
                 fieldName: "c.parentcustomerid",
                 @operator: DbFilterOperator.Equal,
                 fieldValue: Guid.Parse("24cae7f6-ecf5-40f9-aba5-4fb122141e85"),
                 parameterName: "customerId"),
-            Orders = new DbOrder[]
-            {
+            Orders =
+            [
                 new("LastCurrentUserIncidentDate", DbOrderType.Descending),
                 new("LastIncidentDate", DbOrderType.Descending),
                 new("c.createdon", DbOrderType.Descending)
-            }
+            ]
         };
 
         mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbContact>(expectedQuery, cancellationToken), Times.Once);

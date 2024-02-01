@@ -22,13 +22,12 @@ partial class CrmContactApi
             })
         .PipeValue(
             dataverseApi.SearchAsync)
-        .MapFailure(
-            static failure => failure.MapFailureCode(MapFailureCode))
-        .MapSuccess(
+        .Map(
             static @out => new ContactSetSearchOut
             {
                 Contacts = @out.Value.Map(MapDataverseSearchItem)
-            });
+            },
+            static failure => failure.MapFailureCode(MapFailureCode));
 
     private static ContactItemOut MapDataverseSearchItem(DataverseSearchItem item)
         =>

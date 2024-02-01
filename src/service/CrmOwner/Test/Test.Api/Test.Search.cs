@@ -45,7 +45,6 @@ partial class CrmOwnerApiTest
         };
 
         var cancellationToken = new CancellationToken(canceled: false);
-
         _ = await api.SearchAsync(input, cancellationToken);
 
         var expected = new DataverseSearchIn(expectedSearchString)

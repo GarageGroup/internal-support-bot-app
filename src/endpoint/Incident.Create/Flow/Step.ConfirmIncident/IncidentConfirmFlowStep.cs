@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using GarageGroup.Infra.Bot.Builder;
 
 namespace GarageGroup.Internal.Support;
@@ -17,12 +15,14 @@ internal static class IncidentConfirmFlowStep
             confirmButtonText: "Создать",
             cancelButtonText: "Отменить",
             cancelText: "Создание инцидента было отменено",
-            fieldValues: new FlatArray<KeyValuePair<string, string?>>(
+            fieldValues:
+            [
                 new("Заголовок", context.FlowState.Title),
                 new("Клиент", context.FlowState.CustomerTitle),
                 new("Контакт", context.FlowState.ContactFullName ?? "--"),
                 new("Тип обращения", context.FlowState.CaseTypeTitle),
                 new("Приоритет", context.FlowState.PriorityTitle),
                 new("Ответственный", context.FlowState.OwnerFullName),
-                new("Описание", context.FlowState.Description)));
+                new("Описание", context.FlowState.Description)
+            ]);
 }

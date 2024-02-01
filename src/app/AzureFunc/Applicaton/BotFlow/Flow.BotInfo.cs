@@ -15,13 +15,14 @@ partial class Application
     private static BotInfoData GetBotInfoData(IBotContext botContext)
         =>
         new(
-            botContext.ServiceProvider.GetRequiredService<IConfiguration>().GetRequiredSection("BotInfo").GetBotInfoData());
+            botContext.ServiceProvider.GetRequiredService<IConfiguration>().GetRequiredSection("Info").GetBotInfoData());
 
     private static FlatArray<KeyValuePair<string, string?>> GetBotInfoData(this IConfigurationSection section)
         =>
-        new(
-            new("Название", section["Name"]),
+        [
+            new("Название", section["ApiName"]),
             new("Описание", section["Description"]),
-            new("Версия сборки", section["BuildVersion"]),
-            new("Время сборки", section.GetValue<DateTimeOffset?>("BuildDateTime").ToRussianStandardTimeZoneString()));
+            new("Версия сборки", section["ApiVersion"]),
+            new("Время сборки", section.GetValue<DateTimeOffset?>("BuildDateTime").ToRussianStandardTimeZoneString())
+        ];
 }

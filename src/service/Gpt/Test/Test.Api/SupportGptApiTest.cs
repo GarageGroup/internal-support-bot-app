@@ -20,10 +20,10 @@ public static partial class SupportGptApiTest
                 deploymentId: "some-deployment-id",
                 apiVersion: "some-api-version"),
             incidentComplete: new(
-                chatMessages: new ChatMessageOption[]
-                {
+                chatMessages:
+                [
                     new("some-role", "Some message: {0}")
-                })
+                ])
             {
                 MaxTokens = 150,
                 Temperature = 0.7m

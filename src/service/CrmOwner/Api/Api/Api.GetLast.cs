@@ -19,10 +19,12 @@ partial class CrmOwnerApi
                 SelectedFields = DbIncidentOwner.AllSelectedFields,
                 Filter = new DbCombinedFilter(DbLogicalOperator.And)
                 {
-                    Filters = new(
+                    Filters =
+                    [
                         DbIncidentOwner.BuildCurrentUserIdFilter(@in.UserId),
                         DbIncidentOwner.BuildCustomerIdFilter(@in.CustomerId),
-                        DbIncidentOwner.EnabledUserFilter)
+                        DbIncidentOwner.EnabledUserFilter
+                    ]
                 },
                 Orders = DbIncidentOwner.DefaultOrders
             })

@@ -11,12 +11,12 @@ internal static class CaseTypeAwaitHelper
 
     static CaseTypeAwaitHelper()
     {
-        var caseTypes = new CaseTypeValue[]
-        {
+        CaseTypeValue[] caseTypes =
+        [
             new(IncidentCaseTypeCode.Question, "Вопрос"),
             new(IncidentCaseTypeCode.Problem, "Проблема"),
             new(IncidentCaseTypeCode.Request, "Запрос")
-        };
+        ];
 
         valueStepOption = new(
             messageText: "Выберите тип обращения",

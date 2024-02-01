@@ -41,7 +41,7 @@ partial class CrmContactApiTest
 
         var input = new ContactSetSearchIn(
             searchText: sourceSearchString,
-            customerId: Guid.Parse("2a5d892f-1400-ec11-94ef-000d3a4a099f"))
+            customerId: new("2a5d892f-1400-ec11-94ef-000d3a4a099f"))
         {
             Top = sourceTop
         };

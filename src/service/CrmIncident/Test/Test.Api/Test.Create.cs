@@ -40,18 +40,18 @@ partial class CrmIncidentApiTest
         var api = new CrmIncidentApi(mockDataverseApi.Object);
 
         var input = new IncidentCreateIn(
-            ownerId: Guid.Parse("0c1040cc-6dff-4eda-b40b-38b04b72bb82"),
-            customerId: Guid.Parse("4b4d6147-da68-4dea-b8da-f0090d118b12"),
-            contactId: Guid.Parse("6cdae1fe-f0c8-4664-9c0c-579aae1ce242"),
+            ownerId: new("0c1040cc-6dff-4eda-b40b-38b04b72bb82"),
+            customerId: new("4b4d6147-da68-4dea-b8da-f0090d118b12"),
+            contactId: new("6cdae1fe-f0c8-4664-9c0c-579aae1ce242"),
             title: "Some title",
             description: "Some description",
             caseTypeCode: IncidentCaseTypeCode.Problem,
             priorityCode: IncidentPriorityCode.Hight,
-            callerUserId: Guid.Parse("de42801c-ae9b-4be1-bd39-a0a70324539f"));
+            callerUserId: new("de42801c-ae9b-4be1-bd39-a0a70324539f"));
 
         _ = await api.CreateAsync(input, default);
 
-        mockDataverseApi.Verify(static a => a.Impersonate(Guid.Parse("de42801c-ae9b-4be1-bd39-a0a70324539f")), Times.Once);
+        mockDataverseApi.Verify(static a => a.Impersonate(new("de42801c-ae9b-4be1-bd39-a0a70324539f")), Times.Once);
     }
 
     [Theory]
@@ -105,7 +105,7 @@ partial class CrmIncidentApiTest
         var dataverseOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(
             value: new()
             {
-                IncidentId = Guid.Parse("1203c0e2-3648-4596-80dd-127fdd2610b6"),
+                IncidentId = new("1203c0e2-3648-4596-80dd-127fdd2610b6"),
                 Title = "Some incident title"
             });
 
@@ -117,7 +117,7 @@ partial class CrmIncidentApiTest
         var actual = await api.CreateAsync(SomeIncidentCreateInput, default);
 
         var expected = new IncidentCreateOut(
-            id: Guid.Parse("1203c0e2-3648-4596-80dd-127fdd2610b6"),
+            id: new("1203c0e2-3648-4596-80dd-127fdd2610b6"),
             title: "Some incident title");
 
         Assert.StrictEqual(expected, actual);
