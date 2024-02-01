@@ -59,13 +59,15 @@ partial class Application
         var incidentCompleteSection = gptApiSection.GetRequiredSection(IncidentCompleteSectionName);
 
         var incidentComplete = new IncidentCompleteOption(
-            chatMessages: new(
+            chatMessages:
+            [
                 new(
                     role: "system",
                     contentTemplate: incidentCompleteSection["SystemTemplate"].OrEmpty()),
                 new(
                     role: "user",
-                    contentTemplate: incidentCompleteSection["UserTemplate"].OrEmpty())))
+                    contentTemplate: incidentCompleteSection["UserTemplate"].OrEmpty())
+            ])
         {
             MaxTokens = incidentCompleteSection.GetValue<int?>("MaxTokens"),
             Temperature = incidentCompleteSection.GetValue<decimal?>("Temperature")

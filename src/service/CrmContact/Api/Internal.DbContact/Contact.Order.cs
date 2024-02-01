@@ -7,8 +7,9 @@ partial record class DbContact
 {
     internal static readonly FlatArray<DbOrder> DefaultOrders
         =
-        new(
+        [
             new(LastCurrentUserIncidentDateParameter, DbOrderType.Descending),
             new(LastIncidentDateParameter, DbOrderType.Descending),
-            new($"{AliasName}.createdon", DbOrderType.Descending));
+            new($"{AliasName}.createdon", DbOrderType.Descending)
+        ];
 }

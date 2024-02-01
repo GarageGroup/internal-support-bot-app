@@ -21,13 +21,12 @@ partial class CrmOwnerApi
             })
         .PipeValue(
             dataverseApi.SearchAsync)
-        .MapFailure(
-            static failure => failure.MapFailureCode(MapFailureCode))
-        .MapSuccess(
+        .Map(
             static success => new OwnerSetSearchOut
             {
                 Owners = success.Value.Map(MapOwnerItem)
-            });
+            },
+            static failure => failure.MapFailureCode(MapFailureCode));
 
     private static OwnerItemOut MapOwnerItem(DataverseSearchItem item)
         =>

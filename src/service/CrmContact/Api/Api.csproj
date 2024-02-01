@@ -16,10 +16,10 @@
 
   <ItemGroup>
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.3.0" />
-    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Abstractions.Search" Version="3.9.0" />
-    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Filter" Version="0.2.0" />
-    <PackageReference Include="GarageGroup.Infra.Sql.Api.Abstractions.QueryEntitySet" Version="2.1.0" />
-    <PackageReference Include="GarageGroup.Infra.Sql.Api.Core.DbRequest" Version="2.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Abstractions.Search" Version="3.10.0" />
+    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Filter" Version="0.3.0" />
+    <PackageReference Include="GarageGroup.Infra.Sql.Api.Abstractions.QueryEntitySet" Version="2.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Sql.Api.Core.DbRequest" Version="2.3.0" />
     <PackageReference Include="PrimeFuncPack.Core.Optional" Version="2.1.0" />
     <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.1.0" />
   </ItemGroup>

@@ -30,10 +30,10 @@ partial class SupportGptApiTestSource
                     apiKey: "Some API key",
                     model: "some-gpt-model",
                     incidentComplete: new(
-                        chatMessages: new ChatMessageOption[]
-                        {
+                        chatMessages:
+                        [
                             new("some-role", "Some message: {0}")
-                        })
+                        ])
                     {
                         MaxTokens = 150,
                         Temperature = 0.7m
@@ -63,11 +63,11 @@ partial class SupportGptApiTestSource
                     apiKey: "SomeKey",
                     model: "some-model",
                     incidentComplete: new(
-                        chatMessages: new ChatMessageOption[]
-                        {
+                        chatMessages:
+                        [
                             new("role-first", "Some first message"),
                             new("role-second", "{0}: Some second message")
-                        })),
+                        ])),
                 new("\nSome customer request\t"),
                 "https://api.openai.com/v1/chat/completions",
                 new StubGptJsonIn

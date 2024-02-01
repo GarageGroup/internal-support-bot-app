@@ -32,8 +32,8 @@ partial class CrmOwnerApiTest
         var api = new CrmOwnerApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
         var input = new LastOwnerSetGetIn(
-            customerId: Guid.Parse("4a8f89de-3a0f-4952-9a92-7421b2a72405"),
-            userId: Guid.Parse("71cbe0d9-a715-4bf3-bb0c-bb02e343d569"),
+            customerId: new("4a8f89de-3a0f-4952-9a92-7421b2a72405"),
+            userId: new("71cbe0d9-a715-4bf3-bb0c-bb02e343d569"),
             top: 11);
 
         var cancellationToken = new CancellationToken(canceled: false);
@@ -45,25 +45,25 @@ partial class CrmOwnerApiTest
             SelectedFields = new("i.ownerid AS OwnerId", "u.fullname AS OwnerName", "MAX(i.createdon) AS MaxCreatedOn"),
             Filter = new DbCombinedFilter(DbLogicalOperator.And)
             {
-                Filters = new IDbFilter[]
-                {
+                Filters =
+                [
                     new DbParameterFilter(
                         "i.ownerid", DbFilterOperator.Inequal, Guid.Parse("71cbe0d9-a715-4bf3-bb0c-bb02e343d569"), "currentUserId"),
                     new DbParameterFilter(
                         "i.customerid", DbFilterOperator.Equal, Guid.Parse("4a8f89de-3a0f-4952-9a92-7421b2a72405"), "customerId"),
                     new DbRawFilter(
                         "u.isdisabled = 0")
-                }
+                ]
             },
-            JoinedTables = new DbJoinedTable[]
-            {
+            JoinedTables =
+            [
                 new(DbJoinType.Inner, "systemuser", "u", new DbRawFilter("u.systemuserid = i.ownerid"))
-            },
+            ],
             GroupByFields = new("i.ownerid", "u.fullname"),
-            Orders = new DbOrder[]
-            {
+            Orders =
+            [
                 new("MaxCreatedOn", DbOrderType.Descending)
-            }
+            ]
         };
 
         mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbIncidentOwner>(expectedQuery, cancellationToken), Times.Once);

@@ -25,14 +25,14 @@ internal static class IncidentShowHelper
         new HeroCard
         {
             Title = "Обращение было создано успешно",
-            Buttons = new CardAction[]
-            {
+            Buttons =
+            [
                 new(ActionTypes.OpenUrl)
                 {
                     Title = flowState.Title,
                     Value = flowState.GetUrl(option)
                 }
-            }
+            ]
         }
         .ToAttachment()
         .ToActivity();

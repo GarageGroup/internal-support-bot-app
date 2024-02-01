@@ -11,12 +11,12 @@ internal static class PriorityAwaitHelper
 
     static PriorityAwaitHelper()
     {
-        var caseTypes = new PriorityValue[]
-        {
+        PriorityValue[] caseTypes =
+        [
             new(IncidentPriorityCode.Hight, "Высокий"),
             new(IncidentPriorityCode.Normal, "Обычный"),
             new(IncidentPriorityCode.Low, "Низкий")
-        };
+        ];
 
         valueStepOption = new(
             messageText: "Выберите приоритет",

@@ -35,10 +35,10 @@ partial class SupportGptApiTestSource
                         deploymentId: "some-deployment-id",
                         apiVersion: "2023-07-01-preview"),
                     incidentComplete: new(
-                        chatMessages: new ChatMessageOption[]
-                        {
+                        chatMessages:
+                        [
                             new("some-role", "Some message: {0}")
-                        })
+                        ])
                     {
                         MaxTokens = 150,
                         Temperature = 0.7m
@@ -70,11 +70,11 @@ partial class SupportGptApiTestSource
                         deploymentId: "someDeployment",
                         apiVersion: "2023-07-01-preview"),
                     incidentComplete: new(
-                        chatMessages: new ChatMessageOption[]
-                        {
+                        chatMessages:
+                        [
                             new("role-first", "Some first message"),
                             new("role-second", "{0}: Some second message")
-                        })),
+                        ])),
                 new("\nSome customer request\t"),
                 "https://someResource.openai.azure.com/openai/deployments/someDeployment/chat/completions?api-version=2023-07-01-preview",
                 new StubGptJsonIn

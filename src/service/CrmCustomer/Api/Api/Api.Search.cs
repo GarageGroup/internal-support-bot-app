@@ -21,13 +21,12 @@ partial class CrmCustomerApi
             })
         .PipeValue(
             dataverseApi.SearchAsync)
-        .MapFailure(
-            static failure => failure.MapFailureCode(MapFailureCode))
-        .MapSuccess(
+        .Map(
             static @out => new CustomerSetSearchOut
             {
                 Customers = @out.Value.Map(MapCustomer)
-            });
+            },
+            static failure => failure.MapFailureCode(MapFailureCode));
 
     private static CustomerItemOut MapCustomer(DataverseSearchItem item)
         =>

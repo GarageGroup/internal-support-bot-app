@@ -32,7 +32,7 @@ partial class CrmCustomerApiTest
         var api = new CrmCustomerApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
         var input = new LastCustomerSetGetIn(
-            userId: Guid.Parse("f51ceb91-f74d-4ea6-b179-c4af139d2f6f"),
+            userId: new("f51ceb91-f74d-4ea6-b179-c4af139d2f6f"),
             minCreationTime: new(2023, 09, 17, 23, 16, 51),
             top: 7);
 
@@ -42,22 +42,24 @@ partial class CrmCustomerApiTest
         var expectedQuery = new DbSelectQuery("incident", "i")
         {
             Top = 7,
-            SelectedFields = new(
+            SelectedFields =
+            [
                 "i.customerid AS CustomerId",
                 "a.name AS CustomerName",
                 "MAX(i.createdon) AS MaxCreatedOn",
-                "MAX(CASE WHEN i.createdby = 'f51ceb91-f74d-4ea6-b179-c4af139d2f6f' THEN i.createdon ELSE NULL END) AS MaxCurrentUserCreatedOn"),
-            JoinedTables = new DbJoinedTable[]
-            {
+                "MAX(CASE WHEN i.createdby = 'f51ceb91-f74d-4ea6-b179-c4af139d2f6f' THEN i.createdon ELSE NULL END) AS MaxCurrentUserCreatedOn"
+            ],
+            JoinedTables =
+            [
                 new(DbJoinType.Inner, "account", "a", new DbRawFilter("a.accountid = i.customerid"))
-            },
+            ],
             Filter = new DbParameterFilter("i.createdon", DbFilterOperator.GreaterOrEqual, new DateTime(2023, 09, 17, 23, 16, 51), "minDate"),
             GroupByFields = new("i.customerid", "a.name"),
-            Orders = new DbOrder[]
-            {
+            Orders =
+            [
                 new("MaxCurrentUserCreatedOn", DbOrderType.Descending),
                 new("MaxCreatedOn", DbOrderType.Descending)
-            }
+            ]
         };
 
         mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbIncidentCustomer>(expectedQuery, cancellationToken), Times.Once);

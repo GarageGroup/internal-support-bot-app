@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using GarageGroup.Infra;
 using Xunit;
 
@@ -20,28 +19,30 @@ partial class CrmContactApiTestSource
             {
                 new(
                     totalRecordCount: -1,
-                    value: new DataverseSearchItem[]
-                    {
+                    value:
+                    [
                         new(
                             searchScore: -81263.91,
-                            objectId: Guid.Parse("604fae90-7894-48ea-92bf-e888bf0ce6ca"),
+                            objectId: new("604fae90-7894-48ea-92bf-e888bf0ce6ca"),
                             entityName: "First entity name",
                             extensionData: default),
                         new(
                             searchScore: 1000,
-                            objectId: Guid.Parse("eaf4a5e1-3303-4ec1-84cd-626b3828b13b"),
+                            objectId: new("eaf4a5e1-3303-4ec1-84cd-626b3828b13b"),
                             entityName: "SecondEntityName",
-                            extensionData: new(
+                            extensionData:
+                            [
                                 new("fullName", new(JsonSerializer.SerializeToElement("Some value"))),
-                                new("fullname", new(JsonSerializer.SerializeToElement("Some Full Name")))))
-                    }),
+                                new("fullname", new(JsonSerializer.SerializeToElement("Some Full Name")))
+                            ])
+                    ]),
                 new()
                 {
-                    Contacts = new ContactItemOut[]
-                    {
-                        new(Guid.Parse("604fae90-7894-48ea-92bf-e888bf0ce6ca"), string.Empty),
-                        new(Guid.Parse("eaf4a5e1-3303-4ec1-84cd-626b3828b13b"), "Some Full Name")
-                    }
+                    Contacts =
+                    [
+                        new(new("604fae90-7894-48ea-92bf-e888bf0ce6ca"), string.Empty),
+                        new(new("eaf4a5e1-3303-4ec1-84cd-626b3828b13b"), "Some Full Name")
+                    ]
                 }
             }
         };

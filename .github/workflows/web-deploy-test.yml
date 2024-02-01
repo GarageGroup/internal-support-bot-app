@@ -46,11 +46,14 @@ jobs:
     needs: deploy
 
     steps:
-    - name: Ping Health Check URL
-      uses: jtalk/url-health-check-action@v3
-      with:
-        url: https://${{ vars.TEST_WEBAPP_NAME }}.azurewebsites.net/api/health?code=${{ secrets.TEST_BOTFUNC_KEY }}
-        follow-redirect: false
-        max-attempts: 3
-        retry-delay: 5s
-        retry-all: false
+      - name: Get version
+        id: get_version
+        run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
+
+      - name: Ping Health Check URL
+        uses: GarageGroup/platform-ping-app@v0.0.3
+        with:
+          health_check_url: https://${{ vars.TEST_WEBAPP_NAME }}.azurewebsites.net/api/health?code=${{ secrets.TEST_BOTFUNC_KEY }}
+          contains: ${{ steps.get_version.outputs.version }}
+          retry_delay_in_seconds: 15
+          max_attempts: 10
