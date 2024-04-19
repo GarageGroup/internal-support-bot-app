@@ -11,4 +11,3 @@ internal sealed record class IncidentDescriptionState
     [JsonProperty("value")]
     public string? Value { get; init; }
 }
-
