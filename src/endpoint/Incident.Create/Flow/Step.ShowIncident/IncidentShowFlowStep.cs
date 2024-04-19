@@ -5,11 +5,9 @@ namespace GarageGroup.Internal.Support;
 
 internal static class IncidentShowFlowStep
 {
-    internal static ChatFlow<Unit> ShowIncident(
-        this ChatFlow<IncidentLinkFlowState> chatFlow, IncidentCreateFlowOption option)
+    internal static ChatFlow<IncidentCreateFlowState> ShowIncident(
+        this ChatFlow<IncidentCreateFlowState> chatFlow, IncidentCreateFlowOption option)
         =>
         chatFlow.ReplaceActivityOrSkip(
-            option.CreateIncidentActivity)
-        .MapFlowState(
-            Unit.From);
+            option.CreateIncidentActivity);
 }

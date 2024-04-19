@@ -8,6 +8,11 @@ internal static class DescriptionGetHelper
 {
     internal static ChatFlowJump<IncidentCreateFlowState> GetDescriptionOrBreak(IChatFlowContext<IncidentCreateFlowState> context)
     {
+        if (context.FlowState.Description is not null)
+        {
+            return context.FlowState;
+        }
+
         var description = context.GetDescription();
 
         if (string.IsNullOrEmpty(description))
@@ -17,7 +22,7 @@ internal static class DescriptionGetHelper
 
         return context.FlowState with
         {
-            Description = description
+            Description = new(description)
         };
     }
 

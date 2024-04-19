@@ -45,7 +45,8 @@ partial class Application
 
         return new(
             incidentCardUrlTemplate: uri.Replace("%7B", "{").Replace("%7D", "}"),
-            dbRequestPeriodInDays: configuration.GetValue<int>("DbRequestPeriodInDays"))
+            dbRequestPeriodInDays: configuration.GetValue<int>("DbRequestPeriodInDays"),
+            webAppUrl: configuration.GetValue<string>("UrlWebApp"))
         {
             GptTraceData = configuration.GetGptTraceData()
         };

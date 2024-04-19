@@ -19,6 +19,14 @@ internal static class TitleAwaitHelper
 
     internal static ValueStepOption<string> GetStepOption(IChatFlowContext<IncidentCreateFlowState> context)
     {
+        if (string.IsNullOrEmpty(context.FlowState.Title) is false)
+        {
+            return new()
+            {
+                SkipStep = true,
+            };
+        }
+
         if (string.IsNullOrEmpty(context.FlowState.Gpt.Title))
         {
             return new("Укажите заголовок");
@@ -37,12 +45,12 @@ internal static class TitleAwaitHelper
 
         return new(
             messageText: messageBuilder.ToString(),
-            suggestions: new KeyValuePair<string, string>[][]
-            {
+            suggestions:
+            [
                 [
                     new("Использовать сгенерированный заголовок", context.FlowState.Gpt.Title.TruncateTitle())
                 ]
-            });
+            ]);
     }
 
     private static string TruncateTitle(this string title)

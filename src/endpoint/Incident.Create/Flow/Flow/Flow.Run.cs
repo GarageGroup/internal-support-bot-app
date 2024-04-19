@@ -32,9 +32,10 @@ partial class IncidentCreateChatFlow
             return context.BotFlow.NextAsync(cancellationToken);
         }
 
-        return context.CreateChatFlow("IncidentCreate")
+        return context.GetChatFlowStarter<IncidentCreateFlowState>("IncidentCreate")
         .RunFlow(
             crmCustomerApi, crmContactApi, crmOwnerApi, crmIncidentApi, supportGptApi, option)
-        .CompleteValueAsync(cancellationToken);
+        .GetFlowStateAsync(cancellationToken)
+        .ToUnitValueTask();
     }
 }

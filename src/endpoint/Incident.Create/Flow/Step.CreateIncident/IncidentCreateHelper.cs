@@ -30,28 +30,33 @@ internal static class IncidentCreateHelper
         return telegramActivity;
     }
 
-    internal static ValueTask<ChatFlowJump<IncidentCreateOut>> CreateIncidentOrBeakAsync(
+    internal static ValueTask<ChatFlowJump<IncidentCreateFlowState>> CreateIncidentOrBeakAsync(
         this ICrmIncidentApi crmIncidentApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
             context.FlowState, cancellationToken)
         .Pipe(
             static flowState => new IncidentCreateIn(
-                ownerId: flowState.OwnerId,
-                customerId: flowState.CustomerId,
-                contactId: flowState.ContactId,
+                ownerId: flowState.Owner?.Id ?? default,
+                customerId: flowState.Customer?.Id ?? default,
+                contactId: flowState.Contact?.Id,
                 title: flowState.Title.OrEmpty(),
-                description: flowState.Description,
+                description: flowState.Description?.Value,
                 caseTypeCode: flowState.CaseTypeCode,
                 priorityCode: flowState.PriorityCode,
                 callerUserId: flowState.BotUserId.GetValueOrDefault()))
         .PipeValue(
             crmIncidentApi.CreateAsync)
-        .MapFailure(
+        .Map(
+            incident => context.FlowState with
+            {
+                Title = incident.Title,
+                IncidentId = incident.Id,
+            },
             ToUnexpectedBreakState)
         .Fold(
             ChatFlowJump.Next,
-            ChatFlowJump.Break<IncidentCreateOut>);
+            ChatFlowJump.Break<IncidentCreateFlowState>);
 
     private static ChatFlowBreakState ToUnexpectedBreakState<TFailureCode>(Failure<TFailureCode> failure)
         where TFailureCode : struct
