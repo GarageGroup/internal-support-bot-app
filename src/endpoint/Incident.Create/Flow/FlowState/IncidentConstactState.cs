@@ -11,4 +11,3 @@ internal sealed record class IncidentContactState
     [JsonProperty("fullName")]
     public string? FullName { get; init; }
 }
-
