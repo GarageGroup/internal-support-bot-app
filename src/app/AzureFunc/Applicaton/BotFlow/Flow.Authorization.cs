@@ -29,7 +29,7 @@ partial class Application
         =>
         new(
             oAuthConnectionName: context.ServiceProvider.GetConfiguration()["OAuthConnectionName"].OrEmpty(),
-            enterText: $"""
+            enterText: """
                 Войдите в свою учетную запись Garage Group:
                 1. Перейдите по ссылке
                 2. Авторизуйтесь под учетной записью Garage Group

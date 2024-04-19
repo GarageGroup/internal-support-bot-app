@@ -9,8 +9,6 @@ namespace GarageGroup.Internal.Support;
 
 internal static partial class Application
 {
-    private const string DataverseSectionName = "Dataverse";
-
     private const string GptApiSectionName = "GptApi";
 
     private const string GptApiAzureSectionName = "Azure";

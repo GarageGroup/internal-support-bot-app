@@ -5,7 +5,7 @@ namespace GarageGroup.Internal.Support;
 
 public sealed record class IncidentCreateFlowOption
 {
-    public IncidentCreateFlowOption(string incidentCardUrlTemplate, int dbRequestPeriodInDays, string? webAppUrl)
+    public IncidentCreateFlowOption(string incidentCardUrlTemplate, int dbRequestPeriodInDays, string webAppUrl)
     {
         IncidentCardUrlTemplate = incidentCardUrlTemplate.OrEmpty();
         DbRequestPeriodInDays = dbRequestPeriodInDays;
