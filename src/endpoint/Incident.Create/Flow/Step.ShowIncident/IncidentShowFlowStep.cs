@@ -1,4 +1,3 @@
-using System;
 using GarageGroup.Infra.Bot.Builder;
 
 namespace GarageGroup.Internal.Support;
