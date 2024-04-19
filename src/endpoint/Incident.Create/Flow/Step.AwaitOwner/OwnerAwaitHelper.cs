@@ -30,6 +30,7 @@ internal static class OwnerAwaitHelper
 
         return crmOwnerApi.InnerGetDefaultOwnersAsync(context, cancellationToken);
     }
+
     private static ValueTask<LookupValueSetOption> InnerGetDefaultOwnersAsync(
         this ICrmOwnerApi crmOwnerApi,
         IChatFlowContext<IncidentCreateFlowState> context,
