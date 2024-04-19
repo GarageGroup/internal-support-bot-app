@@ -48,7 +48,7 @@ internal static class CustomerAwaitHelper
         .PipeValue(
             crmCustomerApi.GetLastAsync)
         .Fold(
-            @out => new(
+            static @out => new(
                 items: @out.Customers.Map(MapCustomerItem),
                 choiceText: @out.Customers.IsNotEmpty ? CustomerChoiceText : DefaultText),
             context.LogFailure);
