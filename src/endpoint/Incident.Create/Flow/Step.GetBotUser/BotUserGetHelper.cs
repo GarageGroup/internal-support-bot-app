@@ -16,4 +16,11 @@ internal static class BotUserGetHelper
             BotUserId = user.SystemUserId, 
             BotUserName = user.FullName.OrNullIfEmpty() ?? user.BotUser.DisplayName
         };
+
+    internal static SkipOption GetSkipOption(IChatFlowContext<IncidentCreateFlowState> context)
+        =>
+        new()
+        {
+            Skip = context.FlowState.BotUserId is not null
+        };
 }

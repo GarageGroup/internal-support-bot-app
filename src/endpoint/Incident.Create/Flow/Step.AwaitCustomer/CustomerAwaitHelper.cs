@@ -20,6 +20,23 @@ internal static class CustomerAwaitHelper
         this ICrmCustomerApi crmCustomerApi,
         IChatFlowContext<IncidentCreateFlowState> context,
         CancellationToken cancellationToken)
+    {
+        if (context.FlowState.Customer is not null)
+        {
+            return new(
+                result: new(default)
+                {
+                    SkipStep = true,
+                });
+        }
+
+        return crmCustomerApi.InnerGetLastCustomersAsync(context, cancellationToken);
+    }
+
+    private static ValueTask<LookupValueSetOption> InnerGetLastCustomersAsync(
+        this ICrmCustomerApi crmCustomerApi,
+        IChatFlowContext<IncidentCreateFlowState> context,
+        CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
             context.FlowState, cancellationToken)
@@ -39,11 +56,11 @@ internal static class CustomerAwaitHelper
     internal static ValueTask<Result<LookupValueSetOption, BotFlowFailure>> SearchCustomersAsync(
         this ICrmCustomerApi crmCustomerApi,
         IChatFlowContext<IncidentCreateFlowState> _,
-        string seachText,
+        string searchText,
         CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
-            seachText, cancellationToken)
+            searchText, cancellationToken)
         .Pipe(
             static text => new CustomerSetSearchIn(text)
             {

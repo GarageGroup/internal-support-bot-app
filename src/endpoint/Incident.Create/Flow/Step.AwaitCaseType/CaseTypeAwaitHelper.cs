@@ -30,9 +30,12 @@ internal static class CaseTypeAwaitHelper
             new(value.Name, value);
     }
 
-    internal static ValueStepOption<CaseTypeValue> GetValueStepOption()
+    internal static ValueStepOption<CaseTypeValue> GetValueStepOption(IChatFlowContext<IncidentCreateFlowState> context)
         =>
-        valueStepOption;
+        string.IsNullOrEmpty(context.FlowState.CaseTypeTitle) ? valueStepOption : new() 
+        { 
+            SkipStep = true 
+        };
 
     internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, CaseTypeValue caseType)
         =>

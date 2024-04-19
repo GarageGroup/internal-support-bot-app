@@ -7,7 +7,7 @@ namespace GarageGroup.Internal.Support;
 
 internal static class IncidentShowHelper
 {
-    internal static IActivity CreateIncidentActivity(this IncidentCreateFlowOption option, IChatFlowContext<IncidentLinkFlowState> context)
+    internal static IActivity CreateIncidentActivity(this IncidentCreateFlowOption option, IChatFlowContext<IncidentCreateFlowState> context)
     {
         if (context.IsNotTelegramChannel())
         {
@@ -20,7 +20,7 @@ internal static class IncidentShowHelper
         return telegramReply.WithId(context.FlowState.TemporaryActivityId);
     }
 
-    private static IActivity CreateHeroCardActivity(IncidentLinkFlowState flowState, IncidentCreateFlowOption option)
+    private static IActivity CreateHeroCardActivity(IncidentCreateFlowState flowState, IncidentCreateFlowOption option)
         =>
         new HeroCard
         {
@@ -48,7 +48,7 @@ internal static class IncidentShowHelper
         return activity;
     }
 
-    private static TelegramChannelData CreateTelegramChannelData(IncidentLinkFlowState flowState, IncidentCreateFlowOption option)
+    private static TelegramChannelData CreateTelegramChannelData(IncidentCreateFlowState flowState, IncidentCreateFlowOption option)
         =>
         new(
             parameters: new($"Обращение <a href=\"{flowState.GetUrl(option)}\">{HttpUtility.HtmlEncode(flowState.Title)}</a> было создано успешно")
@@ -57,7 +57,7 @@ internal static class IncidentShowHelper
                 ReplyMarkup = new TelegramReplyKeyboardRemove()
             });
 
-    private static string GetUrl(this IncidentLinkFlowState flowState, IncidentCreateFlowOption option)
+    private static string GetUrl(this IncidentCreateFlowState flowState, IncidentCreateFlowOption option)
         =>
-        string.Format(CultureInfo.InvariantCulture, option.IncidentCardUrlTemplate, flowState.Id);
+        string.Format(CultureInfo.InvariantCulture, option.IncidentCardUrlTemplate, flowState.IncidentId);
 }

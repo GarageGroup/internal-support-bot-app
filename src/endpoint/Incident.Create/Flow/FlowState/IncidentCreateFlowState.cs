@@ -1,4 +1,5 @@
 using System;
+using GarageGroup.Internal.Support.FlowState;
 using Newtonsoft.Json;
 
 namespace GarageGroup.Internal.Support;
@@ -14,29 +15,20 @@ internal sealed record class IncidentCreateFlowState
     [JsonProperty("botUserName")]
     public string? BotUserName { get; init; }
 
-    [JsonProperty("ownerId")]
-    public Guid OwnerId { get; init; }
+    [JsonProperty("owner")]
+    public IncidentOwnerState? Owner { get; init; }
 
-    [JsonProperty("ownerFullName")]
-    public string? OwnerFullName { get; init; }
+    [JsonProperty("customer")]
+    public IncidentCustomerState? Customer { get; init; }
 
-    [JsonProperty("customerId")]
-    public Guid CustomerId { get; init; }
-
-    [JsonProperty("customerTitle")]
-    public string? CustomerTitle { get; init; }
-
-    [JsonProperty("contactId")]
-    public Guid? ContactId { get; init; }
-
-    [JsonProperty("contactFullName")]
-    public string? ContactFullName { get; init; }
+    [JsonProperty("contact")]
+    public IncidentContactState? Contact { get; init; }
 
     [JsonProperty("title")]
     public string? Title { get; init; }
 
     [JsonProperty("description")]
-    public string? Description { get; init; }
+    public IncidentDescriptionState? Description { get; init; }
 
     [JsonProperty("caseTypeCode")]
     public IncidentCaseTypeCode CaseTypeCode { get; init; }
@@ -53,6 +45,15 @@ internal sealed record class IncidentCreateFlowState
     [JsonProperty("temporaryActivityId")]
     public string? TemporaryActivityId { get; init; }
 
+    [JsonProperty("incidentId")]
+    public Guid IncidentId { get; init; }
+
     [JsonProperty("gpt")]
     public IncidentGptFlowState Gpt { get; init; }
+
+    [JsonProperty("urlWebApp")]
+    public string? UrlWebApp {  get; init; }
+
+    [JsonProperty("withoutConfirmation")]
+    public bool WithoutConfirmation { get; set; }
 }

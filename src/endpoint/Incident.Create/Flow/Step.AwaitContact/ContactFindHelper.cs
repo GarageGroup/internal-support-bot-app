@@ -30,12 +30,27 @@ internal static class ContactAwaitHelper
 
     internal static ValueTask<LookupValueSetOption> GetDefaultContactsAsync(
         this ICrmContactApi crmContactApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken token)
+    {
+        if (context.FlowState.Contact is not null)
+        {
+            return new(
+                result: new(default)
+                {
+                    SkipStep = true
+                });
+        }
+
+        return crmContactApi.InnerGetDefaultContactsAsync(context, token);
+    }
+
+    private static ValueTask<LookupValueSetOption> InnerGetDefaultContactsAsync(
+        this ICrmContactApi crmContactApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken token)
         =>
         AsyncPipeline.Pipe(
             context.FlowState, token)
         .Pipe(
             static state => new LastContactSetGetIn(
-                customerId: state.CustomerId,
+                customerId: state.Customer?.Id ?? default,
                 userId: state.BotUserId.GetValueOrDefault(),
                 top: MaxCustomerSetCount))
         .PipeValue(
@@ -58,7 +73,7 @@ internal static class ContactAwaitHelper
         .Pipe(
             flowState => new ContactSetSearchIn(
                 searchText: seachText,
-                customerId: flowState.CustomerId)
+                customerId: flowState.Customer?.Id ?? default)
             {
                 Top = MaxCustomerSetCount
             })

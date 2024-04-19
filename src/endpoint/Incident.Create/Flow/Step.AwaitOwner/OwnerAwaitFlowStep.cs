@@ -17,7 +17,10 @@ internal static class OwnerAwaitFlowStep
         =>
         flowState with
         {
-            OwnerId = ownerValue.Id,
-            OwnerFullName = ownerValue.Name
+            Owner = new()
+            {
+                Id = ownerValue.Id,
+                FullName = ownerValue.Name
+            }
         };
 }

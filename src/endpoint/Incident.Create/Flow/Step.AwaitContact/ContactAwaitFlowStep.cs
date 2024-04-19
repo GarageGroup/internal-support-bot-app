@@ -15,13 +15,23 @@ internal static class ContactAwaitFlowStep
 
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, LookupValue contactValue)
         =>
-        contactValue.IsNotSkipValueOrAbsent().Map(flowState.WithContactValue).OrElse(flowState);
+        contactValue.IsNotSkipValueOrAbsent().Map(flowState.WithContactValue).OrElse(flowState.WithEmptyContactValue());
 
     private static IncidentCreateFlowState WithContactValue(this IncidentCreateFlowState flowState, LookupValue contactValue)
         =>
         flowState with 
-        { 
-            ContactId = contactValue.Id,
-            ContactFullName = contactValue.Name
+        {
+            Contact = new()
+            {
+                Id = contactValue.Id,
+                FullName = contactValue.Name
+            }            
+        };
+
+    private static IncidentCreateFlowState WithEmptyContactValue(this IncidentCreateFlowState flowState)
+        =>
+        flowState with
+        {
+            Contact = new()
         };
 }

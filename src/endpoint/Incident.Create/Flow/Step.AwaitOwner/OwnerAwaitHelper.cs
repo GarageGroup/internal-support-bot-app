@@ -18,12 +18,29 @@ internal static class OwnerAwaitHelper
         this ICrmOwnerApi crmOwnerApi,
         IChatFlowContext<IncidentCreateFlowState> context,
         CancellationToken cancellationToken)
+    {
+        if (context.FlowState.Owner is not null) 
+        {
+            return new(
+                result: new(default)
+                {
+                    SkipStep = true,
+                });
+        }
+
+        return crmOwnerApi.InnerGetDefaultOwnersAsync(context, cancellationToken);
+    }
+
+    private static ValueTask<LookupValueSetOption> InnerGetDefaultOwnersAsync(
+        this ICrmOwnerApi crmOwnerApi,
+        IChatFlowContext<IncidentCreateFlowState> context,
+        CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
             context.FlowState, cancellationToken)
         .Pipe(
             static state => new LastOwnerSetGetIn(
-                customerId: state.CustomerId,
+                customerId: state.Customer?.Id ?? default,
                 userId: state.BotUserId.GetValueOrDefault(),
                 top: MaxUserSetCount - 1))
         .PipeValue(

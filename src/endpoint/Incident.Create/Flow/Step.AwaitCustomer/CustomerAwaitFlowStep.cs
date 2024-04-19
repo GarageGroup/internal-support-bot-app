@@ -13,7 +13,10 @@ internal static class CustomerAwaitFlowStep
             CustomerAwaitHelper.CreateResultMessage,
             static (flowState, customerValue) => flowState with
             {
-                CustomerId = customerValue.Id,
-                CustomerTitle = customerValue.Name
+                Customer = new()
+                {
+                    Id = customerValue.Id,
+                    Title = customerValue.Name
+                }
             });
 }

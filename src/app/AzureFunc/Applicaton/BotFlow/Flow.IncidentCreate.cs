@@ -38,14 +38,15 @@ partial class Application
     {
         var configuration = serviceProvider.GetConfiguration();
 
-        var baseUri = new Uri(configuration.GetDataverseApiClientOption(DataverseSectionName).ServiceUrl);
+        var baseUri = new Uri(configuration.GetDataverseApiClientOption(ApplicationHost.DataverseSectionName).ServiceUrl);
         var template = configuration["IncidentCardRelativeUrlTemplate"];
 
         var uri = new Uri(baseUri, template.OrEmpty()).AbsoluteUri;
 
         return new(
             incidentCardUrlTemplate: uri.Replace("%7B", "{").Replace("%7D", "}"),
-            dbRequestPeriodInDays: configuration.GetValue<int>("DbRequestPeriodInDays"))
+            dbRequestPeriodInDays: configuration.GetValue<int>("DbRequestPeriodInDays"),
+            webAppUrl: configuration["UrlWebApp"].OrEmpty())
         {
             GptTraceData = configuration.GetGptTraceData()
         };

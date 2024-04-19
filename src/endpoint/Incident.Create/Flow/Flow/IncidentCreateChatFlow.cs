@@ -5,8 +5,8 @@ namespace GarageGroup.Internal.Support;
 
 internal static partial class IncidentCreateChatFlow
 {
-    private static ChatFlow<Unit> RunFlow(
-        this ChatFlow chatFlow,
+    private static ChatFlow<IncidentCreateFlowState> RunFlow(
+        this ChatFlowStarter<IncidentCreateFlowState> chatFlow,
         ICrmCustomerApi crmCustomerApi,
         ICrmContactApi crmContactApi,
         ICrmOwnerApi crmOwnerApi,
@@ -14,10 +14,11 @@ internal static partial class IncidentCreateChatFlow
         ISupportGptApi supportGptApi,
         IncidentCreateFlowOption option)
         =>
-        chatFlow.Start<IncidentCreateFlowState>(
+        chatFlow.Start(
             () => new()
             {
-                DbMinDate = DateTime.UtcNow.AddDays(-option.DbRequestPeriodInDays).Date
+                DbMinDate = DateTime.UtcNow.AddDays(-option.DbRequestPeriodInDays).Date,
+                UrlWebApp = option.WebAppUrl,
             })
         .GetBotUser()
         .GetDescription()

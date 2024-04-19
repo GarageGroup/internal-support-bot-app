@@ -8,5 +8,6 @@ internal static class BotUserGetFlowStep
         =>
         chatFlow.SetTypingStatus().GetDataverseUserOrBreak(
             BotUserGetHelper.UnexpectedErrorUserMessage,
-            BotUserGetHelper.MapFlowState);
+            BotUserGetHelper.MapFlowState,
+            BotUserGetHelper.GetSkipOption);
 }

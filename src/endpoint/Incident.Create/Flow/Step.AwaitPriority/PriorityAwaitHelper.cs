@@ -30,9 +30,12 @@ internal static class PriorityAwaitHelper
             new(value.Name, value);
     }
 
-    internal static ValueStepOption<PriorityValue> GetValueStepOption()
+    internal static ValueStepOption<PriorityValue> GetValueStepOption(IChatFlowContext<IncidentCreateFlowState> context)
         =>
-        valueStepOption;
+        string.IsNullOrEmpty(context.FlowState.PriorityTitle) ? valueStepOption : new()
+        {
+            SkipStep = true
+        };
 
     internal static string CreateResultMessage(IChatFlowContext<IncidentCreateFlowState> context, PriorityValue priorityValue)
         =>

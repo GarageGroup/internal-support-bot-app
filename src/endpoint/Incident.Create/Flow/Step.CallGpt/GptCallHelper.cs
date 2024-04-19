@@ -11,13 +11,24 @@ internal static class GptCallHelper
 {
     internal static ValueTask<IncidentCreateFlowState> CompleteIncidentAsync(
         this ISupportGptApi gptApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(context.FlowState.Title) is false)
+        {
+            return new(context.FlowState);
+        }
+
+        return gptApi.InnerCompleteIncidentAsync(context, cancellationToken);
+    }
+
+    private static ValueTask<IncidentCreateFlowState> InnerCompleteIncidentAsync(
+        this ISupportGptApi gptApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
             context.FlowState, cancellationToken)
         .HandleCancellation()
         .Pipe(
             static flowState => new IncidentCompleteIn(
-                message: flowState.Description.OrEmpty()))
+                message: (flowState.Description?.Value).OrEmpty()))
         .PipeValue(
             gptApi.CompleteIncidentAsync)
         .Fold(
@@ -36,7 +47,7 @@ internal static class GptCallHelper
             Gpt = context.FlowState.Gpt with
             {
                 Title = @out.Title,
-                SourceMessage = context.FlowState.Description
+                SourceMessage = context.FlowState.Description?.Value
             }
         };
     }
@@ -51,7 +62,7 @@ internal static class GptCallHelper
             ["flowId"] = context.ChatFlowId,
             ["event"] = "GptFailure",
             ["message"] = failure.FailureMessage,
-            ["sourceDescription"] = context.FlowState.Description.OrEmpty()
+            ["sourceDescription"] = (context.FlowState.Description?.Value).OrEmpty()
         });
 
         return context.FlowState with
