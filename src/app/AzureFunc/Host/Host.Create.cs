@@ -2,13 +2,22 @@
 using GarageGroup.Infra.Bot.Builder;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PrimeFuncPack;
 
 namespace GarageGroup.Internal.Support;
 
-partial class Application
+internal static partial class ApplicationHost
 {
-    internal static void Configure(IFunctionsWorkerApplicationBuilder builder)
+    public static IHostBuilder Create()
+        =>
+        FunctionHost.CreateFunctionsWorkerBuilderStandard(
+            useHostConfiguration: false,
+            configure: Configure)
+        .ConfigureBotBuilder(
+            storageResolver: ServiceProviderServiceExtensions.GetRequiredService<ICosmosStorage>);
+
+    private static void Configure(IFunctionsWorkerApplicationBuilder builder)
         =>
         builder.Services.RegisterCosmosStorage().RegisterDataverseApi().RegisterSqlApi();
 
