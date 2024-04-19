@@ -7,7 +7,7 @@ using PrimeFuncPack;
 
 namespace GarageGroup.Internal.Support;
 
-internal static partial class ApplicationHost
+partial class ApplicationHost
 {
     public static IHostBuilder Create()
         =>
