@@ -44,7 +44,10 @@ internal static class IncidentCreateHelper
                 description: flowState.Description?.Value,
                 caseTypeCode: flowState.CaseTypeCode,
                 priorityCode: flowState.PriorityCode,
-                callerUserId: flowState.BotUserId.GetValueOrDefault()))
+                callerUserId: flowState.BotUserId.GetValueOrDefault())
+            {
+                SenderTelegramId = flowState.TelegramSender?.Id
+            })
         .PipeValue(
             crmIncidentApi.CreateAsync)
         .Map(

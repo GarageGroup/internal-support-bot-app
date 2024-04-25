@@ -11,4 +11,7 @@ public interface ICrmContactApi
 
     ValueTask<Result<LastContactSetGetOut, Failure<ContactSetGetFailureCode>>> GetLastAsync(
         LastContactSetGetIn input, CancellationToken cancellationToken);
+
+    ValueTask<Result<ContactGetOut, Failure<ContactGetFailureCode>>> GetAsync(
+        ContactGetIn input, CancellationToken cancellationToken);
 }

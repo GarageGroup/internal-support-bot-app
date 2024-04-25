@@ -28,7 +28,7 @@ internal sealed record class IncidentCreateFlowState
     public string? Title { get; init; }
 
     [JsonProperty("description")]
-    public IncidentDescriptionState? Description { get; init; }
+    public IncidentValueState? Description { get; init; }
 
     [JsonProperty("caseTypeCode")]
     public IncidentCaseTypeCode CaseTypeCode { get; init; }
@@ -56,4 +56,7 @@ internal sealed record class IncidentCreateFlowState
 
     [JsonProperty("withoutConfirmation")]
     public bool WithoutConfirmation { get; set; }
+
+    [JsonProperty("telegramSender")]
+    public TelegramSenderState? TelegramSender { get; init; }
 }

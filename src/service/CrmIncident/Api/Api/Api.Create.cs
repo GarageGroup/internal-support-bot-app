@@ -33,7 +33,8 @@ partial class CrmIncidentApi
                     IncidentPriorityCode.Normal => 2,
                     IncidentPriorityCode.Low    => 3,
                     _ => null
-                }
+                },
+                SenderTelegramId = @in.SenderTelegramId.OrNullIfWhiteSpace()
             })
         .Pipe(
             IncidentJsonCreateIn.BuildDataverseCreateInput)

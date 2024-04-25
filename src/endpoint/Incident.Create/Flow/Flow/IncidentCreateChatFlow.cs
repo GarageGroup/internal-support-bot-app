@@ -22,6 +22,7 @@ internal static partial class IncidentCreateChatFlow
             })
         .GetBotUser()
         .GetDescription()
+        .GetTelegramSender()
         .AwaitCustomer(
             crmCustomerApi)
         .AwaitContact(
