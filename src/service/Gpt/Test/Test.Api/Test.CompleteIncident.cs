@@ -12,24 +12,6 @@ namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 partial class SupportGptApiTest
 {
     [Fact]
-    public static async Task CompleteIncidentAsync_InputIsNull_ExpectArgumentNullException()
-    {
-        using var response = CreateSuccessResponse(SomeResponseMessage);
-        using var messageHandler = new MockHttpMessageHandler(response);
-
-        var api = CreateSupportGptApi(messageHandler, SomeOption);
-
-        var cancellationToken = new CancellationToken(canceled: false);
-        var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
-
-        Assert.Equal("input", ex.ParamName);
-
-        async Task TestAsync()
-            =>
-            _ = await api.CompleteIncidentAsync(null!, cancellationToken);
-    }
-
-    [Fact]
     public static void CompleteIncidentAsync_CancellationTokenIsCanceled_ExpectCanceledTask()
     {
         using var response = CreateSuccessResponse(SomeResponseMessage);

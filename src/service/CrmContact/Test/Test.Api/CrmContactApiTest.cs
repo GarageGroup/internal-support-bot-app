@@ -24,6 +24,11 @@ public static partial class CrmContactApiTest
             userId: new("41113f2a-8a51-4d45-9623-750195e4618c"),
             top: 3);
 
+    private static readonly ContactGetIn SomeContactGetInput
+        =
+        new(
+            telegramSenderId: "1234567");
+
     private static readonly FlatArray<DataverseSearchItem> SomeDataverseItems
         =
         [
@@ -58,6 +63,18 @@ public static partial class CrmContactApiTest
             }
         ];
 
+    private static FlatArray<DbIncident> SomeDbIncident
+        =>
+        [
+            new()
+            {
+                ContactId = new("27bede77-15d3-48ae-bf50-21c13b210380"),
+                ContactName = "Some contact name",
+                CustomerId = new("1097bc3a-046c-4bbb-adae-6f5c7869516b"),
+                CustomerName = "Some cusomer name"
+            }
+        ];
+
     private static Mock<IDataverseSearchSupplier> CreateMockDataverseApi(
         in Result<DataverseSearchOut, Failure<DataverseFailureCode>> result)
     {
@@ -70,13 +87,25 @@ public static partial class CrmContactApiTest
         return mock;
     }
 
-    private static Mock<ISqlQueryEntitySetSupplier> BuildMockSqlApi(
+    private static Mock<ISqlQueryEntitySetSupplier> BuildMockContactSqlApi(
         in Result<FlatArray<DbContact>, Failure<Unit>> result)
     {
         var mock = new Mock<ISqlQueryEntitySetSupplier>();
 
         _ = mock
             .Setup(s => s.QueryEntitySetOrFailureAsync<DbContact>(It.IsAny<IDbQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+
+        return mock;
+    }
+
+    private static Mock<ISqlQueryEntitySetSupplier> BuildMockIncidentSqlApi(
+        in Result<FlatArray<DbIncident>, Failure<Unit>> result)
+    {
+        var mock = new Mock<ISqlQueryEntitySetSupplier>();
+
+        _ = mock
+            .Setup(s => s.QueryEntitySetOrFailureAsync<DbIncident>(It.IsAny<IDbQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(result);
 
         return mock;

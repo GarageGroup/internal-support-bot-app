@@ -9,24 +9,6 @@ namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 
 partial class CrmOwnerApiTest
 {
-    [Fact]
-    public static async Task SearchAsync_InputIsNull_ExpectArgumentNullException()
-    {
-        var dataverseOut = new DataverseSearchOut(1, SomeDataverseItems);
-        var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
-
-        var api = new CrmOwnerApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
-
-        var cancellationToken = new CancellationToken(canceled: false);
-        var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
-
-        Assert.Equal("input", ex.ParamName);
-
-        async Task TestAsync()
-            =>
-            _ = await api.SearchAsync(null!, cancellationToken);
-    }
-
     [Theory]
     [InlineData("Some text", null, "*Some text*")]
     [InlineData(Strings.Empty, 3, "**")]

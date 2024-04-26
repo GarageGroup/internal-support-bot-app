@@ -15,8 +15,6 @@ partial class SupportGptApi
     public ValueTask<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>> CompleteIncidentAsync(
         IncidentCompleteIn input, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(input);
-
         if (cancellationToken.IsCancellationRequested)
         {
             return ValueTask.FromCanceled<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>>(cancellationToken);
