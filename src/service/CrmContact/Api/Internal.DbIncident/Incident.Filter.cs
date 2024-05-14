@@ -6,5 +6,5 @@ partial record class DbIncident
 {
     internal static DbParameterFilter BuildFilter(string senderTelegramId)
         =>
-        new($"{AliasName}.gg_sender_telegram_id", DbFilterOperator.Equal, senderTelegramId);
+        new($"{AliasName}.gg_sender_telegram_id", DbFilterOperator.Equal, senderTelegramId, "SenderTelegramId");
 }

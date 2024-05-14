@@ -45,7 +45,8 @@ partial class CrmContactApiTest
             Filter = new DbParameterFilter(
                 fieldName: "i.gg_sender_telegram_id",
                 @operator: DbFilterOperator.Equal,
-                fieldValue: "123456"),
+                fieldValue: "123456",
+                parameterName: "SenderTelegramId"),
             Orders =
             [
                 new("i.createdon", DbOrderType.Descending)

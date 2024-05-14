@@ -22,9 +22,14 @@ partial class CrmContactApi
             })
         .ForwardValue(
             sqlApi.QueryEntitySetOrFailureAsync<DbIncident>,
-            static failure => failure.WithFailureCode(ContactGetFailureCode.Unknown))
+            MapFailure)
         .Forward(
             MapIncidentOrFailure);
+
+    private Failure<ContactGetFailureCode> MapFailure(Failure<Unit> failure)
+    {
+        return failure.WithFailureCode(ContactGetFailureCode.Unknown);
+    }
 
     private Result<ContactGetIn, Failure<ContactGetFailureCode>> Validate(ContactGetIn input)
     {

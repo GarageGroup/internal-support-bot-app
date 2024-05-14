@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GarageGroup.Internal.Support.FlowState;
 using Newtonsoft.Json;
 
@@ -59,4 +60,7 @@ internal sealed record class IncidentCreateFlowState
 
     [JsonProperty("telegramSender")]
     public TelegramSenderState? TelegramSender { get; init; }
+
+    [JsonProperty("isNotFirstLaunch")]
+    public bool IsNotFirstLaunch { get; set; }
 }
