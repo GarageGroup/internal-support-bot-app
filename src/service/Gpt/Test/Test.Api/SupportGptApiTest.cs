@@ -1,9 +1,7 @@
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Text.Json;
+using GarageGroup.Infra;
 using Moq;
-using PrimeFuncPack;
+using System;
+using System.Threading;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
@@ -14,51 +12,39 @@ public static partial class SupportGptApiTest
     private static readonly SupportGptApiOption SomeOption
         =
         new(
-            apiKey: "Some API key",
-            azureGpt: new(
-                resourceName: "some-resoure-name",
-                deploymentId: "some-deployment-id",
-                apiVersion: "some-api-version"),
-            incidentComplete: new(
-                chatMessages:
-                [
-                    new("some-role", "Some message: {0}")
-                ])
-            {
-                MaxTokens = 150,
-                Temperature = 0.7m
-            });
+            chatMessages:
+            [
+                new("some-role", "Some message: {0}")
+            ])
+        {
+            MaxTokens = 150,
+            Temperature = 0.7m
+        };
 
     private static readonly IncidentCompleteIn SomeInput
         =
         new("Some customer message");
 
-    private static HttpResponseMessage CreateSuccessResponse(string message)
+    private static readonly HttpSendOut SomeSuccessOutput
+        =
+        new()
+        {
+            StatusCode = HttpSuccessCode.OK
+        };
+
+    private static readonly HttpSendFailure SomeHttpTooManyRequestsOutput
+        =
+        new()
+        {
+            StatusCode = HttpFailureCode.TooManyRequests
+        };
+
+    private static Mock<IHttpApi> BuildMockHttpApi(in Result<HttpSendOut, HttpSendFailure> result)
     {
-        var outJson = new StubGptJsonOut
-        {
-            Choices =
-            [
-                new()
-                {
-                    Message = new()
-                    {
-                        Content = message
-                    },
-                    FinishReason = "stop"
-                }
-            ]
-        };
+        var mock = new Mock<IHttpApi>();
 
-        var json = JsonSerializer.Serialize(outJson);
+        _ = mock.Setup(static a => a.SendAsync(It.IsAny<HttpSendIn>(), It.IsAny<CancellationToken>())).ReturnsAsync(result);
 
-        return new(HttpStatusCode.OK)
-        {
-            Content = new StringContent(json)
-        };
+        return mock;
     }
-
-    private static ISupportGptApi CreateSupportGptApi(HttpMessageHandler httpMessageHandler, SupportGptApiOption option)
-        =>
-        Dependency.Of(httpMessageHandler, option).UseSupportGptApi().Resolve(Mock.Of<IServiceProvider>());
 }

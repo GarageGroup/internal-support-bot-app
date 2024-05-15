@@ -1,10 +1,5 @@
+using GarageGroup.Infra;
 using System;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Net.Mime;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,78 +10,44 @@ partial class SupportGptApi
     public ValueTask<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>> CompleteIncidentAsync(
         IncidentCompleteIn input, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(input);
-
-        if (cancellationToken.IsCancellationRequested)
+        if (string.IsNullOrWhiteSpace(input.Message))
         {
-            return ValueTask.FromCanceled<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>>(cancellationToken);
+            return new(default(IncidentCompleteOut));
         }
 
         return InnerCompleteIncidentAsync(input, cancellationToken);
     }
 
-    private async ValueTask<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>> InnerCompleteIncidentAsync(
+    private ValueTask<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>> InnerCompleteIncidentAsync(
         IncidentCompleteIn input, CancellationToken cancellationToken)
+        =>
+        AsyncPipeline.Pipe(
+            input, cancellationToken)
+        .Pipe(
+            MapInput)
+        .Pipe(
+            @in => new HttpSendIn(
+                method: HttpVerb.Post,
+                requestUri: string.Empty)
+            {
+                Body = HttpBody.SerializeAsJson(@in)
+            })
+        .PipeValue(
+            gptHttp.SendAsync)
+        .Forward(
+            MapSuccessOrFailure,
+            static failure => failure.ToStandardFailure().MapFailureCode(ToIncidentCompleteFailureCode));
+
+    private ChatGptJsonIn MapInput(IncidentCompleteIn input)
     {
-        if (string.IsNullOrWhiteSpace(input.Message))
-        {
-            return default(IncidentCompleteOut);
-        }
-
         var sourceMessage = input.Message.Trim();
-        var jsonIn = new ChatGptJsonIn
+
+        return new()
         {
-            Model = option.Model,
-            MaxTokens = option.IncidentComplete.MaxTokens,
-            Temperature = option.IncidentComplete.Temperature,
+            MaxTokens = option.MaxTokens,
+            Temperature = option.Temperature,
             Top = 1,
-            Messages = option.IncidentComplete.ChatMessages.Map(CreateChatMessageJson)
-        };
-
-        using var httpClient = CreateHttpClient();
-        using var httpRequest = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            Content = JsonContent.Create(jsonIn, new MediaTypeHeaderValue(MediaTypeNames.Application.Json))
-        };
-
-        using var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
-        var httpResponseText = await httpResponse.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
-        if (httpResponse.StatusCode is HttpStatusCode.TooManyRequests)
-        {
-            return Failure.Create(
-                failureCode: IncidentCompleteFailureCode.TooManyRequests,
-                failureMessage: ReadErrorMessage(httpResponseText));
-        }
-
-        if (httpResponse.IsSuccessStatusCode is false)
-        {
-            return Failure.Create(
-                failureCode: IncidentCompleteFailureCode.Unknown,
-                failureMessage: $"An unexpected http status code: {httpResponse.StatusCode}. Body: '{httpResponseText}'");
-        }
-
-        var jsonOut = JsonSerializer.Deserialize<ChatGptJsonOut>(httpResponseText);
-
-        if (jsonOut.Choices.IsEmpty)
-        {
-            return Failure.Create(
-                IncidentCompleteFailureCode.Unknown,
-                $"GPT result choices are absent. Body: '{httpResponseText}'");
-        }
-
-        var choice = jsonOut.Choices[0];
-        if (string.Equals(choice.FinishReason, "stop", StringComparison.InvariantCultureIgnoreCase) is false)
-        {
-            return Failure.Create(
-                IncidentCompleteFailureCode.Unknown,
-                $"An unexpected GPT finish reason: '{choice.FinishReason}'. Body: '{httpResponseText}'");
-        }
-
-        return new IncidentCompleteOut
-        {
-            Title = TrimTitle(choice.Message?.Content)
+            Messages = option.ChatMessages.Map(CreateChatMessageJson)
         };
 
         ChatMessageJson CreateChatMessageJson(ChatMessageOption messageOption)
@@ -98,19 +59,35 @@ partial class SupportGptApi
             };
     }
 
-    private static string? ReadErrorMessage(string? httpResponseText)
+    private static Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>> MapSuccessOrFailure(HttpSendOut httpResponse)
     {
-        if (string.IsNullOrEmpty(httpResponseText))
+        var jsonOut = httpResponse.Body.DeserializeFromJson<ChatGptJsonOut>();
+        if (jsonOut.Choices.IsEmpty)
         {
-            return null;
+            return Failure.Create(
+                IncidentCompleteFailureCode.Unknown,
+                $"GPT result choices are absent. Body: '{httpResponse.Body}'");
         }
 
-        var message = JsonSerializer.Deserialize<ChatFailureJson>(httpResponseText)?.Error?.Message;
-        if (string.IsNullOrWhiteSpace(message))
+        var choice = jsonOut.Choices[0];
+        if (string.Equals(choice.FinishReason, "stop", StringComparison.InvariantCultureIgnoreCase) is false)
         {
-            return httpResponseText;
+            return Failure.Create(
+                IncidentCompleteFailureCode.Unknown,
+                $"An unexpected GPT finish reason: '{choice.FinishReason}'. Body: '{httpResponse.Body}'");
         }
 
-        return message;
+        return new IncidentCompleteOut
+        {
+            Title = TrimTitle(choice.Message?.Content)
+        };
     }
+
+    private static IncidentCompleteFailureCode ToIncidentCompleteFailureCode(HttpFailureCode httpFailureCode)
+        =>
+        httpFailureCode switch
+        {
+            HttpFailureCode.TooManyRequests => IncidentCompleteFailureCode.TooManyRequests,
+            _ => IncidentCompleteFailureCode.Unknown
+        };
 }

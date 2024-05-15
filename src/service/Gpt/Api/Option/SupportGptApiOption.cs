@@ -4,25 +4,13 @@ namespace GarageGroup.Internal.Support;
 
 public sealed record class SupportGptApiOption
 {
-    public SupportGptApiOption(string apiKey, string model, IncidentCompleteOption incidentComplete)
-    {
-        ApiKey = apiKey.OrEmpty();
-        Model = model.OrEmpty();
-        IncidentComplete = incidentComplete;
-    }
+    public SupportGptApiOption(FlatArray<ChatMessageOption> chatMessages)
+        =>
+        ChatMessages = chatMessages;
 
-    public SupportGptApiOption(string apiKey, SupportAzureGptApiOption azureGpt, IncidentCompleteOption incidentComplete)
-    {
-        ApiKey = apiKey.OrEmpty();
-        AzureGpt = azureGpt;
-        IncidentComplete = incidentComplete;
-    }
+    public FlatArray<ChatMessageOption> ChatMessages { get; }
 
-    public string ApiKey { get; }
+    public int? MaxTokens { get; init; }
 
-    public string? Model { get; }
-
-    public SupportAzureGptApiOption? AzureGpt { get; }
-
-    public IncidentCompleteOption IncidentComplete { get; }
+    public decimal? Temperature { get; init; }
 }
