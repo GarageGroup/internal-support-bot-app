@@ -13,7 +13,9 @@ partial class SupportGptApiTestSource
         {
             {
                 default,
-                Failure.Create(IncidentCompleteFailureCode.Unknown, "An unexpected http failure occured: 0.")
+                new(
+                    failureCode: IncidentCompleteFailureCode.Unknown, 
+                    failureMessage: "An unexpected http failure occured: 0.")
             },
             {
                 new()
@@ -25,7 +27,9 @@ partial class SupportGptApiTestSource
                         Content = BinaryData.FromString("Some failure message")
                     }
                 },
-                Failure.Create(IncidentCompleteFailureCode.Unknown, "An unexpected http failure occured: 400.\nSome failure message")
+                new(
+                    failureCode: IncidentCompleteFailureCode.Unknown, 
+                    failureMessage: "An unexpected http failure occured: 400.\nSome failure message")
             },
             {
                 new()
@@ -41,7 +45,9 @@ partial class SupportGptApiTestSource
                         Content = BinaryData.FromString("Some error text.")
                     }
                 },
-                Failure.Create(IncidentCompleteFailureCode.Unknown, "An unexpected http failure occured: 500 Some reason.\nSome error text.")
+                new(
+                    failureCode: IncidentCompleteFailureCode.Unknown, 
+                    failureMessage: "An unexpected http failure occured: 500 Some reason.\nSome error text.")
             },
             {
                 new()
@@ -57,7 +63,9 @@ partial class SupportGptApiTestSource
                         Content = BinaryData.FromString("Some error text.")
                     }
                 },
-                Failure.Create(IncidentCompleteFailureCode.TooManyRequests, "An unexpected http failure occured: 429 Some reason.\nSome error text.")
+                new(
+                    failureCode: IncidentCompleteFailureCode.TooManyRequests, 
+                    failureMessage: "An unexpected http failure occured: 429 Some reason.\nSome error text.")
             },
         };
 }

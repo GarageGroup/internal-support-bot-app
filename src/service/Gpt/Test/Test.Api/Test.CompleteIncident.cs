@@ -62,7 +62,7 @@ partial class SupportGptApiTest
 
     [Theory]
     [MemberData(nameof(SupportGptApiTestSource.OutputSuccessTestData), MemberType = typeof(SupportGptApiTestSource))]
-    public static async Task CompleteIncidentAsync_HttpStatusCodeIsSuccessAndJsonIsExpected_ExpectSuccess(
+    public static async Task CompleteIncidentAsync_HttpApiIsSuccess_ExpectSuccessOrFailure(
         HttpSendOut output, Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>> expected)
     {
         var mockHttpApi = BuildMockHttpApi(output);

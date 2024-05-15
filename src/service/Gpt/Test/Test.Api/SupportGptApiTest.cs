@@ -7,8 +7,6 @@ namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
 public static partial class SupportGptApiTest
 {
-    private const string SomeResponseMessage = "Some response message";
-
     private static readonly SupportGptApiOption SomeOption
         =
         new(
@@ -30,13 +28,6 @@ public static partial class SupportGptApiTest
         new()
         {
             StatusCode = HttpSuccessCode.OK
-        };
-
-    private static readonly HttpSendFailure SomeHttpTooManyRequestsOutput
-        =
-        new()
-        {
-            StatusCode = HttpFailureCode.TooManyRequests
         };
 
     private static Mock<IHttpApi> BuildMockHttpApi(in Result<HttpSendOut, HttpSendFailure> result)
