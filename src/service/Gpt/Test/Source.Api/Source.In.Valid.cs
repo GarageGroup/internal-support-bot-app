@@ -12,7 +12,12 @@ partial class SupportGptApiTestSource
         {
             {
                 new(
-                    chatMessages: new FlatArray<ChatMessageOption>(new ChatMessageOption("some role", "some content template {0}")))
+                    chatMessages: 
+                    [
+                        new(
+                        role: "some role",
+                        contentTemplate: "some content template {0}")
+                    ])
                 {
                     MaxTokens = 30,
                     Temperature = 0
@@ -27,17 +32,25 @@ partial class SupportGptApiTestSource
                         MaxTokens = 30,
                         Temperature = 0,
                         Top = 1,
-                        Messages = new FlatArray<ChatMessageJson>(new ChatMessageJson()
-                        {
-                            Role = "some role",
-                            Content = "some content template some message"
-                        })
+                        Messages = 
+                        [
+                            new()
+                            {
+                                Role = "some role",
+                                Content = "some content template some message"
+                            }
+                        ]
                     })
                 }
             },
             {
                 new(
-                    chatMessages: new FlatArray<ChatMessageOption>(new ChatMessageOption("some role", "some content template {0}")))
+                    chatMessages:
+                    [
+                        new(
+                        role: "some role",
+                        contentTemplate: "some content template {0}")
+                    ])
                 {
                     MaxTokens = 100,
                     Temperature = 0.2m
@@ -52,11 +65,14 @@ partial class SupportGptApiTestSource
                         MaxTokens = 100,
                         Temperature = 0.2m,
                         Top = 1,
-                        Messages = new FlatArray<ChatMessageJson>(new ChatMessageJson()
-                        {
-                            Role = "some role",
-                            Content = "some content template some message trim"
-                        })
+                        Messages = 
+                        [
+                            new()
+                            {
+                                Role = "some role",
+                                Content = "some content template some message trim"
+                            }
+                        ]
                     })
                 }
             }

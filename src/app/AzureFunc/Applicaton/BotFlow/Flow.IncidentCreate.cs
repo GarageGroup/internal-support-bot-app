@@ -29,7 +29,7 @@ partial class Application
     private static Dependency<ISupportGptApi> UseSupportGptApi()
         =>
         PrimaryHandler.UseStandardSocketsHttpHandler()
-        .UseLogging("GptBuilderHttpApi")
+        .UseLogging("SupportGptApi")
         .UsePollyStandard()
         .ConfigureHttpHeader("api-key", "GptApi:Azure:Key")
         .UseHttpApi("GptApi:Azure")
