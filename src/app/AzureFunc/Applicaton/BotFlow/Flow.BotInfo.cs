@@ -14,8 +14,10 @@ partial class Application
 
     private static BotInfoData GetBotInfoData(IBotContext botContext)
         =>
-        new(
-            botContext.ServiceProvider.GetRequiredService<IConfiguration>().GetRequiredSection("Info").GetBotInfoData());
+        new() 
+        { 
+            Values = botContext.ServiceProvider.GetRequiredService<IConfiguration>().GetRequiredSection("Info").GetBotInfoData() 
+        };
 
     private static FlatArray<KeyValuePair<string, string?>> GetBotInfoData(this IConfigurationSection section)
         =>
