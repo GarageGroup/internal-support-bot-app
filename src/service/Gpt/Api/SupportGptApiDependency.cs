@@ -1,22 +1,25 @@
-using System;
-using System.Net.Http;
+using GarageGroup.Infra;
 using PrimeFuncPack;
+using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("GarageGroup.Internal.Support.Service.Gpt.Test")]
 
 namespace GarageGroup.Internal.Support;
 
 public static class SupportGptApiDependency
 {
-    public static Dependency<ISupportGptApi> UseSupportGptApi(this Dependency<HttpMessageHandler, SupportGptApiOption> dependency)
+    public static Dependency<ISupportGptApi> UseSupportGptApi(this Dependency<IHttpApi, SupportGptApiOption> dependency)
     {
         ArgumentNullException.ThrowIfNull(dependency);
         return dependency.Fold<ISupportGptApi>(CreateApi);
 
-        static SupportGptApi CreateApi(HttpMessageHandler httpMessageHandler, SupportGptApiOption option)
+        static SupportGptApi CreateApi(IHttpApi httpApi, SupportGptApiOption option)
         {
-            ArgumentNullException.ThrowIfNull(httpMessageHandler);
+            ArgumentNullException.ThrowIfNull(httpApi);
             ArgumentNullException.ThrowIfNull(option);
 
-            return new(httpMessageHandler, option);
+            return new(httpApi, option);
         }
     }
 }

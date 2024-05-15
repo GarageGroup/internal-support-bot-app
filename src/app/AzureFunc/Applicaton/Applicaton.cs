@@ -9,12 +9,6 @@ namespace GarageGroup.Internal.Support;
 
 internal static partial class Application
 {
-    private const string GptApiSectionName = "GptApi";
-
-    private const string GptApiAzureSectionName = "Azure";
-
-    private const string IncidentCompleteSectionName = "IncidentComplete";
-
     private const string BotEntityName = "BotRequest";
 
     private static Dependency<IDataverseApiClient> UseDataverseApi()
