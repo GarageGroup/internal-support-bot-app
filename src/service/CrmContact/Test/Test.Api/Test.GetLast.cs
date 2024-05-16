@@ -10,25 +10,9 @@ namespace GarageGroup.Internal.Support.Service.CrmContact.Test;
 partial class CrmContactApiTest
 {
     [Fact]
-    public static async Task GetLastAsync_InputIsNull_ExpectArgumentNullException()
-    {
-        var mockSqlApi = BuildMockSqlApi(SomeDbContacts);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
-
-        var cancellationToken = new CancellationToken(canceled: false);
-        var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
-
-        Assert.Equal("input", ex.ParamName);
-
-        async Task TestAsync()
-            =>
-            _ = await api.GetLastAsync(null!, cancellationToken);
-    }
-
-    [Fact]
     public static async Task GetLastAsync_InputIsNotNull_ExpectSqlApiCalledOnce()
     {
-        var mockSqlApi = BuildMockSqlApi(SomeDbContacts);
+        var mockSqlApi = BuildMockContactSqlApi(SomeDbContacts);
         var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
         var input = new LastContactSetGetIn(
@@ -72,7 +56,7 @@ partial class CrmContactApiTest
         var sourceException = new Exception("Some exception message");
         var dbFailure = sourceException.ToFailure("Some text");
 
-        var mockSqlApi = BuildMockSqlApi(dbFailure);
+        var mockSqlApi = BuildMockContactSqlApi(dbFailure);
         var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
         var actual = await api.GetLastAsync(SomeLastContactSetGetInput, default);
@@ -86,7 +70,7 @@ partial class CrmContactApiTest
     internal static async Task GetLastAsync_DataverseSearchResultIsSuccess_ExpectSuccess(
         FlatArray<DbContact> dbIncidentContacts, LastContactSetGetOut expected)
     {
-        var mockSqlApi = BuildMockSqlApi(dbIncidentContacts);
+        var mockSqlApi = BuildMockContactSqlApi(dbIncidentContacts);
         var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
         var actual = await api.GetLastAsync(SomeLastContactSetGetInput, default);

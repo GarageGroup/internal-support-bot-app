@@ -11,7 +11,7 @@ partial class CrmContactApi
         LastContactSetGetIn input, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
-            input ?? throw new ArgumentNullException(nameof(input)), cancellationToken)
+            input, cancellationToken)
         .Pipe<IDbQuery>(
             static @in => DbContact.QueryAll with
             {

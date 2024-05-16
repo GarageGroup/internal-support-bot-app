@@ -40,4 +40,6 @@ public sealed record class IncidentCreateIn
     public IncidentPriorityCode PriorityCode { get; }
 
     public Guid CallerUserId { get; }
+
+    public string? SenderTelegramId { get; init; }
 }

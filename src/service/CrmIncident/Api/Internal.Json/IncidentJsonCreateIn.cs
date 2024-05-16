@@ -49,4 +49,7 @@ internal sealed record class IncidentJsonCreateIn
 
     [JsonPropertyName("caseorigincode")]
     public int? CaseOriginCode { get; init; }
+
+    [JsonPropertyName("gg_sender_telegram_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? SenderTelegramId { get; init; }
 }

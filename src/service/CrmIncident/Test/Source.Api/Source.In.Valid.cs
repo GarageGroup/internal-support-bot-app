@@ -43,7 +43,10 @@ partial class CrmIncidentApiTestSource
                     description: "Some Description",
                     caseTypeCode: IncidentCaseTypeCode.Request,
                     priorityCode: IncidentPriorityCode.Hight,
-                    callerUserId: new("144326e7-5aa8-4792-b8aa-d125b6f7f6b5")),
+                    callerUserId: new("144326e7-5aa8-4792-b8aa-d125b6f7f6b5"))
+                {
+                    SenderTelegramId = null
+                },
                 new(
                     entityPluralName: "incidents",
                     selectFields: new("title"),
@@ -68,7 +71,10 @@ partial class CrmIncidentApiTestSource
                     description: string.Empty,
                     caseTypeCode: IncidentCaseTypeCode.Problem,
                     priorityCode: IncidentPriorityCode.Normal,
-                    callerUserId: new("a6093320-cdf2-43d7-bf42-21825c303721")),
+                    callerUserId: new("a6093320-cdf2-43d7-bf42-21825c303721"))
+                {
+                    SenderTelegramId = new(' ', 3)
+                },
                 new(
                     entityPluralName: "incidents",
                     selectFields: new("title"),
@@ -82,6 +88,35 @@ partial class CrmIncidentApiTestSource
                         CaseTypeCode = 2,
                         PriorityCode = 2,
                         CaseOriginCode = null
+                    })
+            },
+            {
+                new(
+                    ownerId: new("0c03e968-b0e0-4e0c-b2b3-7594d73882a1"),
+                    customerId: new("4a4b12a1-5034-420b-91bc-cb0a251c3b01"),
+                    contactId: new("5d22feb3-b450-4129-8bfb-729043042dfa"),
+                    title: "Some Title",
+                    description: string.Empty,
+                    caseTypeCode: IncidentCaseTypeCode.Problem,
+                    priorityCode: IncidentPriorityCode.Normal,
+                    callerUserId: new("a6093320-cdf2-43d7-bf42-21825c303721"))
+                {
+                    SenderTelegramId = "1234567"
+                },
+                new(
+                    entityPluralName: "incidents",
+                    selectFields: new("title"),
+                    entityData: new()
+                    {
+                        OwnerId = "/systemusers(0c03e968-b0e0-4e0c-b2b3-7594d73882a1)",
+                        CustomerId = "/accounts(4a4b12a1-5034-420b-91bc-cb0a251c3b01)",
+                        ContactId = "/contacts(5d22feb3-b450-4129-8bfb-729043042dfa)",
+                        Title = "Some Title",
+                        Description = string.Empty,
+                        CaseTypeCode = 2,
+                        PriorityCode = 2,
+                        CaseOriginCode = null,
+                        SenderTelegramId = "1234567"
                     })
             }
         };

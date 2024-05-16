@@ -10,7 +10,9 @@ partial class SupportGptApi
     public ValueTask<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>> CompleteIncidentAsync(
         IncidentCompleteIn input, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(input.Message))
+        ArgumentNullException.ThrowIfNull(input);
+
+        if (cancellationToken.IsCancellationRequested)
         {
             return new(default(IncidentCompleteOut));
         }

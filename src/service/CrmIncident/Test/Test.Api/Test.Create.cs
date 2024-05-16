@@ -10,26 +10,6 @@ namespace GarageGroup.Internal.Support.Service.CrmIncident.Test;
 partial class CrmIncidentApiTest
 {
     [Fact]
-    public static async Task CreateAsync_InputIsNull_ExpectArgumentNullException()
-    {
-        var dataverseOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(SomeIncidentJsonOutput);
-
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseOut);
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
-
-        var api = new CrmIncidentApi(mockDataverseApi.Object);
-
-        var cancellationToken = new CancellationToken(canceled: false);
-        var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
-
-        Assert.Equal("input", ex.ParamName);
-
-        async Task TestAsync()
-            =>
-            _ = await api.CreateAsync(null!, cancellationToken);
-    }
-
-    [Fact]
     public static async Task CreateAsync_InputIsNotNull_ExpectCallImpersonateOnce()
     {
         var dataverseOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(SomeIncidentJsonOutput);

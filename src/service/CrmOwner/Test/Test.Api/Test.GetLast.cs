@@ -10,22 +10,6 @@ namespace GarageGroup.Internal.Support.Service.CrmOwner.Test;
 partial class CrmOwnerApiTest
 {
     [Fact]
-    public static async Task GetLastAsync_InputIsNull_ExpectArgumentNullException()
-    {
-        var mockSqlApi = BuildMockSqlApi(SomeDbIncidentOwners);
-        var api = new CrmOwnerApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
-
-        var cancellationToken = new CancellationToken(canceled: false);
-        var ex = await Assert.ThrowsAsync<ArgumentNullException>(TestAsync);
-
-        Assert.Equal("input", ex.ParamName);
-
-        async Task TestAsync()
-            =>
-            _ = await api.GetLastAsync(null!, cancellationToken);
-    }
-
-    [Fact]
     public static async Task GetLastAsync_InputIsNotNull_ExpectSqlApiCalledOnce()
     {
         var mockSqlApi = BuildMockSqlApi(SomeDbIncidentOwners);

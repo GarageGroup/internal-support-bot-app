@@ -90,7 +90,8 @@ internal static class IncidentConfirmFlowStep
             PriorityTitle = GetPriorityTitle(support.PriorityCode),
             Owner = support.Owner,
             Description = new(support.Description.OrEmpty()),
-            WithoutConfirmation = true
+            WithoutConfirmation = true,
+            IsNotFirstLaunch = true
         };
     }
 

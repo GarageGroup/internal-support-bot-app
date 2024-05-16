@@ -2,9 +2,9 @@
 
 namespace GarageGroup.Internal.Support.FlowState;
 
-internal sealed record class IncidentDescriptionState
+internal sealed record class IncidentValueState
 {
-    public IncidentDescriptionState(string value)
+    public IncidentValueState(string value)
         =>
         Value = value;
 
