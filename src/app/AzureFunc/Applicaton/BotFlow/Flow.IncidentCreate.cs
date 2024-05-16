@@ -69,7 +69,10 @@ partial class Application
             ])
         {
             MaxTokens = section.GetValue<int?>("MaxTokens"),
-            Temperature = section.GetValue<decimal?>("Temperature")
+            Temperature = section.GetValue<decimal?>("Temperature"),
+            CaseTypeTemplate = new(
+                role: "user",
+                contentTemplate: section["UserCaseTypeTemplate"].OrEmpty())
         };
     }
 

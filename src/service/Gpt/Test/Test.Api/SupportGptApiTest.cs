@@ -1,6 +1,8 @@
 using GarageGroup.Infra;
 using Moq;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
@@ -16,7 +18,8 @@ public static partial class SupportGptApiTest
             ])
         {
             MaxTokens = 150,
-            Temperature = 0.7m
+            Temperature = 0.7m,
+            CaseTypeTemplate = new("someCaseTypeTemplate-role", "SomeCaseTypeTemplate message")
         };
 
     private static readonly IncidentCompleteIn SomeInput
@@ -27,14 +30,32 @@ public static partial class SupportGptApiTest
         =
         new()
         {
-            StatusCode = HttpSuccessCode.OK
+            StatusCode = HttpSuccessCode.OK,
+            Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+            {
+                Choices =
+                        [
+                            new()
+                            {
+                                Message = new()
+                                {
+                                    Content = "Some response \"message\""
+                                },
+                                FinishReason = "stop"
+                            }
+                        ]
+            }),
         };
 
-    private static Mock<IHttpApi> BuildMockHttpApi(in Result<HttpSendOut, HttpSendFailure> result)
+    private static Mock<IHttpApi> BuildMockHttpApi(
+        in Result<HttpSendOut, HttpSendFailure> titleResult,
+        in Result<HttpSendOut, HttpSendFailure> caseTypeResult)
     {
+        var queue = new Queue<Result<HttpSendOut, HttpSendFailure>>([titleResult,  caseTypeResult]);
+
         var mock = new Mock<IHttpApi>();
 
-        _ = mock.Setup(static a => a.SendAsync(It.IsAny<HttpSendIn>(), It.IsAny<CancellationToken>())).ReturnsAsync(result);
+        _ = mock.Setup(static a => a.SendAsync(It.IsAny<HttpSendIn>(), It.IsAny<CancellationToken>())).ReturnsAsync(queue.Dequeue);
 
         return mock;
     }

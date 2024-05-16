@@ -9,9 +9,11 @@ internal static class CaseTypeAwaitHelper
 {
     private static readonly ValueStepOption<CaseTypeValue> valueStepOption;
 
+    private static readonly FlatArray<CaseTypeValue> caseTypes;
+
     static CaseTypeAwaitHelper()
     {
-        CaseTypeValue[] caseTypes =
+        caseTypes =
         [
             new(IncidentCaseTypeCode.Question, "Вопрос"),
             new(IncidentCaseTypeCode.Problem, "Проблема"),
@@ -22,7 +24,7 @@ internal static class CaseTypeAwaitHelper
             messageText: "Выберите тип обращения",
             suggestions: new[]
             {
-                caseTypes.Select(GetSuggestion).ToArray()
+                caseTypes.AsEnumerable().Select(GetSuggestion).ToArray()
             });
 
         static KeyValuePair<string, CaseTypeValue> GetSuggestion(CaseTypeValue value)
@@ -32,7 +34,7 @@ internal static class CaseTypeAwaitHelper
 
     internal static ValueStepOption<CaseTypeValue> GetValueStepOption(IChatFlowContext<IncidentCreateFlowState> context)
         =>
-        string.IsNullOrEmpty(context.FlowState.CaseTypeTitle) ? valueStepOption : new() 
+        context.FlowState.CaseTypeCode is null ? valueStepOption : new() 
         { 
             SkipStep = true 
         };
@@ -46,4 +48,21 @@ internal static class CaseTypeAwaitHelper
         valueStepOption.Suggestions.SelectMany(Pipeline.Pipe).GetValueOrAbsent(text).Fold<Result<CaseTypeValue, BotFlowFailure>>(
             static value => Result.Success(value),
             static () => BotFlowFailure.From(userMessage: "Выберите один из вариантов"));
+
+    internal static IncidentCreateFlowState SetCaseTypeTitle(IncidentCreateFlowState state)
+    {
+        if (state.CaseTypeCode is null || string.IsNullOrEmpty(state.CaseTypeTitle) is false)
+        {
+            return state;
+        }
+
+        return state with
+        {
+            CaseTypeTitle = caseTypes.AsEnumerable().FirstOrDefault(IsCaseTypeMatched)?.Name
+        };
+
+        bool IsCaseTypeMatched(CaseTypeValue caseType)
+            =>
+            caseType.Code == state.CaseTypeCode;
+    }
 }
