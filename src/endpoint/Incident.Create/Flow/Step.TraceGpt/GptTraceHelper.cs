@@ -25,6 +25,9 @@ internal static class GptTraceHelper
             ["gptTitle"] = context.FlowState.Gpt.Title,
             ["selectedTitle"] = context.FlowState.Title.OrEmpty(),
             ["sourceDescription"] = context.FlowState.Gpt.SourceMessage.OrEmpty(),
+            ["gptCaseType"] = context.FlowState.Gpt.CaseTypeCode.ToString().OrEmpty(),
+            ["selectedCaseType"] = context.FlowState.CaseTypeCode.ToString().OrEmpty(),
+            ["isGptCaseTypeUsed"] = context.FlowState.Gpt.CaseTypeCode == context.FlowState.CaseTypeCode ? "true" : "false"
         };
 
         context.BotTelemetryClient.TrackEvent("CompleteIncidentGptUsage", properties);
