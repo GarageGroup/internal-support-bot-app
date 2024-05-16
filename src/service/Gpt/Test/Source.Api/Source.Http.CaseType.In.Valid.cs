@@ -15,8 +15,8 @@ partial class SupportGptApiTestSource
                     chatMessages: 
                     [
                         new(
-                        role: "some role",
-                        contentTemplate: "some content template {0}")
+                            role: "some role",
+                            contentTemplate: "some content template {0}")
                     ])
                 {
                     MaxTokens = 30,
@@ -30,7 +30,7 @@ partial class SupportGptApiTestSource
                     method: HttpVerb.Post,
                     requestUri: string.Empty)
                 {
-                    Body = HttpBody.SerializeAsJson(new ChatGptJsonIn()
+                    Body = HttpBody.SerializeAsJson(new ChatGptJsonIn
                     {
                         MaxTokens = 30,
                         Temperature = 0,
