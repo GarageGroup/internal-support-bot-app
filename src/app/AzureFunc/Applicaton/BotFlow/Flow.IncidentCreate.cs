@@ -65,11 +65,14 @@ partial class Application
                     contentTemplate: section["SystemTemplate"].OrEmpty()),
                 new(
                     role: "user",
-                    contentTemplate: section["UserTemplate"].OrEmpty())
+                    contentTemplate: section["UserIncidentTitleTemplate"].OrEmpty())
             ])
         {
             MaxTokens = section.GetValue<int?>("MaxTokens"),
-            Temperature = section.GetValue<decimal?>("Temperature")
+            Temperature = section.GetValue<decimal?>("Temperature"),
+            CaseTypeTemplate = new(
+                role: "user",
+                contentTemplate: section["UserIncidentCaseTypeTemplate"].OrEmpty())
         };
     }
 

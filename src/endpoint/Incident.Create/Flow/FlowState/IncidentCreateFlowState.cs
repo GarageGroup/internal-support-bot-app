@@ -31,7 +31,7 @@ internal sealed record class IncidentCreateFlowState
     public IncidentDescriptionState? Description { get; init; }
 
     [JsonProperty("caseTypeCode")]
-    public IncidentCaseTypeCode CaseTypeCode { get; init; }
+    public IncidentCaseTypeCode? CaseTypeCode { get; init; }
 
     [JsonProperty("caseTypeTitle")]
     public string? CaseTypeTitle { get; init; }

@@ -10,7 +10,9 @@ internal static class CaseTypeAwaitFlowStep
             CaseTypeAwaitHelper.GetValueStepOption,
             CaseTypeAwaitHelper.ParseCaseTypeOrFailure,
             CaseTypeAwaitHelper.CreateResultMessage,
-            MapFlowState);
+            MapFlowState)
+        .MapFlowState(
+            CaseTypeAwaitHelper.SetCaseTypeTitle);
 
     private static IncidentCreateFlowState MapFlowState(IncidentCreateFlowState flowState, CaseTypeValue caseTypeValue)
         =>

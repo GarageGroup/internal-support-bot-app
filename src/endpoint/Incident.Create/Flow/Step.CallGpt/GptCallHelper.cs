@@ -47,8 +47,10 @@ internal static class GptCallHelper
             Gpt = context.FlowState.Gpt with
             {
                 Title = @out.Title,
+                CaseTypeCode = @out.CaseTypeCode,
                 SourceMessage = context.FlowState.Description?.Value
-            }
+            },
+            CaseTypeCode = @out.CaseTypeCode
         };
     }
 

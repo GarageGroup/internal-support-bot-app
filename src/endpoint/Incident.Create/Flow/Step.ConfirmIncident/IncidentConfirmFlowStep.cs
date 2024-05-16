@@ -101,7 +101,7 @@ internal static class IncidentConfirmFlowStep
             Title = state.Title,
             Customer = state.Customer,
             Contact = state.Contact,
-            CaseTypeCode = state.CaseTypeCode,
+            CaseTypeCode = state.CaseTypeCode.GetValueOrDefault(),
             PriorityCode = state.PriorityCode,
             Owner = state.Owner,
             Description = state.Description?.Value,

@@ -16,4 +16,8 @@
     <PackageReference Include="PrimeFuncPack.Primitives.Strings" Version="2.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\shared\Entity\Entity.csproj" />
+  </ItemGroup>
+
 </Project>

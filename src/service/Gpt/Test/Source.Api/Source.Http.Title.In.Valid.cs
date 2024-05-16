@@ -6,7 +6,7 @@ namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
 partial class SupportGptApiTestSource
 {
-    public static TheoryData<SupportGptApiOption, IncidentCompleteIn, HttpSendIn> InputTestData
+    public static TheoryData<SupportGptApiOption, IncidentCompleteIn, HttpSendIn> InputTitleTestData
         =>
         new()
         {

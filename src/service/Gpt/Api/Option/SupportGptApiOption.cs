@@ -13,4 +13,6 @@ public sealed record class SupportGptApiOption
     public int? MaxTokens { get; init; }
 
     public decimal? Temperature { get; init; }
+
+    public ChatMessageOption? CaseTypeTemplate { get; init; }
 }

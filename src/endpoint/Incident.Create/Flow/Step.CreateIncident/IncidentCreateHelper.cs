@@ -42,7 +42,7 @@ internal static class IncidentCreateHelper
                 contactId: flowState.Contact?.Id,
                 title: flowState.Title.OrEmpty(),
                 description: flowState.Description?.Value,
-                caseTypeCode: flowState.CaseTypeCode,
+                caseTypeCode: flowState.CaseTypeCode.GetValueOrDefault(),
                 priorityCode: flowState.PriorityCode,
                 callerUserId: flowState.BotUserId.GetValueOrDefault()))
         .PipeValue(
