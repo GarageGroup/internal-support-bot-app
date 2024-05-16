@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net8.0</TargetFramework>
-	  <ImplicitUsings>disable</ImplicitUsings>
-	  <Nullable>enable</Nullable>
-	  <InvariantGlobalization>true</InvariantGlobalization>
-	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	  <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
-	  <AssemblyName>GarageGroup.Internal.Support.Shared.Entity</AssemblyName>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
+    <AssemblyName>GarageGroup.Internal.Support.Shared.Entity</AssemblyName>
   </PropertyGroup>
 
 </Project>
