@@ -34,16 +34,16 @@ public static partial class SupportGptApiTest
             Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
             {
                 Choices =
-                        [
-                            new()
-                            {
-                                Message = new()
-                                {
-                                    Content = "Some response \"message\""
-                                },
-                                FinishReason = "stop"
-                            }
-                        ]
+                [
+                    new()
+                    {
+                        Message = new()
+                        {
+                            Content = "Some response \"message\""
+                        },
+                        FinishReason = "stop"
+                    }
+                ]
             }),
         };
 
