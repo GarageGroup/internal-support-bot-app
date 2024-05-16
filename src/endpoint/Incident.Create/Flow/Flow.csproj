@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\..\service\CrmIncident\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\CrmOwner\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\Gpt\Contract\Contract.csproj" />
+    <ProjectReference Include="..\..\..\shared\Entity\Entity.csproj" />
   </ItemGroup>
 
   <ItemGroup>

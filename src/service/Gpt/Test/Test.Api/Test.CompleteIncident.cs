@@ -31,8 +31,8 @@ partial class SupportGptApiTest
     }
 
     [Theory]
-    [MemberData(nameof(SupportGptApiTestSource.InputTestData), MemberType = typeof(SupportGptApiTestSource))]
-    public static async Task CompleteIncidentAsync_InputMessageIsNotWhiteSpace_ExpectHttpApiSendAsyncOnce(
+    [MemberData(nameof(SupportGptApiTestSource.InputTitleTestData), MemberType = typeof(SupportGptApiTestSource))]
+    public static async Task CompleteIncidentAsync_InputMessageIsNotWhiteSpace_ExpectTitleHttpApiSendAsyncOnce(
         SupportGptApiOption option, IncidentCompleteIn input, HttpSendIn httpInput)
     {
         var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, SomeSuccessOutput);
@@ -61,8 +61,23 @@ partial class SupportGptApiTest
     }
 
     [Theory]
+    [MemberData(nameof(SupportGptApiTestSource.InputCaseTypeTestData), MemberType = typeof(SupportGptApiTestSource))]
+    public static async Task CompleteIncidentAsync_HttpApiTitleIsSuccess_ExpectCaseTypeHttpApiSendAsyncOnce(
+        SupportGptApiOption option, IncidentCompleteIn input, HttpSendIn httpInput)
+    {
+        var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, SomeSuccessOutput);
+
+        var api = new SupportGptApi(mockHttpApi.Object, option);
+
+        var cancellationToken = new CancellationToken(canceled: false);
+        _ = await api.CompleteIncidentAsync(input, cancellationToken);
+
+        mockHttpApi.Verify(a => a.SendAsync(httpInput, cancellationToken), Times.Once);
+    }
+
+    [Theory]
     [MemberData(nameof(SupportGptApiTestSource.OutputFailureTestData), MemberType = typeof(SupportGptApiTestSource))]
-    public static async Task CompleteIncidentAsync_HttpApiCaseCodeIsNotSuccess_ExpectFailure(
+    public static async Task CompleteIncidentAsync_HttpApiCaseTypeIsNotSuccess_ExpectFailure(
         HttpSendFailure httpSendFailure, Failure<IncidentCompleteFailureCode> failureExpected)
     {
         var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, httpSendFailure);

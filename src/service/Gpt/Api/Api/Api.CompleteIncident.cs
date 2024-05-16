@@ -163,7 +163,7 @@ partial class SupportGptApi
 
         return output with
         {
-            CaseTypeCode = caseType
+            CaseTypeCode = (IncidentCaseTypeCode)caseType
         };
     }
 

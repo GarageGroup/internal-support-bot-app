@@ -50,7 +50,7 @@ partial class SupportGptApiTestSource
                 new IncidentCompleteOut()
                 {
                     Title = "Some response \"message\"",
-                    CaseTypeCode = 2
+                    CaseTypeCode = IncidentCaseTypeCode.Request
                 }
             },
             {
@@ -93,7 +93,7 @@ partial class SupportGptApiTestSource
                 new IncidentCompleteOut()
                 {
                     Title = null,
-                    CaseTypeCode = 1
+                    CaseTypeCode = IncidentCaseTypeCode.Problem
                 }
             },
             {
@@ -136,7 +136,7 @@ partial class SupportGptApiTestSource
                 new IncidentCompleteOut()
                 {
                     Title = "Some response message",
-                    CaseTypeCode = 0
+                    CaseTypeCode = IncidentCaseTypeCode.Question
                 }
             },
             {
@@ -179,7 +179,7 @@ partial class SupportGptApiTestSource
                 new IncidentCompleteOut()
                 {
                     Title = "Some response \"message",
-                    CaseTypeCode = 1
+                    CaseTypeCode = IncidentCaseTypeCode.Problem
                 }
             },
             {
@@ -222,7 +222,7 @@ partial class SupportGptApiTestSource
                 new IncidentCompleteOut()
                 {
                     Title = null,
-                    CaseTypeCode = 1
+                    CaseTypeCode = IncidentCaseTypeCode.Problem
                 }
             },
             {
