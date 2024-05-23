@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using GarageGroup.Infra;
 
 namespace GarageGroup.Internal.Support;
 
@@ -12,48 +13,27 @@ partial class CrmContactApi
         AsyncPipeline.Pipe(
             input, cancellationToken)
         .Pipe(
-            Validate)
-        .MapSuccess(
             static @in => DbIncident.QueryAll with
             {
                 Top = 1,
                 Filter = DbIncident.BuildFilter(@in.TelegramSenderId),
                 Orders = DbIncident.DefaultOrders
             })
-        .ForwardValue(
-            sqlApi.QueryEntitySetOrFailureAsync<DbIncident>,
-            MapFailure)
-        .Forward(
-            MapIncidentOrFailure);
+        .PipeValue(
+            sqlEntityApi.QueryEntityOrFailureAsync<DbIncident>)
+        .Map(
+            static incident => new ContactGetOut(
+                contactId: incident.ContactId,
+                contactName: incident.ContactName,
+                customerId: incident.CustomerId,
+                customerName: incident.CustomerName),
+            static failure => failure.MapFailureCode(MapFailureCode));
 
-    private Failure<ContactGetFailureCode> MapFailure(Failure<Unit> failure)
-    {
-        return failure.WithFailureCode(ContactGetFailureCode.Unknown);
-    }
-
-    private Result<ContactGetIn, Failure<ContactGetFailureCode>> Validate(ContactGetIn input)
-    {
-        if (string.IsNullOrWhiteSpace(input.TelegramSenderId))
+    private static ContactGetFailureCode MapFailureCode(EntityQueryFailureCode failureCode)
+        =>
+        failureCode switch
         {
-            return Failure.Create(ContactGetFailureCode.InvalidInput, "Telegram sender id is empty");
-        }
-
-        return input;
-    }
-
-    private Result<ContactGetOut, Failure<ContactGetFailureCode>> MapIncidentOrFailure(FlatArray<DbIncident> incidentList)
-    {
-        if (incidentList.IsEmpty)
-        {
-            return Failure.Create(ContactGetFailureCode.NotFound, "Incident not found");
-        }
-
-        var incident = incidentList[0];
-
-        return new ContactGetOut(
-            contactId: incident.ContactId,
-            contactName: incident.ContactName,
-            customerId: incident.CustomerId,
-            customerName: incident.CustomerName);
-    }
+            EntityQueryFailureCode.NotFound => ContactGetFailureCode.NotFound,
+            _ => default
+        };
 }

@@ -11,20 +11,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\service\CrmContact\Contract\Contract.csproj" />
-    <ProjectReference Include="..\..\..\service\CrmCustomer\Contract\Contract.csproj" />
+    <ProjectReference Include="..\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\CrmIncident\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\CrmOwner\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\Gpt\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\shared\Entity\Entity.csproj" />
+    <ProjectReference Include="..\..\Contact.Get\Contract\Contract.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.3.0" />
-    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Extensions" Version="0.5.0" />
-    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Card" Version="0.5.0" />
-    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Lookup" Version="0.5.0" />
-    <PackageReference Include="GarageGroup.Infra.Bot.Builder.ChatFlow.Step.Value" Version="0.4.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Extensions" Version="0.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Card" Version="0.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Choice" Version="0.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Value" Version="0.1.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.1.0" />
     <PackageReference Include="PrimeFuncPack.Primitives.Pipeline" Version="2.0.3" />
   </ItemGroup>

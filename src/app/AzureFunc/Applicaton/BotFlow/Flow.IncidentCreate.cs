@@ -2,29 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using GarageGroup.Infra;
-using GarageGroup.Infra.Bot.Builder;
+using GarageGroup.Infra.Telegram.Bot;
+using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using PrimeFuncPack;
 
 namespace GarageGroup.Internal.Support;
 
 partial class Application
 {
-    private static IBotBuilder UseIncidentCreateFlow(this IBotBuilder botBuilder)
+    private static BotCommandBuilder WithIncidentCreateCommand(this BotCommandBuilder builder)
         =>
-        Dependency.From(
-            ResolveIncidentCreateFlowOption)
-        .With(
-            UseDataverseApi().With(UseSqlApi()).UseCrmCustomerApi())
-        .With(
-            UseDataverseApi().With(UseSqlApi()).UseCrmContactApi())
+        builder.With(
+            UseIncidentCreateCommand());
+
+    private static Dependency<IChatCommand<IncidentCreateCommandIn, Unit>> UseIncidentCreateCommand()
+        =>
+        Pipeline.Pipe(
+            UseDataverseApi().UseCrmIncidentApi())
         .With(
             UseDataverseApi().With(UseSqlApi()).UseCrmOwnerApi())
         .With(
-            UseDataverseApi().UseCrmIncidentApi())
-        .With(
             UseSupportGptApi())
-        .MapIncidentCreateFlow(botBuilder);
+        .With(
+            ServiceProviderServiceExtensions.GetService<TelemetryClient>,
+            ResolveIncidentCreateFlowOption)
+        .UseIncidentCreateCommand();
 
     private static Dependency<ISupportGptApi> UseSupportGptApi()
         =>
@@ -46,9 +50,7 @@ partial class Application
         var uri = new Uri(baseUri, template.OrEmpty()).AbsoluteUri;
 
         return new(
-            incidentCardUrlTemplate: uri.Replace("%7B", "{").Replace("%7D", "}"),
-            dbRequestPeriodInDays: configuration.GetValue<int>("DbRequestPeriodInDays"),
-            webAppUrl: configuration["UrlWebApp"].OrEmpty())
+            incidentCardUrlTemplate: uri.Replace("%7B", "{").Replace("%7D", "}"))
         {
             GptTraceData = configuration.GetGptTraceData()
         };

@@ -1,30 +1,11 @@
-using System;
-using System.Collections.Generic;
-using GarageGroup.Infra.Bot.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using GarageGroup.Infra.Telegram.Bot;
 
 namespace GarageGroup.Internal.Support;
 
 partial class Application
 {
-    private static IBotBuilder UseBotInfoFlow(this IBotBuilder botBuilder)
+    private static BotCommandBuilder WithBotInfoCommand(this BotCommandBuilder builder)
         =>
-        botBuilder.UseBotInfo(BotInfoCommand, GetBotInfoData);
-
-    private static BotInfoData GetBotInfoData(IBotContext botContext)
-        =>
-        new() 
-        { 
-            Values = botContext.ServiceProvider.GetRequiredService<IConfiguration>().GetRequiredSection("Info").GetBotInfoData() 
-        };
-
-    private static FlatArray<KeyValuePair<string, string?>> GetBotInfoData(this IConfigurationSection section)
-        =>
-        [
-            new("Название", section["ApiName"]),
-            new("Описание", section["Description"]),
-            new("Версия сборки", section["ApiVersion"]),
-            new("Время сборки", section.GetValue<DateTimeOffset?>("BuildDateTime").ToRussianStandardTimeZoneString())
-        ];
+        builder.With(
+            "info", BotCommand.UseBotInfoCommand());
 }

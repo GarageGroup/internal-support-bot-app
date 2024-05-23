@@ -21,7 +21,7 @@ partial class CrmContactApi
                 Orders = DbContact.DefaultOrders
             })
         .PipeValue(
-            sqlApi.QueryEntitySetOrFailureAsync<DbContact>)
+            sqlEntitySetApi.QueryEntitySetOrFailureAsync<DbContact>)
         .Map(
             static success => new LastContactSetGetOut
             {

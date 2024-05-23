@@ -1,9 +1,8 @@
-using GarageGroup.Infra;
-using Moq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using GarageGroup.Infra;
+using Moq;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 
@@ -54,7 +53,6 @@ public static partial class SupportGptApiTest
         var queue = new Queue<Result<HttpSendOut, HttpSendFailure>>([titleResult,  caseTypeResult]);
 
         var mock = new Mock<IHttpApi>();
-
         _ = mock.Setup(static a => a.SendAsync(It.IsAny<HttpSendIn>(), It.IsAny<CancellationToken>())).ReturnsAsync(queue.Dequeue);
 
         return mock;

@@ -29,12 +29,12 @@ partial class CrmIncidentApi
                 },
                 PriorityCode = @in.PriorityCode switch
                 {
-                    IncidentPriorityCode.Hight  => 1,
+                    IncidentPriorityCode.High  => 1,
                     IncidentPriorityCode.Normal => 2,
                     IncidentPriorityCode.Low    => 3,
                     _ => null
                 },
-                SenderTelegramId = @in.SenderTelegramId.OrNullIfWhiteSpace()
+                SenderTelegramId = @in.SenderTelegramId?.ToString()
             })
         .Pipe(
             IncidentJsonCreateIn.BuildDataverseCreateInput)

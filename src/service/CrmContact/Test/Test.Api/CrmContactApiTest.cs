@@ -27,7 +27,7 @@ public static partial class CrmContactApiTest
     private static readonly ContactGetIn SomeContactGetInput
         =
         new(
-            telegramSenderId: "1234567");
+            telegramSenderId: 1234567);
 
     private static readonly FlatArray<DataverseSearchItem> SomeDataverseItems
         =
@@ -63,17 +63,15 @@ public static partial class CrmContactApiTest
             }
         ];
 
-    private static FlatArray<DbIncident> SomeDbIncident
+    private static DbIncident SomeDbIncident
         =>
-        [
-            new()
-            {
-                ContactId = new("27bede77-15d3-48ae-bf50-21c13b210380"),
-                ContactName = "Some contact name",
-                CustomerId = new("1097bc3a-046c-4bbb-adae-6f5c7869516b"),
-                CustomerName = "Some cusomer name"
-            }
-        ];
+        new()
+        {
+            ContactId = new("27bede77-15d3-48ae-bf50-21c13b210380"),
+            ContactName = "Some contact name",
+            CustomerId = new("1097bc3a-046c-4bbb-adae-6f5c7869516b"),
+            CustomerName = "Some cusomer name"
+        };
 
     private static Mock<IDataverseSearchSupplier> CreateMockDataverseApi(
         in Result<DataverseSearchOut, Failure<DataverseFailureCode>> result)
@@ -87,7 +85,7 @@ public static partial class CrmContactApiTest
         return mock;
     }
 
-    private static Mock<ISqlQueryEntitySetSupplier> BuildMockContactSqlApi(
+    private static Mock<ISqlQueryEntitySetSupplier> BuildMockSqlEntitySetApi(
         in Result<FlatArray<DbContact>, Failure<Unit>> result)
     {
         var mock = new Mock<ISqlQueryEntitySetSupplier>();
@@ -99,13 +97,13 @@ public static partial class CrmContactApiTest
         return mock;
     }
 
-    private static Mock<ISqlQueryEntitySetSupplier> BuildMockIncidentSqlApi(
-        in Result<FlatArray<DbIncident>, Failure<Unit>> result)
+    private static Mock<ISqlQueryEntitySupplier> BuildMockSqlEntityApi(
+        in Result<DbIncident, Failure<EntityQueryFailureCode>> result)
     {
-        var mock = new Mock<ISqlQueryEntitySetSupplier>();
+        var mock = new Mock<ISqlQueryEntitySupplier>();
 
         _ = mock
-            .Setup(s => s.QueryEntitySetOrFailureAsync<DbIncident>(It.IsAny<IDbQuery>(), It.IsAny<CancellationToken>()))
+            .Setup(s => s.QueryEntityOrFailureAsync<DbIncident>(It.IsAny<IDbQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(result);
 
         return mock;

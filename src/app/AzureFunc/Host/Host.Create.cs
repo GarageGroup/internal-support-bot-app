@@ -1,5 +1,5 @@
 ﻿using GarageGroup.Infra;
-using GarageGroup.Infra.Bot.Builder;
+using GarageGroup.Infra.Telegram.Bot;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,27 +9,47 @@ namespace GarageGroup.Internal.Support;
 
 partial class ApplicationHost
 {
-    public static IHostBuilder Create()
+    public static IHostBuilder CreateBuilder()
         =>
         FunctionHost.CreateFunctionsWorkerBuilderStandard(
             useHostConfiguration: false,
-            configure: Configure)
-        .ConfigureBotBuilder(
-            storageResolver: ServiceProviderServiceExtensions.GetRequiredService<ICosmosStorage>);
+            configure: Configure);
 
     private static void Configure(IFunctionsWorkerApplicationBuilder builder)
         =>
-        builder.Services.RegisterCosmosStorage().RegisterDataverseApi().RegisterSqlApi();
+        builder.Services.RegisterBlobBotStorage().RegisterBotProvider().RegisterDataverseApi().RegisterSqlApi();
 
-    private static IServiceCollection RegisterCosmosStorage(this IServiceCollection services)
+    private static IServiceCollection RegisterBlobBotStorage(this IServiceCollection services)
         =>
         PrimaryHandler.UseStandardSocketsHttpHandler()
-        .UseLogging("CosmosStorage")
-        .UseTokenCredentialResource()
+        .UseLogging(
+            "BlobBotStorage")
         .UsePollyStandard()
-        .UseCosmosStorage("CosmosDb")
-        .ToRegistrar(services)
-        .RegisterScoped();
+        .UseHttpApi()
+        .UseBlobBotStorage(
+            "BlobBotStorage")
+        .ToRegistrar(
+            services)
+        .RegisterSingleton();
+
+    private static IServiceCollection RegisterBotProvider(this IServiceCollection services)
+        =>
+        PrimaryHandler.UseStandardSocketsHttpHandler()
+        .UseLogging(
+            "BotApi")
+        .UsePollyStandard()
+        .ConfigureHttpHeader(
+            "Ocp-Apim-Subscription-Key", "TelegramBot:ApiKey")
+        .UseHttpApi(
+            "TelegramBot")
+        .UseTelegramBotApi()
+        .With<IBotStorage>(
+            ServiceProviderServiceExtensions.GetRequiredService<IBlobBotStorage>)
+        .UseBotProvider(
+            "Bot")
+        .ToRegistrar(
+            services)
+        .RegisterSingleton();
 
     private static IServiceCollection RegisterDataverseApi(this IServiceCollection services)
         =>

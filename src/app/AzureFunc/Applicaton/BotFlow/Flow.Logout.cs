@@ -1,10 +1,11 @@
-using GarageGroup.Infra.Bot.Builder;
+using GarageGroup.Infra.Telegram.Bot;
 
 namespace GarageGroup.Internal.Support;
 
 partial class Application
 {
-    private static IBotBuilder UseLogoutFlow(this IBotBuilder botBuilder)
+    private static BotCommandBuilder WithLogoutCommand(this BotCommandBuilder builder)
         =>
-        botBuilder.UseLogout(LogoutCommand);
+        builder.With(
+            "logout", UseUserAuthorizationApi().UseSignOutCommand());
 }

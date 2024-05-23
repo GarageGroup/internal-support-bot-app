@@ -12,8 +12,8 @@ partial class CrmContactApiTest
     [Fact]
     public static async Task GetLastAsync_InputIsNotNull_ExpectSqlApiCalledOnce()
     {
-        var mockSqlApi = BuildMockContactSqlApi(SomeDbContacts);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
+        var mockSqlApi = BuildMockSqlEntitySetApi(SomeDbContacts);
+        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), Mock.Of<ISqlQueryEntitySupplier>(), mockSqlApi.Object);
 
         var input = new LastContactSetGetIn(
             customerId: new("24cae7f6-ecf5-40f9-aba5-4fb122141e85"),
@@ -56,8 +56,8 @@ partial class CrmContactApiTest
         var sourceException = new Exception("Some exception message");
         var dbFailure = sourceException.ToFailure("Some text");
 
-        var mockSqlApi = BuildMockContactSqlApi(dbFailure);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
+        var mockSqlApi = BuildMockSqlEntitySetApi(dbFailure);
+        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), Mock.Of<ISqlQueryEntitySupplier>(), mockSqlApi.Object);
 
         var actual = await api.GetLastAsync(SomeLastContactSetGetInput, default);
         var expected = Failure.Create(ContactSetGetFailureCode.Unknown, "Some text", sourceException);
@@ -70,8 +70,8 @@ partial class CrmContactApiTest
     internal static async Task GetLastAsync_DataverseSearchResultIsSuccess_ExpectSuccess(
         FlatArray<DbContact> dbIncidentContacts, LastContactSetGetOut expected)
     {
-        var mockSqlApi = BuildMockContactSqlApi(dbIncidentContacts);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
+        var mockSqlApi = BuildMockSqlEntitySetApi(dbIncidentContacts);
+        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), Mock.Of<ISqlQueryEntitySupplier>(), mockSqlApi.Object);
 
         var actual = await api.GetLastAsync(SomeLastContactSetGetInput, default);
 

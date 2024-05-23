@@ -41,5 +41,5 @@ public sealed record class IncidentCreateIn
 
     public Guid CallerUserId { get; }
 
-    public string? SenderTelegramId { get; init; }
+    public long? SenderTelegramId { get; init; }
 }

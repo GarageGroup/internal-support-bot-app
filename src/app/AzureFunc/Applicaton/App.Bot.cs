@@ -1,17 +1,16 @@
-using System;
 using GarageGroup.Infra;
-using GarageGroup.Infra.Bot.Builder;
+using GarageGroup.Infra.Telegram.Bot;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Bot.Builder;
 using Microsoft.DurableTask.Client;
+using Microsoft.Extensions.DependencyInjection;
 using PrimeFuncPack;
 
 namespace GarageGroup.Internal.Support;
 
 partial class Application
 {
-    [HttpFunction("HandleHttpBotMessage", HttpMethodName.Post, Route = "messages", AuthLevel = HttpAuthorizationLevel.Function)]
-    internal static Dependency<IBotSignalHandler> UseBotSignal([DurableClient] DurableTaskClient client)
+    [HttpFunction("HandleBotHttp", HttpMethodName.Post, Route = "message", AuthLevel = HttpAuthorizationLevel.Function)]
+    internal static Dependency<IBotSignalHandler> UseBotSignal([DurableClient] this DurableTaskClient client)
         =>
         Dependency.Of(
             client)
@@ -19,21 +18,19 @@ partial class Application
         .UseBotSignalHandler(
             BotEntityName);
 
-    [EntityFunction("HandleBotRequest", EntityName = BotEntityName)]
-    internal static Dependency<IBotRequestHandler> UseBot()
+    [EntityFunction("HandleBotEntity", EntityName = BotEntityName)]
+    internal static Dependency<IBotWebHookHandler> UseBot()
         =>
         Dependency.From(
-            ResolveBot,
-            StandardCloudAdapter.Resolve)
-        .UseBotRequestHandler();
-
-    private static IBot ResolveBot(this IServiceProvider serviceProvider)
-        =>
-        BotBuilder.Resolve(serviceProvider)
-        .UseLogoutFlow()
-        .UseBotStopFlow()
-        .UseAuthorizationFlow()
-        .UseBotInfoFlow()
-        .UseIncidentCreateFlow()
-        .Build();
+            ServiceProviderServiceExtensions.GetRequiredService<BotProvider>)
+        .GetBotBuilder()
+        .UseAuthorization()
+        .UseCommands()
+        .WithBotInfoCommand()
+        .WithBotStopCommand()
+        .WithLogoutCommand()
+        .WithContactGetCommand()
+        .WithIncidentCreateCommand()
+        .WithBotMenuCommand()
+        .BuildWebHookHandler();
 }

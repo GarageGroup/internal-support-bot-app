@@ -1,12 +1,17 @@
 {
-    "version": "2.0",
-    "logging": {
-        "applicationInsights": {
-            "samplingSettings": {
-                "isEnabled": true,
-                "maxTelemetryItemsPerSecond" : 20,
-                "excludedTypes": "Exception"
-            }
-        }
+  "version": "2.0",
+  "extensions": {
+    "http": {
+      "routePrefix": ""
     }
+  },
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "maxTelemetryItemsPerSecond" : 20,
+        "excludedTypes": "Exception"
+      }
+    }
+  }
 }

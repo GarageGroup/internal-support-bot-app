@@ -1,10 +1,11 @@
-using GarageGroup.Infra.Bot.Builder;
+using GarageGroup.Infra.Telegram.Bot;
 
 namespace GarageGroup.Internal.Support;
 
 partial class Application
 {
-    private static IBotBuilder UseBotStopFlow(this IBotBuilder botBuilder)
+    private static BotCommandBuilder WithBotStopCommand(this BotCommandBuilder builder)
         =>
-        botBuilder.UseBotStop(StopCommand, static () => new(successText: "Операция остановлена"));
+        builder.With(
+            "stop", BotCommand.UseStopCommand());
 }

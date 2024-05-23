@@ -1,12 +1,10 @@
-﻿using System;
+﻿namespace GarageGroup.Internal.Support;
 
-namespace GarageGroup.Internal.Support;
-
-public sealed record class ContactGetIn
+public readonly record struct ContactGetIn
 {
-    public ContactGetIn(string telegramSenderId)
+    public ContactGetIn(long telegramSenderId)
         =>
-        TelegramSenderId = telegramSenderId.OrEmpty();
+        TelegramSenderId = telegramSenderId;
 
-    public string TelegramSenderId { get; }
+    public long TelegramSenderId { get; }
 }
