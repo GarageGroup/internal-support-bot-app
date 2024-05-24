@@ -13,7 +13,7 @@ partial class IncidentCreateCommand
         }
 
         var description = GetDescription(update.Message);
-        if (string.IsNullOrEmpty(description))
+        if (string.IsNullOrEmpty(description) && update.Message.Photo.IsEmpty)
         {
             return default;
         }

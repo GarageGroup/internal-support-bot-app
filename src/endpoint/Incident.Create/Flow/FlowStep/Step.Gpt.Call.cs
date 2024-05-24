@@ -22,10 +22,6 @@ partial class IncidentCreateFlowStep
             return context.FlowState;
         }
 
-        // to do: remove before release
-        context.Logger.LogInformation("SenderId: {senderId}", context.FlowState.SourceSender?.UserId);
-        context.Logger.LogInformation("PhotoIds: {photoIds}", string.Join(',', context.FlowState.PhotoIdSet.AsEnumerable()));
-
         var gptTask = gptApi.InnerCompleteIncidentAsync(context, cancellationToken);
         var typingTask = context.Api.SendChatActionAsync(BotChatAction.Typing, cancellationToken);
 
@@ -38,15 +34,25 @@ partial class IncidentCreateFlowStep
         this ISupportGptApi gptApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
-            context.FlowState, cancellationToken)
+            context, cancellationToken)
         .Pipe(
-            static flowState => new IncidentCompleteIn(
-                message: flowState.Description.OrEmpty()))
+            CreateIncidentCompleteIn)
         .PipeValue(
             gptApi.CompleteIncidentAsync)
         .Fold(
             context.ApplyGptValue,
             context.LogGptFailure);
+
+    private static IncidentCompleteIn CreateIncidentCompleteIn(IChatFlowContext<IncidentCreateFlowState> context)
+    {
+        return new(
+            message: string.IsNullOrWhiteSpace(context.FlowState.Description) ? null : context.FlowState.Description,
+            imageUrl: context.FlowState.PhotoIdSet.IsEmpty ? default : context.FlowState.Pictures.Map(GetUrl));
+
+        static string GetUrl(PictureState pictureState)
+            =>
+            pictureState.ImageUrl;
+    }
 
     private static IncidentCreateFlowState ApplyGptValue(
         this IChatFlowContext<IncidentCreateFlowState> context, IncidentCompleteOut @out)

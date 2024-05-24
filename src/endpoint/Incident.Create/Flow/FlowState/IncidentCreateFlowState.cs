@@ -12,6 +12,8 @@ internal sealed record class IncidentCreateFlowState
 
     public FlatArray<string> PhotoIdSet { get; init; }
 
+    public FlatArray<PictureState> Pictures { get; init; }
+
     public SourceSenderState? SourceSender { get; init; }
 
     public IncidentCustomerState? Customer { get; init; }

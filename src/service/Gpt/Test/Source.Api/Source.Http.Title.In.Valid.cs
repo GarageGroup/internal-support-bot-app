@@ -21,7 +21,7 @@ partial class SupportGptApiTestSource
                     MaxTokens = 30,
                     Temperature = 0
                 },
-                new("some message"),
+                new("some message", default),
                 new(
                     method: HttpVerb.Post,
                     requestUri: string.Empty)
@@ -36,7 +36,10 @@ partial class SupportGptApiTestSource
                             new()
                             {
                                 Role = "some role",
-                                Content = "some content template some message"
+                                Content =
+                                [ 
+                                    new(text: "some content template some message")
+                                ]
                             }
                         ]
                     })
@@ -54,7 +57,7 @@ partial class SupportGptApiTestSource
                     MaxTokens = 100,
                     Temperature = 0.2m
                 },
-                new("  some message trim   "),
+                new("  some message trim   ", new("some image")),
                 new(
                     method: HttpVerb.Post,
                     requestUri: string.Empty)
@@ -69,7 +72,85 @@ partial class SupportGptApiTestSource
                             new()
                             {
                                 Role = "some role",
-                                Content = "some content template some message trim"
+                                Content =
+                                [
+                                    new(image: new("some image")),
+                                    new(text: "some content template some message trim")
+                                ]
+                            }
+                        ]
+                    })
+                }
+            },
+            {
+                new(
+                    chatMessages:
+                    [
+                        new(
+                        role: "some role",
+                        contentTemplate: "some content template {0}")
+                    ])
+                {
+                    MaxTokens = 100,
+                    Temperature = 0.2m
+                },
+                new("  some message trim   ", new("first some image", "second some image")),
+                new(
+                    method: HttpVerb.Post,
+                    requestUri: string.Empty)
+                {
+                    Body = HttpBody.SerializeAsJson(new ChatGptJsonIn()
+                    {
+                        MaxTokens = 100,
+                        Temperature = 0.2m,
+                        Top = 1,
+                        Messages =
+                        [
+                            new()
+                            {
+                                Role = "some role",
+                                Content =
+                                [
+                                    new(image: new("first some image")),
+                                    new(image: new("second some image")),
+                                    new(text: "some content template some message trim")
+                                ]
+                            }
+                        ]
+                    })
+                }
+            },
+            {
+                new(
+                    chatMessages:
+                    [
+                        new(
+                        role: "some role",
+                        contentTemplate: "some content template {0}")
+                    ])
+                {
+                    MaxTokens = 100,
+                    Temperature = 0.2m
+                },
+                new(null, new("some image")),
+                new(
+                    method: HttpVerb.Post,
+                    requestUri: string.Empty)
+                {
+                    Body = HttpBody.SerializeAsJson(new ChatGptJsonIn()
+                    {
+                        MaxTokens = 100,
+                        Temperature = 0.2m,
+                        Top = 1,
+                        Messages =
+                        [
+                            new()
+                            {
+                                Role = "some role",
+                                Content =
+                                [
+                                    new(image: new("some image"))
+                                ]
                             }
                         ]
                     })

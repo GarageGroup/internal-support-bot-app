@@ -23,7 +23,7 @@ public static partial class SupportGptApiTest
 
     private static readonly IncidentCompleteIn SomeInput
         =
-        new("Some customer message");
+        new("Some customer message", new("Some image url"));
 
     private static readonly HttpSendOut SomeSuccessOutput
         =

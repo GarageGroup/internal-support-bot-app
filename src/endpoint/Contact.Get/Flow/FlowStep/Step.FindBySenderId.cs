@@ -56,8 +56,7 @@ partial class ContactGetFlowStep
         .PipeValue(
             crmContactApi.GetAsync)
         .OnFailure(
-            failure => context.Logger.LogError(
-                failure.SourceException, "FindContactBySenderId failure: {message}", failure.FailureMessage))
+            context.LogFailure)
         .Fold<ContactGetOut?>(
             static success => success,
             _ => null);

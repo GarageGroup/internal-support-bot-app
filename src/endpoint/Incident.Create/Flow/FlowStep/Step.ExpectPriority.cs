@@ -23,7 +23,7 @@ partial class IncidentCreateFlowStep
         }
 
         return new(
-            text: context.Localizer[ChooseCaseTypeText],
+            text: context.Localizer[ChoosePriorityText],
             parse: GetDefault,
             forward: MapFlowState)
         {

@@ -24,6 +24,8 @@ internal static class IncidentCreateResource
 
     public const string ChooseCaseTypeText = "ChooseCaseTypeText";
 
+    public const string ChoosePriorityText = "ChoosePriorityText";
+
     public const string NotAllowedText = "NotAllowedText";
 
     public const string NotFoundOwnersText = "NotFoundOwnersText";

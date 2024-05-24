@@ -11,17 +11,14 @@ namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 partial class SupportGptApiTest
 {
     [Theory]
-    [InlineData(null)]
-    [InlineData(TestData.EmptyString)]
-    [InlineData(TestData.MixedWhiteSpacesString)]
+    [MemberData(nameof(SupportGptApiTestSource.InputInvalidTestData), MemberType = typeof(SupportGptApiTestSource))]
     public static async Task CompleteIncidentAsync_InputMessageIsNullOrWhiteSpace_ExpectDefaultIncidentCompletion(
-        string? inputMessage)
+        IncidentCompleteIn input)
     {
         var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, SomeSuccessOutput);
 
         var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
 
-        var input = new IncidentCompleteIn(inputMessage!);
         var cancellationToken = new CancellationToken(canceled: false);
 
         var actual = await api.CompleteIncidentAsync(input, cancellationToken);
