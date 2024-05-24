@@ -1,6 +1,6 @@
-using GarageGroup.Infra;
 using System;
 using System.Net.Mime;
+using GarageGroup.Infra;
 using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;

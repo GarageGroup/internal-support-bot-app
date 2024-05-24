@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
+    <AssemblyName>GarageGroup.Internal.Support.Endpoint.Contact.Get.Contract</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Core.Context" Version="0.1.0" />
+  </ItemGroup>
+
+</Project>

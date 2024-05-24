@@ -4,7 +4,5 @@ public enum ContactGetFailureCode
 {
     Unknown,
 
-    InvalidInput,
-
-    NotFound,
+    NotFound
 }

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Question" xml:space="preserve">
+    <value>Вопрос</value>
+  </data>
+  <data name="Problem" xml:space="preserve">
+    <value>Проблема</value>
+  </data>
+  <data name="Request" xml:space="preserve">
+    <value>Запрос</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>Высокий</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Обычный</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>Низкий</value>
+  </data>
+  <data name="ProvideTitleText" xml:space="preserve">
+    <value>Укажите заголовок</value>
+  </data>
+  <data name="ProvideOrUseGeneratedTitleText" xml:space="preserve">
+    <value>Укажите заголовок или используйте сгенерированный вариант</value>
+  </data>
+  <data name="UseGeneratedTitleText" xml:space="preserve">
+    <value>Использовать сгенерированный заголовок</value>
+  </data>
+  <data name="ExcededLengthTitleTemplate" xml:space="preserve">
+    <value>Длина заголовка не может быть больше, чем {0} символов</value>
+  </data>
+  <data name="ChooseCaseTypeText" xml:space="preserve">
+    <value>Выберите тип обращения</value>
+  </data>
+  <data name="NotAllowedText" xml:space="preserve">
+    <value>Данная операция не разрешена для вашей учетной записи. Обратитесь к администратору</value>
+  </data>
+  <data name="NotFoundOwnersText" xml:space="preserve">
+    <value>Не удалось найти ни одного пользователя. Попробуйте уточнить запрос</value>
+  </data>
+  <data name="ChooseOrSearchOwnerText" xml:space="preserve">
+    <value>Выберите ответственного или введите часть имени для поиска</value>
+  </data>
+  <data name="ConfirmationHeaderText" xml:space="preserve">
+    <value>Создать обращение?</value>
+  </data>
+  <data name="ModificationHeaderText" xml:space="preserve">
+    <value>Изменение обращения</value>
+  </data>
+  <data name="TitleFieldName" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="CustomerFieldName" xml:space="preserve">
+    <value>Клиент</value>
+  </data>
+  <data name="ContactFieldName" xml:space="preserve">
+    <value>Контакт</value>
+  </data>
+  <data name="CaseTypeFieldName" xml:space="preserve">
+    <value>Тип обращения</value>
+  </data>
+  <data name="PriorityFieldName" xml:space="preserve">
+    <value>Приоритет</value>
+  </data>
+  <data name="OwnerFieldName" xml:space="preserve">
+    <value>Ответственный</value>
+  </data>
+  <data name="DescriptionFieldName" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="EditButton" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="ConfirmButton" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="CancelButton" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
+  <data name="CancelText" xml:space="preserve">
+    <value>Создание инцидента было отменено</value>
+  </data>
+  <data name="IncidentCreationTemporaryText" xml:space="preserve">
+    <value>Создание обращения выполняется...</value>
+  </data>
+  <data name="IncidentCreationSuccessTemplate" xml:space="preserve">
+    <value>Обращение {0} было создано успешно</value>
+  </data>
+</root>

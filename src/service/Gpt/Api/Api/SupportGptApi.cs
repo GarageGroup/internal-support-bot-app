@@ -20,4 +20,12 @@ internal sealed partial class SupportGptApi(IHttpApi gptHttp, SupportGptApiOptio
 
         return title.Trim('.').Trim().OrNullIfEmpty();
     }
+
+    private static IncidentCompleteFailureCode ToIncidentCompleteFailureCode(HttpFailureCode httpFailureCode)
+        =>
+        httpFailureCode switch
+        {
+            HttpFailureCode.TooManyRequests => IncidentCompleteFailureCode.TooManyRequests,
+            _ => IncidentCompleteFailureCode.Unknown
+        };
 }

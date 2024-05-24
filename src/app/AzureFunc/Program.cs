@@ -7,5 +7,5 @@ static class Program
 {
     static Task Main()
         =>
-        ApplicationHost.Create().Build().RunAsync();
+        ApplicationHost.CreateBuilder().Build().RunAsync();
 }

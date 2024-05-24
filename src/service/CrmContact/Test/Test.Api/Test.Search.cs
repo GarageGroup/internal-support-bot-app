@@ -19,7 +19,7 @@ partial class CrmContactApiTest
         var dataverseOut = new DataverseSearchOut(17, SomeDataverseItems);
         var mockDataverseApi = CreateMockDataverseApi(dataverseOut);
 
-        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
+        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySupplier>(), Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var input = new ContactSetSearchIn(
             searchText: sourceSearchString,
@@ -58,7 +58,7 @@ partial class CrmContactApiTest
         var dataverseFailure = Failure.Create(sourceFailureCode, "Some Failure message");
         var mockDataverseApi = CreateMockDataverseApi(dataverseFailure);
 
-        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
+        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySupplier>(), Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var actual = await api.SearchAsync(SomeContactSetSearchInput, CancellationToken.None);
         var expected = Failure.Create(expectedFailureCode, "Some Failure message");
@@ -72,7 +72,7 @@ partial class CrmContactApiTest
         DataverseSearchOut dataverseSearchOutput, ContactSetSearchOut expected)
     {
         var mockDataverseApi = CreateMockDataverseApi(dataverseSearchOutput);
-        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
+        var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySupplier>(), Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var actual = await api.SearchAsync(SomeContactSetSearchInput, CancellationToken.None);
 

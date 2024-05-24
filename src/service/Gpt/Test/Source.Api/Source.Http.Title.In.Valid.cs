@@ -1,5 +1,4 @@
 ﻿using GarageGroup.Infra;
-using System;
 using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;

@@ -42,7 +42,7 @@ partial class CrmIncidentApiTestSource
                     title: string.Empty,
                     description: "Some Description",
                     caseTypeCode: IncidentCaseTypeCode.Request,
-                    priorityCode: IncidentPriorityCode.Hight,
+                    priorityCode: IncidentPriorityCode.High,
                     callerUserId: new("144326e7-5aa8-4792-b8aa-d125b6f7f6b5"))
                 {
                     SenderTelegramId = null
@@ -73,7 +73,7 @@ partial class CrmIncidentApiTestSource
                     priorityCode: IncidentPriorityCode.Normal,
                     callerUserId: new("a6093320-cdf2-43d7-bf42-21825c303721"))
                 {
-                    SenderTelegramId = new(' ', 3)
+                    SenderTelegramId = null
                 },
                 new(
                     entityPluralName: "incidents",
@@ -101,7 +101,7 @@ partial class CrmIncidentApiTestSource
                     priorityCode: IncidentPriorityCode.Normal,
                     callerUserId: new("a6093320-cdf2-43d7-bf42-21825c303721"))
                 {
-                    SenderTelegramId = "1234567"
+                    SenderTelegramId = 8978123
                 },
                 new(
                     entityPluralName: "incidents",
@@ -116,7 +116,7 @@ partial class CrmIncidentApiTestSource
                         CaseTypeCode = 2,
                         PriorityCode = 2,
                         CaseOriginCode = null,
-                        SenderTelegramId = "1234567"
+                        SenderTelegramId = "8978123"
                     })
             }
         };

@@ -1,13 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
-namespace GarageGroup.Internal.Support.FlowState;
+namespace GarageGroup.Internal.Support;
 
 internal sealed record class IncidentCustomerState
 {
-    [JsonProperty("id")]
-    public Guid Id { get; init; }
+    public IncidentCustomerState(Guid id, [AllowNull] string title)
+    {
+        Id = id;
+        Title = title.OrEmpty();
+    }
 
-    [JsonProperty("title")]
-    public string? Title { get; init; }
+    public Guid Id { get; }
+
+    public string Title { get; }
 }

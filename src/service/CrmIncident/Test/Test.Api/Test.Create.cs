@@ -26,7 +26,7 @@ partial class CrmIncidentApiTest
             title: "Some title",
             description: "Some description",
             caseTypeCode: IncidentCaseTypeCode.Problem,
-            priorityCode: IncidentPriorityCode.Hight,
+            priorityCode: IncidentPriorityCode.High,
             callerUserId: new("de42801c-ae9b-4be1-bd39-a0a70324539f"));
 
         _ = await api.CreateAsync(input, default);

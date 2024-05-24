@@ -1,35 +1,22 @@
-﻿using GarageGroup.Infra;
-using Moq;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using GarageGroup.Infra;
+using Moq;
 using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.CrmContact.Test;
 
 partial class CrmContactApiTest
 {
-    [Theory]
-    [MemberData(nameof(CrmContactApiTestSource.InputGetInvalidTestData), MemberType = typeof(CrmContactApiTestSource))]
-    public static async Task GetAsync_InputInvalid_ExpectInvalidInputFailure(ContactGetIn input)
-    {
-        var mockSqlApi = BuildMockIncidentSqlApi(SomeDbIncident);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
-
-        var actual = await api.GetAsync(input, default);
-        var expected = Failure.Create(ContactGetFailureCode.InvalidInput, "Telegram sender id is empty");
-
-        Assert.StrictEqual(expected, actual);
-    }
-
     [Fact]
-    public static async Task GetAsync_InputIsValid_ExpectSqlApiCalledOnce()
+    public static async Task GetAsync_ExpectSqlApiCalledOnce()
     {
-        var mockSqlApi = BuildMockIncidentSqlApi(SomeDbIncident);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
+        var mockSqlApi = BuildMockSqlEntityApi(SomeDbIncident);
+        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
-        var input = new ContactGetIn(
-            telegramSenderId: "123456");
+        const long telegramSenderId = 179190124307;
+        var input = new ContactGetIn(telegramSenderId);
 
         var cancellationToken = new CancellationToken(canceled: false);
         _ = await api.GetAsync(input, cancellationToken);
@@ -37,15 +24,17 @@ partial class CrmContactApiTest
         var expectedQuery = new DbSelectQuery("incident", "i")
         {
             Top = 1,
-            SelectedFields = new(
+            SelectedFields =
+            [
                 "i.customerid AS CustomerId",
                 "i.customeridname AS CustomerName",
                 "i.primarycontactid AS ContactId",
-                "i.primarycontactidname AS ContactName"),
+                "i.primarycontactidname AS ContactName"
+            ],
             Filter = new DbParameterFilter(
                 fieldName: "i.gg_sender_telegram_id",
                 @operator: DbFilterOperator.Equal,
-                fieldValue: "123456",
+                fieldValue: telegramSenderId,
                 parameterName: "SenderTelegramId"),
             Orders =
             [
@@ -53,33 +42,23 @@ partial class CrmContactApiTest
             ]
         };
 
-        mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbIncident>(expectedQuery, cancellationToken), Times.Once);
+        mockSqlApi.Verify(a => a.QueryEntityOrFailureAsync<DbIncident>(expectedQuery, cancellationToken), Times.Once);
     }
 
-    [Fact]
-    public static async Task GetAsync_DbResultIsFailure_ExpectUnknownFailure()
+    [Theory]
+    [InlineData(EntityQueryFailureCode.NotFound, ContactGetFailureCode.NotFound)]
+    [InlineData(EntityQueryFailureCode.Unknown, ContactGetFailureCode.Unknown)]
+    public static async Task GetAsync_DbResultIsFailure_ExpectFailure(
+        EntityQueryFailureCode sourceFailureCode, ContactGetFailureCode expectedFailureCode)
     {
         var sourceException = new Exception("Some exception message");
-        var dbFailure = sourceException.ToFailure("Some text");
+        var dbFailure = sourceException.ToFailure(sourceFailureCode, "Some text");
 
-        var mockSqlApi = BuildMockIncidentSqlApi(dbFailure);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
-
-        var actual = await api.GetAsync(SomeContactGetInput, default);
-        var expected = Failure.Create(ContactGetFailureCode.Unknown, "Some text", sourceException);
-
-        Assert.StrictEqual(expected, actual);
-    }
-
-    [Fact]
-    internal static async Task GetAsync_DataverseGetResultIsEmpty_ExpectNotFoundFailure()
-    {
-        var output = new FlatArray<DbIncident>();
-        var mockSqlApi = BuildMockIncidentSqlApi(output);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
+        var mockSqlApi = BuildMockSqlEntityApi(dbFailure);
+        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var actual = await api.GetAsync(SomeContactGetInput, default);
-        var expected = Failure.Create(ContactGetFailureCode.NotFound, "Incident not found");
+        var expected = Failure.Create(expectedFailureCode, "Some text", sourceException);
 
         Assert.StrictEqual(expected, actual);
     }
@@ -87,10 +66,10 @@ partial class CrmContactApiTest
     [Theory]
     [MemberData(nameof(CrmContactApiTestSource.OutputGetTestData), MemberType = typeof(CrmContactApiTestSource))]
     internal static async Task GetAsync_DataverseGetResultIsSuccess_ExpectSuccess(
-        FlatArray<DbIncident> dbIncident, ContactGetOut expected)
+        DbIncident dbIncident, ContactGetOut expected)
     {
-        var mockSqlApi = BuildMockIncidentSqlApi(dbIncident);
-        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
+        var mockSqlApi = BuildMockSqlEntityApi(dbIncident);
+        var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
         var actual = await api.GetAsync(SomeContactGetInput, default);
 

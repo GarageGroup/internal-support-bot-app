@@ -12,7 +12,7 @@ public static class CrmContactApiDependency
     public static Dependency<ICrmContactApi> UseCrmContactApi<TDataverseApi, TSqlApi>(
         this Dependency<TDataverseApi, TSqlApi> dependency)
         where TDataverseApi : IDataverseSearchSupplier
-        where TSqlApi : ISqlQueryEntitySetSupplier
+        where TSqlApi : ISqlQueryEntitySupplier, ISqlQueryEntitySetSupplier
     {
         ArgumentNullException.ThrowIfNull(dependency);
         return dependency.Fold<ICrmContactApi>(CreateApi);
@@ -22,7 +22,7 @@ public static class CrmContactApiDependency
             ArgumentNullException.ThrowIfNull(dataverseApi);
             ArgumentNullException.ThrowIfNull(sqlApi);
 
-            return new(dataverseApi, sqlApi);
+            return new(dataverseApi, sqlApi, sqlApi);
         }
     }
 }

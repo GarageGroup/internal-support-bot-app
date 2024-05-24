@@ -1,31 +1,31 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
-using GarageGroup.Infra.Bot.Builder;
+using GarageGroup.Infra.Telegram.Bot;
+using Microsoft.ApplicationInsights;
 using PrimeFuncPack;
 
 namespace GarageGroup.Internal.Support;
 
 public static class IncidentCreateDependency
 {
-    public static IBotBuilder MapIncidentCreateFlow(
-        this Dependency<IncidentCreateFlowOption, ICrmCustomerApi, ICrmContactApi, ICrmOwnerApi, ICrmIncidentApi, ISupportGptApi> dependency,
-        IBotBuilder botBuilder)
+    public static Dependency<IChatCommand<IncidentCreateCommandIn, Unit>> UseIncidentCreateCommand(
+        this Dependency<ICrmIncidentApi, ICrmOwnerApi, ISupportGptApi, TelemetryClient?, IncidentCreateFlowOption> dependency)
     {
         ArgumentNullException.ThrowIfNull(dependency);
-        ArgumentNullException.ThrowIfNull(botBuilder);
+        return dependency.Fold<IChatCommand<IncidentCreateCommandIn, Unit>>(CreateCommand);
 
-        return botBuilder.Use(InnerInvokeAsync);
+        static IncidentCreateCommand CreateCommand(
+            ICrmIncidentApi incidentApi,
+            ICrmOwnerApi ownerApi,
+            ISupportGptApi gptApi,
+            TelemetryClient? telemetryClient,
+            IncidentCreateFlowOption option)
+        {
+            ArgumentNullException.ThrowIfNull(incidentApi);
+            ArgumentNullException.ThrowIfNull(ownerApi);
+            ArgumentNullException.ThrowIfNull(gptApi);
+            ArgumentNullException.ThrowIfNull(option);
 
-        ValueTask<Unit> InnerInvokeAsync(IBotContext context, CancellationToken cancellationToken)
-            =>
-            context.RunAsync(
-                option: dependency.ResolveFirst(context.ServiceProvider),
-                crmCustomerApi: dependency.ResolveSecond(context.ServiceProvider),
-                crmContactApi: dependency.ResolveThird(context.ServiceProvider),
-                crmOwnerApi: dependency.ResolveFourth(context.ServiceProvider),
-                crmIncidentApi: dependency.ResolveFifth(context.ServiceProvider),
-                supportGptApi: dependency.ResolveSixth(context.ServiceProvider),
-                cancellationToken: cancellationToken);
+            return new(incidentApi, ownerApi, gptApi, telemetryClient, option);
+        }
     }
 }

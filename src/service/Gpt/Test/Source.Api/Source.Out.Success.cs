@@ -1,5 +1,5 @@
-using GarageGroup.Infra;
 using System;
+using GarageGroup.Infra;
 using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
@@ -14,7 +14,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -32,7 +32,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -47,7 +47,7 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new IncidentCompleteOut()
+                new IncidentCompleteOut
                 {
                     Title = "Some response \"message\"",
                     CaseTypeCode = IncidentCaseTypeCode.Request
@@ -57,7 +57,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -75,7 +75,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -90,7 +90,7 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new IncidentCompleteOut()
+                new IncidentCompleteOut
                 {
                     Title = null,
                     CaseTypeCode = IncidentCaseTypeCode.Problem
@@ -100,7 +100,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -118,7 +118,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -133,7 +133,7 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new IncidentCompleteOut()
+                new IncidentCompleteOut
                 {
                     Title = "Some response message",
                     CaseTypeCode = IncidentCaseTypeCode.Question
@@ -143,7 +143,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -161,7 +161,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -176,7 +176,7 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new IncidentCompleteOut()
+                new IncidentCompleteOut
                 {
                     Title = "Some response \"message",
                     CaseTypeCode = IncidentCaseTypeCode.Problem
@@ -186,7 +186,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -204,7 +204,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -219,7 +219,7 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new IncidentCompleteOut()
+                new IncidentCompleteOut
                 {
                     Title = null,
                     CaseTypeCode = IncidentCaseTypeCode.Problem
@@ -229,7 +229,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices = default
                     }),
@@ -237,7 +237,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -252,9 +252,9 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new Failure<IncidentCompleteFailureCode>(
+                Failure.Create(
                     failureCode: IncidentCompleteFailureCode.Unknown,
-                    failureMessage: $"GPT result choices are absent. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    failureMessage: $"GPT result choices are absent. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices = default
                     })}'")
@@ -263,7 +263,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -281,7 +281,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -296,9 +296,9 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new Failure<IncidentCompleteFailureCode>(
+                Failure.Create(
                     failureCode: IncidentCompleteFailureCode.Unknown,
-                    failureMessage: $"An unexpected GPT finish reason: 'not stop'. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    failureMessage: $"An unexpected GPT finish reason: 'not stop'. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -317,7 +317,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -335,14 +335,14 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices = default
                     }),
                 },
-                new Failure<IncidentCompleteFailureCode>(
+                Failure.Create(
                     failureCode: IncidentCompleteFailureCode.Unknown,
-                    failureMessage: $"GPT result choices are absent. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    failureMessage: $"GPT result choices are absent. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices = default
                     })}'")
@@ -351,7 +351,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -369,7 +369,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -384,9 +384,9 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new Failure<IncidentCompleteFailureCode>(
+                Failure.Create(
                     failureCode: IncidentCompleteFailureCode.Unknown,
-                    failureMessage: $"An unexpected GPT finish reason: 'not stop'. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    failureMessage: $"An unexpected GPT finish reason: 'not stop'. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -405,7 +405,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -423,7 +423,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -438,9 +438,9 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new Failure<IncidentCompleteFailureCode>(
+                Failure.Create(
                     failureCode: IncidentCompleteFailureCode.Unknown,
-                    failureMessage: $"Incorrect response from GPT. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    failureMessage: $"Incorrect response from GPT. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -459,7 +459,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -477,7 +477,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -492,9 +492,9 @@ partial class SupportGptApiTestSource
                         ]
                     }),
                 },
-                new Failure<IncidentCompleteFailureCode>(
+                Failure.Create(
                     failureCode: IncidentCompleteFailureCode.Unknown,
-                    failureMessage: $"Incorrect response from GPT. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    failureMessage: $"Incorrect response from GPT. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -513,7 +513,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -531,7 +531,7 @@ partial class SupportGptApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    Body = HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -539,16 +539,16 @@ partial class SupportGptApiTestSource
                             {
                                 Message = new()
                                 {
-                                    Content = "Проблема"
+                                    Content = "Some content"
                                 },
                                 FinishReason = "stop"
                             }
                         ]
                     }),
                 },
-                new Failure<IncidentCompleteFailureCode>(
+                Failure.Create(
                     failureCode: IncidentCompleteFailureCode.Unknown,
-                    failureMessage: $"Incorrect response from GPT. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut()
+                    failureMessage: $"Incorrect response from GPT. Body: '{HttpBody.SerializeAsJson(new StubGptJsonOut
                     {
                         Choices =
                         [
@@ -556,7 +556,7 @@ partial class SupportGptApiTestSource
                             {
                                 Message = new()
                                 {
-                                    Content = "Проблема"
+                                    Content = "Some content"
                                 },
                                 FinishReason = "stop"
                             }

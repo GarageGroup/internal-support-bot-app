@@ -43,14 +43,14 @@ partial class SupportGptApi
             GetCaseTypeAsync);
 
     private ValueTask<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>> GetCaseTypeAsync(
-        (IncidentCompleteIn Input, IncidentCompleteOut Output) input, CancellationToken cancellationToken)
+        (IncidentCompleteIn Input, IncidentCompleteOut Output) request, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
-            input, cancellationToken)
+            request.Input, cancellationToken)
         .Pipe(
-            @in => MapCaseTypeInput(@in.Input))
+            MapCaseTypeInput)
         .Pipe(
-            @in => new HttpSendIn(
+            static @in => new HttpSendIn(
                 method: HttpVerb.Post,
                 requestUri: string.Empty)
             {
@@ -59,7 +59,7 @@ partial class SupportGptApi
         .PipeValue(
             gptHttp.SendAsync)
         .Forward(
-            @out => MapCaseTypeSuccessOrFailure(@out, input.Output),
+            @out => MapCaseTypeSuccessOrFailure(@out, request.Output),
             static failure => failure.ToStandardFailure().MapFailureCode(ToIncidentCompleteFailureCode));
 
     private ChatGptJsonIn MapCaseTypeInput(IncidentCompleteIn input)
@@ -72,13 +72,11 @@ partial class SupportGptApi
             Temperature = option.Temperature,
             Top = 1,
             Messages = option.ChatMessages.Map(CreateChatMessageJson).Concat(
-                [
-                    new()
-                    {
-                        Role = option.CaseTypeTemplate?.Role,
-                        Content = option.CaseTypeTemplate?.ContentTemplate
-                    }
-                ])
+                new ChatMessageJson
+                {
+                    Role = option.CaseTypeTemplate?.Role,
+                    Content = option.CaseTypeTemplate?.ContentTemplate
+                })
         };
 
         ChatMessageJson CreateChatMessageJson(ChatMessageOption messageOption)
@@ -166,12 +164,4 @@ partial class SupportGptApi
             CaseTypeCode = (IncidentCaseTypeCode)caseType
         };
     }
-
-    private static IncidentCompleteFailureCode ToIncidentCompleteFailureCode(HttpFailureCode httpFailureCode)
-        =>
-        httpFailureCode switch
-        {
-            HttpFailureCode.TooManyRequests => IncidentCompleteFailureCode.TooManyRequests,
-            _ => IncidentCompleteFailureCode.Unknown
-        };
 }

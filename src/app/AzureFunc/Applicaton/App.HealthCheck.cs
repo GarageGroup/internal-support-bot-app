@@ -9,7 +9,7 @@ partial class Application
     internal static Dependency<IHealthCheckHandler> UseHealthCheck()
         =>
         HealthCheck.UseServices(
-            UseCosmosStorage().UseServiceHealthCheckApi("CosmosStorage"),
+            Dependency.From(ResolveBotApi).UseServiceHealthCheckApi("TelegramBotApi"),
             UseSqlApi().UseServiceHealthCheckApi("DataverseDb"),
             UseDataverseApi().UseServiceHealthCheckApi("DataverseApi"))
         .UseHealthCheckHandler();
