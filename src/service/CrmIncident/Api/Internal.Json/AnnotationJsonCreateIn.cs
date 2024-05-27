@@ -13,10 +13,10 @@ internal sealed record class AnnotationJsonCreateIn
             entityPluralName: "annotations",
             entityData: annotationJson);
 
-    public AnnotationJsonCreateIn(Guid incidentId, FlatArray<byte> bytes, string fileName)
+    internal AnnotationJsonCreateIn(Guid incidentId, string base64Data, string fileName)
     {
         ObjectLookup = $"/incidents({incidentId:D})";
-        DocumentBodyBinary = bytes;
+        DocumentBodyBinary = base64Data;
         FileName = fileName;
     }
 
@@ -24,7 +24,7 @@ internal sealed record class AnnotationJsonCreateIn
     public string ObjectLookup { get; }
 
     [JsonPropertyName("documentbody_binary")]
-    public FlatArray<byte> DocumentBodyBinary { get; }
+    public string DocumentBodyBinary { get; }
 
     [JsonPropertyName("filename")]
     public string FileName { get; }

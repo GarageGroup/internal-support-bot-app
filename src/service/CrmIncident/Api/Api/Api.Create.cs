@@ -117,14 +117,14 @@ partial class CrmIncidentApi
                 SourceException = failure.SourceException
             });
 
-    private static Result<byte[], Failure<Unit>> MapSuccessHttpApiOrFailure(HttpSendOut httpResponse)
+    private static Result<string, Failure<Unit>> MapSuccessHttpApiOrFailure(HttpSendOut httpResponse)
     {
         if (httpResponse.Body.Content == null)
         {
             return Failure.Create("Http response content is empty");
         }
         
-        return httpResponse.Body.Content.ToArray();
+        return Convert.ToBase64String(httpResponse.Body.Content.ToArray());
     }
 
     private static IncidentCreateFailureCode ToIncidentCreateFailureCode(DataverseFailureCode dataverseFailureCode)

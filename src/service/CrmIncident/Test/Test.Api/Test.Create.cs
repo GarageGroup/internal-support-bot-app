@@ -199,9 +199,9 @@ partial class CrmIncidentApiTest
     [Theory]
     [MemberData(nameof(CrmIncidentApiTestSource.AnnotationInputValidTestData), MemberType = typeof(CrmIncidentApiTestSource))]
     internal static async Task CreateAsync_InputIsNotNullPicturesIsNotEmpty_ExpectDataverseAnnotationCreateCalledOnce(
-        IncidentCreateIn input, 
-        IncidentJsonCreateOut incidentJsonCreateOut, 
-        HttpSendOut httpApiOut, 
+        IncidentCreateIn input,
+        IncidentJsonCreateOut incidentJsonCreateOut,
+        HttpSendOut httpApiOut,
         DataverseEntityCreateIn<AnnotationJsonCreateIn> expectedInput)
     {
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(incidentJsonCreateOut);

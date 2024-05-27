@@ -41,7 +41,7 @@ partial class CrmIncidentApiTestSource
                 },
                 new(
                     entityPluralName: "annotations",
-                    entityData: new(new("ec8c8180-8ed7-4598-9bee-275262b396e2"), new BinaryData("Some content").ToArray().ToFlatArray(), "some file name")
+                    entityData: new(new("ec8c8180-8ed7-4598-9bee-275262b396e2"), "U29tZSBjb250ZW50", "some file name")
                     {
                         Subject = "Picture from user"
                     })
