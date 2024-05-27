@@ -20,7 +20,11 @@ partial class Application
     private static Dependency<IChatCommand<IncidentCreateCommandIn, Unit>> UseIncidentCreateCommand()
         =>
         Pipeline.Pipe(
-            UseDataverseApi().UseCrmIncidentApi())
+            PrimaryHandler.UseStandardSocketsHttpHandler()
+            .UseLogging("CrmIncidentApi")
+            .UseHttpApi()
+            .With(UseDataverseApi())
+            .UseCrmIncidentApi())
         .With(
             UseDataverseApi().With(UseSqlApi()).UseCrmOwnerApi())
         .With(

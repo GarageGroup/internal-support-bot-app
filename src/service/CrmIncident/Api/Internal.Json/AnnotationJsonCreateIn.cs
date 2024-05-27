@@ -13,16 +13,22 @@ internal sealed record class AnnotationJsonCreateIn
             entityPluralName: "annotations",
             entityData: annotationJson);
 
-    internal static string BuildOwnerLookupValue(Guid ownerId)
-        =>
-        $"/systemusers({ownerId:D})";
+    public AnnotationJsonCreateIn(Guid incidentId, FlatArray<byte> bytes, string fileName)
+    {
+        ObjectLookup = $"/incidents({incidentId:D})";
+        DocumentBodyBinary = bytes;
+        FileName = fileName;
+    }
 
-    [JsonPropertyName("objectidtypecode")]
-    public string? ObjectIdTypeCode { get; init; }
-
-    [JsonPropertyName("objectid")]
-    public string? ObjectId { get; init; }
+    [JsonPropertyName("objectid_incident@odata.bind")]
+    public string ObjectLookup { get; }
 
     [JsonPropertyName("documentbody_binary")]
-    public byte[]? DocumentBodyBinary { get; init; }
+    public FlatArray<byte> DocumentBodyBinary { get; }
+
+    [JsonPropertyName("filename")]
+    public string FileName { get; }
+
+    [JsonPropertyName("subject")]
+    public string? Subject { get; init; }
 }

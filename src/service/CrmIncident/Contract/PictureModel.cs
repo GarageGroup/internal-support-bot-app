@@ -2,9 +2,9 @@
 
 namespace GarageGroup.Internal.Support;
 
-internal sealed record class PictureState
+public sealed record class PictureModel
 {
-    public PictureState(string fileName, string imageUrl)
+    public PictureModel(string fileName, string imageUrl)
     {
         FileName = fileName.OrEmpty();
         ImageUrl = imageUrl.OrEmpty();

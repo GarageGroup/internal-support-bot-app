@@ -27,15 +27,32 @@ public static partial class CrmIncidentApiTest
             Title = "Some Incident title"
         };
 
+    private static readonly HttpSendOut SomeHttpApiSuccessOutput
+        =
+        new()
+        {
+            StatusCode = HttpSuccessCode.OK,
+            Body = new HttpBody()
+            {
+                Content = new BinaryData("Some content")
+            }
+        };
+
     private static Mock<IDataverseEntityCreateSupplier> BuildMockDataverseCreateSupplier(
-        in Result<DataverseEntityCreateOut<IncidentJsonCreateOut>, Failure<DataverseFailureCode>> result)
+        in Result<DataverseEntityCreateOut<IncidentJsonCreateOut>, Failure<DataverseFailureCode>> incidentResult,
+        in Result<Unit, Failure<DataverseFailureCode>> annotationResult)
     {
         var mock = new Mock<IDataverseEntityCreateSupplier>();
 
         _ = mock.Setup(
             static api => api.CreateEntityAsync<IncidentJsonCreateIn, IncidentJsonCreateOut>(
                 It.IsAny<DataverseEntityCreateIn<IncidentJsonCreateIn>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(result);
+            .ReturnsAsync(incidentResult);
+
+        _ = mock.Setup(
+            static api => api.CreateEntityAsync(
+                It.IsAny<DataverseEntityCreateIn<AnnotationJsonCreateIn>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(annotationResult);
 
         return mock;
     }
@@ -46,6 +63,15 @@ public static partial class CrmIncidentApiTest
         var mock = new Mock<IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>>();
 
         _ = mock.Setup(static api => api.Impersonate(It.IsAny<Guid>())).Returns(dataverseCreateSupplier);
+
+        return mock;
+    }
+
+    private static Mock<IHttpApi> BuildHttpApi(in Result<HttpSendOut, HttpSendFailure> result)
+    {
+        var mock = new Mock<IHttpApi>();
+
+        _ = mock.Setup(static a => a.SendAsync(It.IsAny<HttpSendIn>(), It.IsAny<CancellationToken>())).ReturnsAsync(result);
 
         return mock;
     }

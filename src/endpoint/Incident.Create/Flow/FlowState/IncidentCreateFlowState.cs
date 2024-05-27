@@ -37,4 +37,6 @@ internal sealed record class IncidentCreateFlowState
     public bool WithoutConfirmation { get; init; }
 
     public bool IsRepeated { get; init; }
+
+    public FlatArray<string> AnnotationFailureFileNames { get; init; }
 }

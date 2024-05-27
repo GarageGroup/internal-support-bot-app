@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Web;
@@ -56,10 +58,8 @@ partial class IncidentCreateFlowStep
 
     private static EntityCardOption InnerCreateIncidentCardOption(
         this IChatFlowContext<IncidentCreateFlowState> context, string headerText)
-        =>
-        new(headerText)
-        {
-            FieldValues =
+    {
+        FlatArray<KeyValuePair<string, string?>> fieldValues =
             [
                 new(context.Localizer[TitleFieldName], context.FlowState.Title),
                 new(context.Localizer[CustomerFieldName], context.FlowState.Customer?.Title),
@@ -68,8 +68,19 @@ partial class IncidentCreateFlowStep
                 new(context.Localizer[PriorityFieldName], context.FlowState.Priority?.Title),
                 new(context.Localizer[OwnerFieldName], context.FlowState.Owner?.FullName),
                 new(context.Localizer[DescriptionFieldName], context.FlowState.Description)
-            ]
+            ];
+
+        var annotationFileNames = context.GetAnnotationFileNames();
+        if (string.IsNullOrEmpty(annotationFileNames) is false)
+        {
+            fieldValues = fieldValues.Concat([new(context.Localizer[AttachmentsFieldName], annotationFileNames)]);
+        }
+
+        return new(headerText)
+        {
+            FieldValues = fieldValues
         };
+    }  
 
     private static ChatFlowJump<IncidentCreateFlowState> NextOrRestart(IChatFlowContext<IncidentCreateFlowState> context)
     {
@@ -158,5 +169,14 @@ partial class IncidentCreateFlowStep
         }
 
         return Convert.ToBase64String(memoryStream.ToArray());
+    }
+
+    private static string GetAnnotationFileNames(this IChatFlowContext<IncidentCreateFlowState> context)
+    {
+        return string.Join(", ", context.FlowState.Pictures.AsEnumerable().Select(GetFileName));
+
+        static string GetFileName(PictureState picture)
+            =>
+            picture.FileName;
     }
 }

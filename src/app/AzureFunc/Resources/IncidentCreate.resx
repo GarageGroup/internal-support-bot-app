@@ -207,4 +207,10 @@
   <data name="ChoosePriorityText" xml:space="preserve">
     <value>Choose the priority</value>
   </data>
+  <data name="AttachmentsFieldName" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="IncidentCreationAnnotationFailureTemplate" xml:space="preserve">
+    <value>Errors occurred when creating some attachments. Please follow the link and add them manually: {0}</value>
+  </data>
 </root>
