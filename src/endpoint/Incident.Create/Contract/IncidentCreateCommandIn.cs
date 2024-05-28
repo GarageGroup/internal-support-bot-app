@@ -13,9 +13,7 @@ public sealed record class IncidentCreateCommandIn : IChatCommandIn<Unit>
 
     public string? Description { get; }
 
-    public FlatArray<string> PhotoIdSet { get; init; }
-
-    public FlatArray<string> DocumentIdSet { get; init; }
+    public FlatArray<string> DocumentIds { get; init; }
 
     public BotUser? SourceSender { get; init; }
 }

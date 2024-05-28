@@ -13,22 +13,21 @@ partial class IncidentCreateCommand
         }
 
         var description = update.Message.GetDescription();
-        var photoIdSet = update.Message.GetPhotoIds();
+        var documentIds = update.Message.GetDocumentIds();
 
-        if (string.IsNullOrEmpty(description) && photoIdSet.IsEmpty)
+        if (string.IsNullOrEmpty(description) && documentIds.IsEmpty)
         {
             return default;
         }
 
         return new IncidentCreateCommandIn(description)
         {
-            PhotoIdSet = photoIdSet,
+            DocumentIds = documentIds,
             SourceSender = update.Message.ForwardOrigin switch
             {
                 BotMessageOriginUser originUser => originUser.SenderUser,
                 _ => null
-            },
-            DocumentIdSet = update.Message.GetDocumentIds()
+            }
         };
     }
 

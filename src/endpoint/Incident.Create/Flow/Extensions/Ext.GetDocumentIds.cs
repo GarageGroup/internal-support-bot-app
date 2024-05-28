@@ -12,6 +12,11 @@ partial class IncidentCreateCommandExtensions
 
         static IEnumerable<string> InnerGetDocumentIds(BotMessage message)
         {
+            if (message.Photo.IsNotEmpty)
+            {
+                yield return message.Photo[^1].FileId;
+            }
+
             if (message.Document is not null)
             {
                 yield return message.Document.FileId;

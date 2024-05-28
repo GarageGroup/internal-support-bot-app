@@ -174,17 +174,10 @@ partial class IncidentCreateFlowStep
 
     private static string GetAnnotationFileNames(this IChatFlowContext<IncidentCreateFlowState> context)
     {
-        var pictureFileNames = context.FlowState.Pictures.AsEnumerable().Select(GetPictureFileName);
-        var documentFileNames = context.FlowState.Documents.AsEnumerable().Select(GetDocumentFileName);
+        return string.Join(", ", context.FlowState.Documents.AsEnumerable().Select(GetFileName));
 
-        return string.Join(", ", pictureFileNames.Concat(documentFileNames));
-
-        static string GetPictureFileName(PictureState picture)
+        static string GetFileName(DocumentState document)
             =>
-            picture.FileName;
-
-        static string GetDocumentFileName(DocumentState picture)
-            =>
-            picture.FileName;
+            document.FileName;
     }
 }

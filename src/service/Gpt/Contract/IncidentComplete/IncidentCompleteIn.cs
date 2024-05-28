@@ -1,14 +1,15 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GarageGroup.Internal.Support;
 
 public sealed record class IncidentCompleteIn
 {
-    public IncidentCompleteIn(string? message, FlatArray<string> imageUrl)
+    public IncidentCompleteIn([AllowNull] string message, FlatArray<string> imageUrls)
     {
-        Message = message;
-        ImageUrls = imageUrl;
-    }        
+        Message = message.OrNullIfWhiteSpace();
+        ImageUrls = imageUrls;
+    }
 
     public string? Message { get; }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GarageGroup.Infra.Telegram.Bot;
@@ -15,52 +16,28 @@ partial class IncidentCreateFlowStep
 
     private static ValueTask<IncidentCreateFlowState> GetDocumentUrlsAsync(
         IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
+    {
+        if (context.FlowState.DocumentIds.IsEmpty || context.FlowState.Documents.IsNotEmpty)
+        {
+            return new(context.FlowState);
+        }
+
+        return InnerGetDocumentUrlsAsync(context, cancellationToken);
+    }
+
+    private static ValueTask<IncidentCreateFlowState> InnerGetDocumentUrlsAsync(
+        IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
-            context, cancellationToken)
-        .PipeParallelValue(
-            GetPicturesAsync,
-            GetDocumentsAsync)
+            context.FlowState.DocumentIds, cancellationToken)
+        .PipeParallel(
+            context.GetDocumentAsync, ParallelOption)
         .Pipe(
-            @out => context.FlowState with
+            documents => context.FlowState with
             {
-                Pictures = @out.Item1,
-                Documents = @out.Item2
+                Documents = documents,
+                PhotoUrls = documents.AsEnumerable().Where(IsPhoto).Select(GetUrl).ToFlatArray()
             });
-
-    private static ValueTask<FlatArray<PictureState>> GetPicturesAsync(
-        IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
-    {
-        if (context.FlowState.PhotoIdSet.IsEmpty || context.FlowState.Pictures.IsNotEmpty)
-        {
-            return new(context.FlowState.Pictures);
-        }
-
-        return AsyncPipeline.Pipe(context.FlowState.PhotoIdSet, cancellationToken).PipeParallel(context.GetPictureAsync, ParallelOption);
-    }
-
-    private static ValueTask<FlatArray<DocumentState>> GetDocumentsAsync(
-        IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
-    {
-        if (context.FlowState.DocumentIdSet.IsEmpty || context.FlowState.Documents.IsNotEmpty)
-        {
-            return new(context.FlowState.Documents);
-        }
-
-        return AsyncPipeline.Pipe(context.FlowState.DocumentIdSet, cancellationToken).PipeParallel(context.GetDocumentAsync, ParallelOption);
-    }
-
-    private static Task<PictureState> GetPictureAsync(
-        this IChatFlowContextBase context, string photoId, CancellationToken cancellationToken)
-        =>
-        AsyncPipeline.Pipe(
-            photoId, cancellationToken)
-        .Pipe(
-            context.Api.GetFileLinkAsync)
-        .Pipe(
-            static info => new PictureState(
-                fileName: info.FilePath.Split('/')[^1],
-                imageUrl: info.FileUrl));
 
     private static Task<DocumentState> GetDocumentAsync(
         this IChatFlowContextBase context, string documentId, CancellationToken cancellationToken)
@@ -70,15 +47,40 @@ partial class IncidentCreateFlowStep
         .Pipe(
             context.Api.GetFileLinkAsync)
         .Pipe(
-            static info =>
-            {
-                var pathes = info.FilePath.Split('/');
+            ParseDocumentState);
 
-                return new DocumentState(
-                    fileName: pathes[^1],
-                    url: info.FileUrl)
-                {
-                    Type = pathes[0].Equals("videos", StringComparison.InvariantCultureIgnoreCase) ? DocumentType.Video : DocumentType.Document
-                };
-            });
+    private static DocumentState ParseDocumentState(ChatFileLink link)
+    {
+        var paths = link.FilePath.Split('/');
+
+        return new(
+            fileName: paths[^1],
+            url: link.FileUrl)
+        {
+            Type = ParseType(paths[0])
+        };
+
+        static DocumentType ParseType(string path)
+        {
+            if (string.Equals("photos", path, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return DocumentType.Photo;
+            }
+
+            if (string.Equals("videos", path, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return DocumentType.Video;
+            }
+
+            return DocumentType.Document;
+        }
+    }
+
+    private static bool IsPhoto(DocumentState document)
+        =>
+        document.Type is DocumentType.Photo;
+
+    private static string GetUrl(DocumentState document)
+        =>
+        document.Url;
 }

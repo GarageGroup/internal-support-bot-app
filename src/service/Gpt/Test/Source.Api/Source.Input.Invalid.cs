@@ -13,27 +13,27 @@ partial class SupportGptApiTestSource
             {
                 new(
                     message: null,
-                    imageUrl: default)
+                    imageUrls: default)
             },
             {
                 new(
                     message: TestData.EmptyString,
-                    imageUrl: default)
+                    imageUrls: default)
             },
             {
                 new(
                     message: TestData.MixedWhiteSpacesString,
-                    imageUrl: default)
+                    imageUrls: default)
             },
             {
                 new(
                     message: TestData.EmptyString,
-                    imageUrl: default)
+                    imageUrls: default)
             },
             {
                 new(
                     message: TestData.MixedWhiteSpacesString,
-                    imageUrl: default)
+                    imageUrls: default)
             }
         };
 }

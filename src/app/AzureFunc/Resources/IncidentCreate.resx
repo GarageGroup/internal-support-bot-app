@@ -211,7 +211,7 @@
     <value>Attachments</value>
   </data>
   <data name="IncidentCreationAnnotationFailureInvalidFileSizeTemplate" xml:space="preserve">
-    <value>These files are too large: {0}</value>
+    <value>Failed to create the following attachments due to file size being too large: {0}</value>
   </data>
   <data name="IncidentCreationAnnotationFailureTemplate" xml:space="preserve">
     <value>Errors occurred when creating some attachments. Please follow the link and add them manually: {0}</value>

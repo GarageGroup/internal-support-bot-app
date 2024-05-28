@@ -10,13 +10,11 @@ internal sealed record class IncidentCreateFlowState
 
     public required string? Description { get; init; }
 
-    public FlatArray<string> PhotoIdSet { get; init; }
-
-    public FlatArray<PictureState> Pictures { get; init; }
-
-    public FlatArray<string> DocumentIdSet { get; init; }
+    public FlatArray<string> DocumentIds { get; init; }
 
     public FlatArray<DocumentState> Documents { get; init; }
+
+    public FlatArray<string> PhotoUrls { get; init; }
 
     public SourceSenderState? SourceSender { get; init; }
 
