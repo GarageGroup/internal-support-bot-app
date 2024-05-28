@@ -39,11 +39,15 @@ partial class IncidentCreateFlowStep
             Keyboard = new(
                 confirmButtonText: context.Localizer[ConfirmButton],
                 cancelButtonText: context.Localizer[CancelButton],
-                cancelText: context.Localizer[CancelText])
+                forwardCancellation: ForwardCancellation)
             {
                 WebAppButton = context.BuildWebAppButton()
             }
         };
+
+        Result<IncidentCreateFlowState, ChatBreakState> ForwardCancellation()
+            =>
+            ChatBreakState.From(context.Localizer[CancelText]);
     }
 
     private static EntityCardOption? CreateIncidentCardOption(IChatFlowContext<IncidentCreateFlowState> context)

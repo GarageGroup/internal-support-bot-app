@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Core.Context" Version="0.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Core.Context" Version="0.2.0" />
   </ItemGroup>
 
 </Project>

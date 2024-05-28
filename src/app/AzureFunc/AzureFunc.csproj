@@ -40,8 +40,8 @@
     <PackageReference Include="GarageGroup.Infra.Sql.Api.Provider.Dataverse" Version="0.1.0" />
     <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Api" Version="0.1.0" />
     <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Api.Dataverse" Version="0.0.2" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Azure" Version="0.1.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Engine" Version="0.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Azure" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Engine" Version="0.2.0" />
     <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Storage.Azure.Blob" Version="0.0.1" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.17.2" OutputItemType="Analyzer" />

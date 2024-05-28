@@ -33,16 +33,11 @@ partial class ContactGetFlowStep
             return context.FlowState;
         }
 
-        var customerMessage = context.BuildCustomerResultMessage(contact.CustomerName);
-        var contactMessage = context.BuildContactResultMessage(contact.ContactName);
-
-        var resultMessage = string.Format("{0}\n\r{1}", customerMessage, contactMessage);
-        _ = await context.Api.SendHtmlModeTextAndRemoveReplyKeyboardAsync(resultMessage, cancellationToken).ConfigureAwait(false);
-
         return context.FlowState with
         {
             Customer = new(contact.CustomerId, contact.CustomerName),
-            Contact = new(contact.ContactId, contact.ContactName)
+            Contact = new(contact.ContactId, contact.ContactName),
+            ShowConfirmation = true
         };
     }
 
