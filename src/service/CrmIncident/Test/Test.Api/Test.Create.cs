@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -110,7 +109,7 @@ partial class CrmIncidentApiTest
     }
 
     [Fact]
-    public static async Task CreateAsync_InputIsNotNullPicturesIsNotEmpty_ExpectCallHttpApiOnce()
+    public static async Task CreateAsync_InputIsNotNullAndDocumentsIsNotEmpty_ExpectCallHttpApiOnce()
     {
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(SomeIncidentJsonOutput);
 
@@ -132,31 +131,32 @@ partial class CrmIncidentApiTest
         {
             Documents = 
             [
-                new DocumentModel("first some file name", "first some image url"),
-                new DocumentModel("second some file name", "second some image url")
+                new("first some file name", "first some image url"),
+                new("second some file name", "second some image url")
             ]
         };
 
         _ = await api.CreateAsync(input, default);
 
-        mockHttpApi.Verify(a => a.SendAsync(new HttpSendIn(HttpVerb.Get, "first some image url"), It.IsAny<CancellationToken>()), Times.Once);
-        mockHttpApi.Verify(a => a.SendAsync(new HttpSendIn(HttpVerb.Get, "second some image url"), It.IsAny<CancellationToken>()), Times.Once);
+        mockHttpApi.Verify(a => a.SendAsync(new(HttpVerb.Get, "first some image url"), It.IsAny<CancellationToken>()), Times.Once);
+        mockHttpApi.Verify(a => a.SendAsync(new(HttpVerb.Get, "second some image url"), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
     public static async Task CreateAsync_HttpApiIsNotSuccess_ExpectOutputFailure()
     {
-        var incidentCreateOut = new IncidentJsonCreateOut()
+        var incidentCreateOut = new IncidentJsonCreateOut
         {
             IncidentId = new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
             Title = "Some Incident title"
         };
+
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(incidentCreateOut);
 
         var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, Result.Success<Unit>(default));
         var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
 
-        var httpFailure = new HttpSendFailure()
+        var httpFailure = new HttpSendFailure
         {
             StatusCode = HttpFailureCode.BadRequest,
             Body = new()
@@ -181,7 +181,7 @@ partial class CrmIncidentApiTest
         {
             Documents =
             [
-                new DocumentModel("some file name", "some image url")
+                new("some file name", "some image url")
             ]
         };
 
@@ -190,7 +190,13 @@ partial class CrmIncidentApiTest
             id: new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
             title: "Some Incident title")
         {
-            Failures = [new AnnotationCreateFailure("some file name", "An unexpected http failure occured: 400.\nSome failure message")]
+            Failures =
+            [
+                new("some file name", "An unexpected http failure occured: 400.\nSome failure message")
+                {
+                    FailureCode = AnnotationCreateFailureCode.Unknown
+                }
+            ]
         };
 
         Assert.StrictEqual(expected, actual);
@@ -229,7 +235,7 @@ partial class CrmIncidentApiTest
     public static async Task CreateAsync_DataverseAnnotationCreateResultIsNotSuccess_ExpectOutputFailure(
         DataverseFailureCode sourceFailureCode)
     {
-        var incidentCreateOut = new IncidentJsonCreateOut()
+        var incidentCreateOut = new IncidentJsonCreateOut
         {
             IncidentId = new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
             Title = "Some Incident title"
@@ -258,7 +264,7 @@ partial class CrmIncidentApiTest
         {
             Documents =
             [
-                new DocumentModel("some file name", "some image url")
+                new("some file name", "some image url")
             ]
         };
 
@@ -271,6 +277,7 @@ partial class CrmIncidentApiTest
             [
                 new("some file name", "Some failure message") 
                 {
+                    FailureCode = AnnotationCreateFailureCode.Unknown,
                     SourceException = sourceException
                 }
             ]
@@ -279,12 +286,10 @@ partial class CrmIncidentApiTest
         Assert.StrictEqual(expected, actual);
     }
 
-    [Theory]
-    [InlineData(DataverseFailureCode.InvalidFileSize)]
-    public static async Task CreateAsync_DataverseAnnotationCreateResultInvalidFileSize_ExpectOutputFailure(
-        DataverseFailureCode sourceFailureCode)
+    [Fact]
+    public static async Task CreateAsync_DataverseAnnotationCreateResultInvalidFileSize_ExpectOutputFailure()
     {
-        var incidentCreateOut = new IncidentJsonCreateOut()
+        var incidentCreateOut = new IncidentJsonCreateOut
         {
             IncidentId = new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
             Title = "Some Incident title"
@@ -292,7 +297,7 @@ partial class CrmIncidentApiTest
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(incidentCreateOut);
 
         var sourceException = new Exception("Some error message");
-        var dataverseAnnotationCreateFailure = Failure.Create(sourceFailureCode, "Some failure message", sourceException);
+        var dataverseAnnotationCreateFailure = Failure.Create(DataverseFailureCode.InvalidFileSize, "Some failure message", sourceException);
 
         var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, dataverseAnnotationCreateFailure);
         var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
@@ -313,7 +318,7 @@ partial class CrmIncidentApiTest
         {
             Documents =
             [
-                new DocumentModel("some file name", "some image url")
+                new("some file name", "some image url")
             ]
         };
 
@@ -326,8 +331,8 @@ partial class CrmIncidentApiTest
             [
                 new("some file name", "Some failure message")
                 {
-                    SourceException = sourceException,
-                    FailureCode = IncidentCreateFailureCode.InvalidFileSize,
+                    FailureCode = AnnotationCreateFailureCode.InvalidFileSize,
+                    SourceException = sourceException
                 }
             ]
         };
@@ -363,9 +368,10 @@ partial class CrmIncidentApiTest
         {
             Documents =
             [
-                new DocumentModel("some file name", "some image url")
+                new("some file name", "some image url")
             ]
         };
+
         var actual = await api.CreateAsync(input, default);
 
         var expected = new IncidentCreateOut(

@@ -99,7 +99,7 @@ partial class CrmIncidentApi
             httpApi.SendAsync)
         .Forward(
             MapSuccessHttpApiOrFailure,
-            static failure => failure.ToStandardFailure().MapFailureCode(ToIncidentCreateFailureCode))
+            static failure => failure.ToStandardFailure().WithFailureCode(AnnotationCreateFailureCode.Unknown))
         .MapSuccess(
             @out => new AnnotationJsonCreateIn(input.IncidentId, @out, input.Document.FileName)
             {
@@ -114,26 +114,22 @@ partial class CrmIncidentApi
             AnnotationJsonCreateIn.BuildDataverseCreateInput)
         .ForwardValue(
             dataverseApi.Impersonate(input.CallerUserId).CreateEntityAsync,
-            static failure => failure.MapFailureCode(ToIncidentCreateFailureCode))
+            static failure => failure.MapFailureCode(ToAnnotationCreateFailureCode))
         .Fold<AnnotationCreateFailure?>(
             _ => null,
             failure => new AnnotationCreateFailure(input.Document.FileName, failure.FailureMessage)
             {
                 SourceException = failure.SourceException,
-                FailureCode = failure.FailureCode switch 
-                { 
-                    IncidentCreateFailureCode.InvalidFileSize => failure.FailureCode,
-                    _ => null
-                }
+                FailureCode = failure.FailureCode
             });
 
-    private static Result<string, Failure<IncidentCreateFailureCode>> MapSuccessHttpApiOrFailure(HttpSendOut httpResponse)
+    private static Result<string, Failure<AnnotationCreateFailureCode>> MapSuccessHttpApiOrFailure(HttpSendOut httpResponse)
     {
-        if (httpResponse.Body.Content == null)
+        if (httpResponse.Body.Content is null)
         {
-            return Failure.Create(IncidentCreateFailureCode.Unknown, "Http response content is empty");
+            return Failure.Create(AnnotationCreateFailureCode.Unknown, "Http response content is empty");
         }
-        
+
         return Convert.ToBase64String(httpResponse.Body.Content.ToArray());
     }
 
@@ -145,7 +141,14 @@ partial class CrmIncidentApi
             DataverseFailureCode.UserNotEnabled     => IncidentCreateFailureCode.NotAllowed,
             DataverseFailureCode.PrivilegeDenied    => IncidentCreateFailureCode.NotAllowed,
             DataverseFailureCode.Throttling         => IncidentCreateFailureCode.TooManyRequests,
-            DataverseFailureCode.InvalidFileSize    => IncidentCreateFailureCode.InvalidFileSize,
+            _ => default
+        };
+
+    private static AnnotationCreateFailureCode ToAnnotationCreateFailureCode(DataverseFailureCode dataverseFailureCode)
+        =>
+        dataverseFailureCode switch
+        {
+            DataverseFailureCode.InvalidFileSize    => AnnotationCreateFailureCode.InvalidFileSize,
             _ => default
         };
 

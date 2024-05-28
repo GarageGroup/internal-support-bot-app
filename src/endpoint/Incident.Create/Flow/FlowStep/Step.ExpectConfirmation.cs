@@ -73,7 +73,8 @@ partial class IncidentCreateFlowStep
         var annotationFileNames = context.GetAnnotationFileNames();
         if (string.IsNullOrEmpty(annotationFileNames) is false)
         {
-            fieldValues = fieldValues.Concat([new(context.Localizer[AttachmentsFieldName], annotationFileNames)]);
+            fieldValues = fieldValues.Concat(
+                new KeyValuePair<string, string?>(context.Localizer[AttachmentsFieldName], annotationFileNames));
         }
 
         return new(headerText)

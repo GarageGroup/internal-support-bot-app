@@ -32,9 +32,9 @@ public static partial class CrmIncidentApiTest
         new()
         {
             StatusCode = HttpSuccessCode.OK,
-            Body = new HttpBody()
+            Body = new()
             {
-                Content = new BinaryData("Some content")
+                Content = new("Some content")
             }
         };
 

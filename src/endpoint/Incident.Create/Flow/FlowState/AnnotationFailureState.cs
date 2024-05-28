@@ -10,5 +10,5 @@ internal sealed record class AnnotationFailureState
     
     public string? FileName { get; }
 
-    public IncidentCreateFailureCode? FailureCode { get; init; }
+    public AnnotationCreateFailureCode FailureCode { get; init; }
 }

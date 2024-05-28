@@ -12,41 +12,24 @@ partial class IncidentCreateCommand
             return default;
         }
 
-        var description = GetDescription(update.Message);
-        if (string.IsNullOrEmpty(description) && update.Message.Photo.IsEmpty)
+        var description = update.Message.GetDescription();
+        var photoIdSet = update.Message.GetPhotoIds();
+
+        if (string.IsNullOrEmpty(description) && photoIdSet.IsEmpty)
         {
             return default;
         }
 
         return new IncidentCreateCommandIn(description)
         {
-            PhotoIdSet = update.Message.Photo.Map(GetPhotoFileId),
+            PhotoIdSet = photoIdSet,
             SourceSender = update.Message.ForwardOrigin switch
             {
                 BotMessageOriginUser originUser => originUser.SenderUser,
                 _ => null
             },
-            DocumentIdSet = GetDocumentFileId(update.Message)
+            DocumentIdSet = update.Message.GetDocumentIds()
         };
-
-        static string GetPhotoFileId(BotPhotoSize photo)
-            =>
-            photo.FileId;
-
-        static FlatArray<string> GetDocumentFileId(BotMessage? message)
-        {
-            if (message?.Document is not null)
-            {
-                return [message.Document.FileId];
-            }
-
-            if (message?.Video is not null)
-            {
-                return [message.Video.FileId];
-            }
-
-            return default;
-        }
     }
 
     private static bool IsOnlyCommandName(BotMessage message)
@@ -63,20 +46,5 @@ partial class IncidentCreateCommand
         }
 
         return message.Text?.Length == entity.Length;
-    }
-
-    private static string? GetDescription(BotMessage message)
-    {
-        if (string.IsNullOrWhiteSpace(message.Text) is false)
-        {
-            return message.Text;
-        }
-
-        if (string.IsNullOrWhiteSpace(message.Caption) is false)
-        {
-            return message.Caption;
-        }
-
-        return default;
     }
 }

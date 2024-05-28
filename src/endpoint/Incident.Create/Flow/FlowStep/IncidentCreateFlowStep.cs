@@ -20,6 +20,13 @@ internal static partial class IncidentCreateFlowStep
         =
         [ ' ', ',', '.', '!', '?' ];
 
+    private static readonly PipelineParallelOption ParallelOption
+        =
+        new()
+        {
+            DegreeOfParallelism = 4
+        };
+
     private static string GetDisplayName(this IChatFlowContextBase context, IncidentCaseTypeCode caseTypeCode)
         =>
         caseTypeCode switch

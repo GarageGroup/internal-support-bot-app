@@ -1,12 +1,13 @@
 ﻿using GarageGroup.Infra;
-using System;
 using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.CrmIncident.Test;
 
+using TestData = TheoryData<IncidentCreateIn, IncidentJsonCreateOut, HttpSendOut, DataverseEntityCreateIn<AnnotationJsonCreateIn>>;
+
 partial class CrmIncidentApiTestSource
 {
-    public static TheoryData<IncidentCreateIn, IncidentJsonCreateOut, HttpSendOut, DataverseEntityCreateIn<AnnotationJsonCreateIn>> AnnotationInputValidTestData
+    public static TestData AnnotationInputValidTestData
         =>
         new()
         {
@@ -23,7 +24,7 @@ partial class CrmIncidentApiTestSource
                 {
                     Documents =
                     [
-                        new DocumentModel("some file name", "some image url")
+                        new("some file name", "some image url")
                         {
                             Type = DocumentType.Photo
                         }
@@ -37,9 +38,9 @@ partial class CrmIncidentApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = new HttpBody()
+                    Body = new()
                     {
-                        Content = new BinaryData("Some content")
+                        Content = new("Some content")
                     }
                 },
                 new(
@@ -62,7 +63,7 @@ partial class CrmIncidentApiTestSource
                 {
                     Documents =
                     [
-                        new DocumentModel("some file name", "some image url")
+                        new("some file name", "some image url")
                         {
                             Type = DocumentType.Video
                         }
@@ -76,9 +77,9 @@ partial class CrmIncidentApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = new HttpBody()
+                    Body = new()
                     {
-                        Content = new BinaryData("Some content")
+                        Content = new("Some content")
                     }
                 },
                 new(
@@ -101,7 +102,7 @@ partial class CrmIncidentApiTestSource
                 {
                     Documents =
                     [
-                        new DocumentModel("some file name", "some image url")
+                        new("some file name", "some image url")
                         {
                             Type = DocumentType.Document
                         }
@@ -115,9 +116,9 @@ partial class CrmIncidentApiTestSource
                 new()
                 {
                     StatusCode = HttpSuccessCode.OK,
-                    Body = new HttpBody()
+                    Body = new()
                     {
-                        Content = new BinaryData("Some content")
+                        Content = new("Some content")
                     }
                 },
                 new(

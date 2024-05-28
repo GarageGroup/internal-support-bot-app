@@ -15,7 +15,7 @@ public sealed record class AnnotationCreateFailure
 
     public string FailureMessage { get; }
 
-    public Exception? SourceException { get; init; }
+    public AnnotationCreateFailureCode FailureCode { get; set; }
 
-    public IncidentCreateFailureCode? FailureCode { get; set; }
+    public Exception? SourceException { get; init; }
 }

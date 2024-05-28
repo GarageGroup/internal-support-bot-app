@@ -112,9 +112,9 @@ partial class SupportGptApi
 
     private static FlatArray<ChatContentJsonIn> CreateChatContentJsonIn(IncidentCompleteIn input, ChatMessageOption messageOption)
     {
-        if (messageOption.Role.Equals("system"))
+        if (messageOption.Role.Equals("system", StringComparison.InvariantCultureIgnoreCase))
         {
-            return new FlatArray<ChatContentJsonIn>(new ChatContentJsonIn(text: messageOption.ContentTemplate));
+            return [new(text: messageOption.ContentTemplate)];
         }
 
         if (string.IsNullOrWhiteSpace(input.Message))
@@ -124,11 +124,11 @@ partial class SupportGptApi
 
         if (input.ImageUrls.IsEmpty)
         {
-            return new FlatArray<ChatContentJsonIn>(new ChatContentJsonIn(text: string.Format(messageOption.ContentTemplate, input.Message.Trim())));
+            return [new(text: string.Format(messageOption.ContentTemplate, input.Message.Trim()))];
         }
 
         return input.ImageUrls.Map(CreateChatContentJsonIn).Concat(
-                new ChatContentJsonIn(text: string.Format(messageOption.ContentTemplate, input.Message.Trim())));
+            new ChatContentJsonIn(text: string.Format(messageOption.ContentTemplate, input.Message.Trim())));
 
         static ChatContentJsonIn CreateChatContentJsonIn(string imageUrl)
             =>

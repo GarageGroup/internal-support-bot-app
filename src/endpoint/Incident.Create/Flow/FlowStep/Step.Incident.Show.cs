@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -7,7 +6,6 @@ using System.Threading.Tasks;
 using System.Web;
 using GarageGroup.Infra.Telegram.Bot;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 
 namespace GarageGroup.Internal.Support;
 
@@ -47,40 +45,44 @@ partial class IncidentCreateFlowStep
             return context.Localizer.GetString(IncidentCreationSuccessTemplate, link);
         }
 
-        var builder = new StringBuilder(context.Localizer.GetString(IncidentCreationSuccessTemplate, link)).Append("\n\r\n\r");
+        var builder = new StringBuilder(context.Localizer.GetString(IncidentCreationSuccessTemplate, link));
 
         var failureFileNames = string.Join(", ", context.FlowState.AnnotationFailureFileNames.AsEnumerable().Select(GetFileName));
-        var failureFileNamesInvalidFileSize = string.Join(", ", context.FlowState.AnnotationFailureFileNames.AsEnumerable().Select(GetFileNameInvalidFileSize));
-
         if (string.IsNullOrEmpty(failureFileNames) is false)
         {
-            builder.Append(context.Localizer.GetString(IncidentCreationAnnotationFailureTemplate, failureFileNames)).Append("\n\r\n\r");
+            var text = context.Localizer.GetString(IncidentCreationAnnotationFailureTemplate, failureFileNames);
+            builder.Append("\n\r\n\r").Append(text);
         }
+
+        var invalidSizeFileNames = context.FlowState.AnnotationFailureFileNames.AsEnumerable().Select(GetInvalidSizeFileName);
+        var failureFileNamesInvalidFileSize = string.Join(", ", invalidSizeFileNames);
+
         if (string.IsNullOrEmpty(failureFileNamesInvalidFileSize) is false)
         {
-            builder.Append(context.Localizer.GetString(IncidentCreationAnnotationFailureInvalidFileSizeTemplate, failureFileNamesInvalidFileSize));
+            var text = context.Localizer.GetString(IncidentCreationAnnotationFailureInvalidFileSizeTemplate, failureFileNamesInvalidFileSize);
+            builder.Append("\n\r\n\r").Append(text);
         }
 
         return builder.ToString();
 
         static string? GetFileName(AnnotationFailureState failure)
         {
-            if (failure.FailureCode is not null)
+            if (failure.FailureCode is not AnnotationCreateFailureCode.InvalidFileSize)
             {
                 return null;
             }
 
-            return failure.FileName;
+            return string.Format(CultureInfo.InvariantCulture, "<b>{0}</b>", failure.FileName);
         }
 
-        static string? GetFileNameInvalidFileSize(AnnotationFailureState failure)
+        static string? GetInvalidSizeFileName(AnnotationFailureState failure)
         {
-            if (failure.FailureCode is null)
+            if (failure.FailureCode is AnnotationCreateFailureCode.InvalidFileSize)
             {
                 return null;
             }
 
-            return failure.FileName;
+            return string.Format(CultureInfo.InvariantCulture, "<b>{0}</b>", failure.FileName);
         }
     }
 }
