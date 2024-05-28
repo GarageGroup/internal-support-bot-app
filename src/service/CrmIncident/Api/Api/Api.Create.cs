@@ -48,22 +48,22 @@ partial class CrmIncidentApi
                 id: entityCreateOut.Value.IncidentId,
                 title: entityCreateOut.Value.Title))
         .MapSuccess(
-            @out => new AnnotationSetInput(input.Pictures, input.CallerUserId, @out))
+            @out => new AnnotationSetInput(input.Documents, input.CallerUserId, @out))
         .MapSuccessValue(
             CreateAnnotationsAsync);
 
     private ValueTask<IncidentCreateOut> CreateAnnotationsAsync(
         AnnotationSetInput input, CancellationToken cancellationToken)
     {
-        if (input.Pictures.IsEmpty)
+        if (input.Documents.IsEmpty)
         {
             return new(input.Incident);
         }
 
-        var inputs = input.Pictures.Map(CreateAnnotationInput);
+        var inputs = input.Documents.Map(CreateAnnotationInput);
         return AsyncPipeline.Pipe(inputs, cancellationToken).PipeParallelValue(CreateAnnotationAsync).Pipe(GetIncident);
 
-        AnnotationInput CreateAnnotationInput(PictureModel pictureModel)
+        AnnotationInput CreateAnnotationInput(DocumentModel pictureModel)
             =>
             new(pictureModel, input.CallerUserId, input.Incident.Id);
 
@@ -90,38 +90,48 @@ partial class CrmIncidentApi
         AnnotationInput input, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
-            input.Picture, cancellationToken)
+            input.Document, cancellationToken)
         .Pipe(
             static @in => new HttpSendIn(
                 method: HttpVerb.Get,
-                requestUri: @in.ImageUrl))
+                requestUri: @in.Url))
         .PipeValue(
             httpApi.SendAsync)
         .Forward(
             MapSuccessHttpApiOrFailure,
-            static failure => failure.ToStandardFailure().WithFailureCode<Unit>(default))
+            static failure => failure.ToStandardFailure().MapFailureCode(ToIncidentCreateFailureCode))
         .MapSuccess(
-            @out => new AnnotationJsonCreateIn(input.IncidentId, @out, input.Picture.FileName)
+            @out => new AnnotationJsonCreateIn(input.IncidentId, @out, input.Document.FileName)
             {
-                Subject = PictureSubject
+                Subject = input.Document.Type switch 
+                { 
+                    DocumentType.Document => DocumentSubject,
+                    DocumentType.Video => VideoSubject,
+                    _ => PictureSubject
+                }
             })
         .MapSuccess(
             AnnotationJsonCreateIn.BuildDataverseCreateInput)
         .ForwardValue(
             dataverseApi.Impersonate(input.CallerUserId).CreateEntityAsync,
-            static failure => failure.WithFailureCode<Unit>(default))
+            static failure => failure.MapFailureCode(ToIncidentCreateFailureCode))
         .Fold<AnnotationCreateFailure?>(
             _ => null,
-            failure => new AnnotationCreateFailure(input.Picture.FileName, failure.FailureMessage)
+            failure => new AnnotationCreateFailure(input.Document.FileName, failure.FailureMessage)
             {
-                SourceException = failure.SourceException
+                SourceException = failure.SourceException,
+                FailureCode = failure.FailureCode switch 
+                { 
+                    IncidentCreateFailureCode.InvalidFileSize => failure.FailureCode,
+                    _ => null
+                }
             });
 
-    private static Result<string, Failure<Unit>> MapSuccessHttpApiOrFailure(HttpSendOut httpResponse)
+    private static Result<string, Failure<IncidentCreateFailureCode>> MapSuccessHttpApiOrFailure(HttpSendOut httpResponse)
     {
         if (httpResponse.Body.Content == null)
         {
-            return Failure.Create("Http response content is empty");
+            return Failure.Create(IncidentCreateFailureCode.Unknown, "Http response content is empty");
         }
         
         return Convert.ToBase64String(httpResponse.Body.Content.ToArray());
@@ -135,6 +145,15 @@ partial class CrmIncidentApi
             DataverseFailureCode.UserNotEnabled     => IncidentCreateFailureCode.NotAllowed,
             DataverseFailureCode.PrivilegeDenied    => IncidentCreateFailureCode.NotAllowed,
             DataverseFailureCode.Throttling         => IncidentCreateFailureCode.TooManyRequests,
+            DataverseFailureCode.InvalidFileSize    => IncidentCreateFailureCode.InvalidFileSize,
             _ => default
+        };
+
+    private static IncidentCreateFailureCode ToIncidentCreateFailureCode(HttpFailureCode httpFailureCode)
+        =>
+        httpFailureCode switch
+        {
+            HttpFailureCode.TooManyRequests => IncidentCreateFailureCode.TooManyRequests,
+            _ => IncidentCreateFailureCode.Unknown
         };
 }

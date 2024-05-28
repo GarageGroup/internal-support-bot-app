@@ -9,7 +9,11 @@ internal sealed partial class CrmIncidentApi(IHttpApi httpApi, TDataverseApi dat
 {
     private const string PictureSubject = "Picture from user";
 
-    private sealed record class AnnotationInput(PictureModel Picture, Guid CallerUserId, Guid IncidentId);
+    private const string DocumentSubject = "Document from user";
 
-    private sealed record class AnnotationSetInput(FlatArray<PictureModel> Pictures, Guid CallerUserId, IncidentCreateOut Incident);
+    private const string VideoSubject = "Video from user";
+
+    private sealed record class AnnotationInput(DocumentModel Document, Guid CallerUserId, Guid IncidentId);
+
+    private sealed record class AnnotationSetInput(FlatArray<DocumentModel> Documents, Guid CallerUserId, IncidentCreateOut Incident);
 }

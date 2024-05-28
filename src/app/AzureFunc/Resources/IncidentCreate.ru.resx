@@ -210,6 +210,9 @@
   <data name="AttachmentsFieldName" xml:space="preserve">
     <value>Вложения</value>
   </data>
+  <data name="IncidentCreationAnnotationFailureInvalidFileSizeTemplate" xml:space="preserve">
+    <value>Данные вложения слишком большого размера. Пожалуйста, перейдите по ссылке и добавьте их вручную: {0}</value>
+  </data>
   <data name="IncidentCreationAnnotationFailureTemplate" xml:space="preserve">
     <value>При создании некоторых вложений произошли ошибки. Пожалуйста, перейдите по ссылке и добавьте их вручную: {0}</value>
   </data>

@@ -43,5 +43,5 @@ public sealed record class IncidentCreateIn
 
     public long? SenderTelegramId { get; init; }
 
-    public FlatArray<PictureModel> Pictures { get; init; }
+    public FlatArray<DocumentModel> Documents { get; init; }
 }

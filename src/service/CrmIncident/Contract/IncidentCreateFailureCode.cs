@@ -8,5 +8,7 @@ public enum IncidentCreateFailureCode
 
     NotAllowed,
 
-    TooManyRequests
+    TooManyRequests,
+
+    InvalidFileSize
 }

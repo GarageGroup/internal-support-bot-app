@@ -14,6 +14,10 @@ internal sealed record class IncidentCreateFlowState
 
     public FlatArray<PictureState> Pictures { get; init; }
 
+    public FlatArray<string> DocumentIdSet { get; init; }
+
+    public FlatArray<DocumentState> Documents { get; init; }
+
     public SourceSenderState? SourceSender { get; init; }
 
     public IncidentCustomerState? Customer { get; init; }
@@ -38,5 +42,5 @@ internal sealed record class IncidentCreateFlowState
 
     public bool IsRepeated { get; init; }
 
-    public FlatArray<string> AnnotationFailureFileNames { get; init; }
+    public FlatArray<AnnotationFailureState> AnnotationFailureFileNames { get; init; }
 }

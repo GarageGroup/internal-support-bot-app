@@ -210,6 +210,9 @@
   <data name="AttachmentsFieldName" xml:space="preserve">
     <value>Attachments</value>
   </data>
+  <data name="IncidentCreationAnnotationFailureInvalidFileSizeTemplate" xml:space="preserve">
+    <value>The attachment data is too large. Please follow the link and add them manually: {0}</value>
+  </data>
   <data name="IncidentCreationAnnotationFailureTemplate" xml:space="preserve">
     <value>Errors occurred when creating some attachments. Please follow the link and add them manually: {0}</value>
   </data>

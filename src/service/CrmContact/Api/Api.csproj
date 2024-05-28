@@ -16,8 +16,8 @@
 
   <ItemGroup>
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.3.0" />
-    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Abstractions.Search" Version="3.10.0" />
-    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Filter" Version="0.3.0" />
+    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Abstractions.Search" Version="3.11.0" />
+    <PackageReference Include="GarageGroup.Infra.Dataverse.Api.Filter" Version="0.4.0" />
     <PackageReference Include="GarageGroup.Infra.Sql.Api.Abstractions.QueryEntity" Version="2.2.0" />
     <PackageReference Include="GarageGroup.Infra.Sql.Api.Abstractions.QueryEntitySet" Version="2.2.0" />
     <PackageReference Include="GarageGroup.Infra.Sql.Api.Core.DbRequest" Version="2.4.0" />

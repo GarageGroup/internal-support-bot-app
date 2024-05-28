@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using GarageGroup.Infra.Telegram.Bot;
@@ -35,7 +36,7 @@ partial class IncidentCreateFlowStep
                 callerUserId: flowState.BotUserId)
             {
                 SenderTelegramId = flowState.SourceSender?.UserId,
-                Pictures = flowState.Pictures.Map(MapPicture)
+                Documents = flowState.GetDocuments()
             })
         .PipeValue(
             crmIncidentApi.CreateAsync)
@@ -84,11 +85,41 @@ partial class IncidentCreateFlowStep
             TemporaryMessageId = message.MessageId
         };
 
-    private static PictureModel MapPicture(PictureState pictureState)
-        =>
-        new(fileName: pictureState.FileName, imageUrl: pictureState.ImageUrl);
+    private static FlatArray<DocumentModel> GetDocuments(this IncidentCreateFlowState state)
+    {
+        var result = new List<DocumentModel>();
 
-    private static string GetFileName(AnnotationCreateFailure failure)
+        if (state.Pictures.IsNotEmpty)
+        {
+            result.AddRange(state.Pictures.Map(GetPicture));
+        }
+
+        if (state.Documents.IsNotEmpty)
+        {
+            result.AddRange(state.Documents.Map(GetDocument));
+        }
+
+        return result;
+
+        static DocumentModel GetPicture(PictureState picture)
+            =>
+            new(fileName: picture.FileName, url: picture.ImageUrl)
+            {
+                Type = DocumentType.Photo
+            };
+
+        static DocumentModel GetDocument(DocumentState document)
+            =>
+            new(fileName: document.FileName, url: document.Url)
+            {
+                Type = document.Type
+            };
+    }
+
+    private static AnnotationFailureState GetFileName(AnnotationCreateFailure failure)
         =>
-        failure.FileName;
+        new(failure.FileName)
+        {
+            FailureCode = failure.FailureCode
+        };
 }

@@ -65,4 +65,6 @@ internal static class IncidentCreateResource
     public const string IncidentCreationSuccessTemplate = "IncidentCreationSuccessTemplate";
 
     public const string IncidentCreationAnnotationFailureTemplate = "IncidentCreationAnnotationFailureTemplate";
+
+    public const string IncidentCreationAnnotationFailureInvalidFileSizeTemplate = "IncidentCreationAnnotationFailureInvalidFileSizeTemplate";
 }

@@ -130,10 +130,10 @@ partial class CrmIncidentApiTest
             priorityCode: IncidentPriorityCode.High,
             callerUserId: new("de42801c-ae9b-4be1-bd39-a0a70324539f"))
         {
-            Pictures = 
+            Documents = 
             [
-                new PictureModel("first some file name", "first some image url"),
-                new PictureModel("second some file name", "second some image url")
+                new DocumentModel("first some file name", "first some image url"),
+                new DocumentModel("second some file name", "second some image url")
             ]
         };
 
@@ -179,9 +179,9 @@ partial class CrmIncidentApiTest
             priorityCode: IncidentPriorityCode.Low,
             callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
         {
-            Pictures =
+            Documents =
             [
-                new PictureModel("some file name", "some image url")
+                new DocumentModel("some file name", "some image url")
             ]
         };
 
@@ -256,9 +256,9 @@ partial class CrmIncidentApiTest
             priorityCode: IncidentPriorityCode.Low,
             callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
         {
-            Pictures =
+            Documents =
             [
-                new PictureModel("some file name", "some image url")
+                new DocumentModel("some file name", "some image url")
             ]
         };
 
@@ -272,6 +272,62 @@ partial class CrmIncidentApiTest
                 new("some file name", "Some failure message") 
                 {
                     SourceException = sourceException
+                }
+            ]
+        };
+
+        Assert.StrictEqual(expected, actual);
+    }
+
+    [Theory]
+    [InlineData(DataverseFailureCode.InvalidFileSize)]
+    public static async Task CreateAsync_DataverseAnnotationCreateResultInvalidFileSize_ExpectOutputFailure(
+        DataverseFailureCode sourceFailureCode)
+    {
+        var incidentCreateOut = new IncidentJsonCreateOut()
+        {
+            IncidentId = new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
+            Title = "Some Incident title"
+        };
+        var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(incidentCreateOut);
+
+        var sourceException = new Exception("Some error message");
+        var dataverseAnnotationCreateFailure = Failure.Create(sourceFailureCode, "Some failure message", sourceException);
+
+        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, dataverseAnnotationCreateFailure);
+        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
+
+        var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
+
+        var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
+
+        var input = new IncidentCreateIn(
+            ownerId: new("1203c0e2-3648-4596-80dd-127fdd2610b6"),
+            customerId: new("bd8b8e33-554e-e611-80dc-c4346bad0190"),
+            contactId: new("be761c38-5d95-47c2-b4aa-1056e61a1cb0"),
+            title: "Some title",
+            description: "Some description",
+            caseTypeCode: IncidentCaseTypeCode.Question,
+            priorityCode: IncidentPriorityCode.Low,
+            callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
+        {
+            Documents =
+            [
+                new DocumentModel("some file name", "some image url")
+            ]
+        };
+
+        var actual = await api.CreateAsync(input, default);
+        var expected = new IncidentCreateOut(
+            id: new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
+            title: "Some Incident title")
+        {
+            Failures =
+            [
+                new("some file name", "Some failure message")
+                {
+                    SourceException = sourceException,
+                    FailureCode = IncidentCreateFailureCode.InvalidFileSize,
                 }
             ]
         };
@@ -305,9 +361,9 @@ partial class CrmIncidentApiTest
             priorityCode: IncidentPriorityCode.Low,
             callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
         {
-            Pictures =
+            Documents =
             [
-                new PictureModel("some file name", "some image url")
+                new DocumentModel("some file name", "some image url")
             ]
         };
         var actual = await api.CreateAsync(input, default);

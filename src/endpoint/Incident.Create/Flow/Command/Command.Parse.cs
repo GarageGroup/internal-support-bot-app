@@ -20,17 +20,33 @@ partial class IncidentCreateCommand
 
         return new IncidentCreateCommandIn(description)
         {
-            PhotoIdSet = update.Message.Photo.Map(GetFileId),
+            PhotoIdSet = update.Message.Photo.Map(GetPhotoFileId),
             SourceSender = update.Message.ForwardOrigin switch
             {
                 BotMessageOriginUser originUser => originUser.SenderUser,
                 _ => null
-            }
+            },
+            DocumentIdSet = GetDocumentFileId(update.Message)
         };
 
-        static string GetFileId(BotPhotoSize photo)
+        static string GetPhotoFileId(BotPhotoSize photo)
             =>
             photo.FileId;
+
+        static FlatArray<string> GetDocumentFileId(BotMessage? message)
+        {
+            if (message?.Document is not null)
+            {
+                return [message.Document.FileId];
+            }
+
+            if (message?.Video is not null)
+            {
+                return [message.Video.FileId];
+            }
+
+            return default;
+        }
     }
 
     private static bool IsOnlyCommandName(BotMessage message)
