@@ -67,7 +67,7 @@ partial class IncidentCreateFlowStep
 
         static string? GetFileName(AnnotationFailureState failure)
         {
-            if (failure.FailureCode is not AnnotationCreateFailureCode.InvalidFileSize)
+            if (failure.FailureCode is AnnotationCreateFailureCode.InvalidFileSize)
             {
                 return null;
             }
@@ -77,7 +77,7 @@ partial class IncidentCreateFlowStep
 
         static string? GetInvalidSizeFileName(AnnotationFailureState failure)
         {
-            if (failure.FailureCode is AnnotationCreateFailureCode.InvalidFileSize)
+            if (failure.FailureCode is not AnnotationCreateFailureCode.InvalidFileSize)
             {
                 return null;
             }

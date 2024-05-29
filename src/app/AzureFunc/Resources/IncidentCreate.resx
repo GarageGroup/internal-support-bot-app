@@ -216,4 +216,10 @@
   <data name="IncidentCreationAnnotationFailureTemplate" xml:space="preserve">
     <value>Errors occurred when creating some attachments. Please follow the link and add them manually: {0}</value>
   </data>
+  <data name="GptErrorMessage" xml:space="preserve">
+    <value>An unexpected error occurred during generation. Fill in the title yourself</value>
+  </data>
+  <data name="GptTempMessage" xml:space="preserve">
+    <value>The title is generated... It may take about a minute.</value>
+  </data>
 </root>

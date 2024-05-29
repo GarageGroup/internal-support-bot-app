@@ -216,4 +216,10 @@
   <data name="IncidentCreationAnnotationFailureTemplate" xml:space="preserve">
     <value>При создании некоторых вложений произошли ошибки. Пожалуйста, перейдите по ссылке и добавьте их вручную: {0}</value>
   </data>
+  <data name="GptErrorMessage" xml:space="preserve">
+    <value>Произошла непредвиденная ошибка при генерации. Заполните заголовок самостоятельно</value>
+  </data>
+  <data name="GptTempMessage" xml:space="preserve">
+    <value>Генерируется заголовок... Это может занять около минуты</value>
+  </data>
 </root>

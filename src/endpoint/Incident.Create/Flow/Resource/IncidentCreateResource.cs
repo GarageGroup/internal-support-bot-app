@@ -67,4 +67,8 @@ internal static class IncidentCreateResource
     public const string IncidentCreationAnnotationFailureTemplate = "IncidentCreationAnnotationFailureTemplate";
 
     public const string IncidentCreationAnnotationFailureInvalidFileSizeTemplate = "IncidentCreationAnnotationFailureInvalidFileSizeTemplate";
+
+    public const string GptTempMessage = "GptTempMessage";
+
+    public const string GptErrorMessage = "GptErrorMessage";
 }

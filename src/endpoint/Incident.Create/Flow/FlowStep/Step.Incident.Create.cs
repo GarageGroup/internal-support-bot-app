@@ -13,12 +13,24 @@ partial class IncidentCreateFlowStep
     internal static ChatFlow<IncidentCreateFlowState> CreateIncident(
         this ChatFlow<IncidentCreateFlowState> chatFlow, ICrmIncidentApi crmIncidentApi)
         =>
-        chatFlow.SendChatAction(
-            BotChatAction.Typing, GetTemporaryMessage, SaveTemporaryMessageId)
-        .ForwardValue(
+        chatFlow.Next(
             crmIncidentApi.CreateIncidentOrThrowAsync);
 
-    private static ValueTask<ChatFlowJump<IncidentCreateFlowState>> CreateIncidentOrThrowAsync(
+    private static async Task<IncidentCreateFlowState> CreateIncidentOrThrowAsync(
+        this ICrmIncidentApi crmIncidentApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
+    {
+        var incidentTask = crmIncidentApi.InnerCreateIncidentOrThrowAsync(context, cancellationToken);
+        var messageTask = context.SendTemporaryMessageAsync(context.Localizer[IncidentCreationTemporaryText], cancellationToken);
+
+        await Task.WhenAll(incidentTask, messageTask).ConfigureAwait(false);
+
+        return incidentTask.Result with
+        { 
+            TemporaryMessageId = messageTask.Result.MessageId
+        };
+    }
+
+    private static Task<IncidentCreateFlowState> InnerCreateIncidentOrThrowAsync(
         this ICrmIncidentApi crmIncidentApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
@@ -48,8 +60,6 @@ partial class IncidentCreateFlowStep
                 IncidentId = incident.Id,
                 AnnotationFailureFileNames = incident.Failures.Map(GetFileName)
             })
-        .MapSuccess(
-            ChatFlowJump.Next)
         .SuccessOrThrow(
             static failure => failure.ToException());
 
@@ -67,22 +77,6 @@ partial class IncidentCreateFlowStep
                 "Annotation error. FileName: {fileName}. Message: {failureMessage}", failure.FileName, failure.FailureMessage);
         }
     }
-
-    private static ChatMessageSendRequest? GetTemporaryMessage(IChatFlowContextBase context)
-        =>
-        new(context.Localizer[IncidentCreationTemporaryText])
-        {
-            DisableNotification = true,
-            ReplyMarkup = new BotReplyKeyboardRemove()
-        };
-
-    private static IncidentCreateFlowState SaveTemporaryMessageId(
-        IChatFlowContext<IncidentCreateFlowState> context, BotMessage message)
-        =>
-        context.FlowState with
-        {
-            TemporaryMessageId = message.MessageId
-        };
 
     private static DocumentModel MapDocument(DocumentState document)
         =>

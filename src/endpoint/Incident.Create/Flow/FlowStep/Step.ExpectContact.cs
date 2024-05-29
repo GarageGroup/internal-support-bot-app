@@ -97,15 +97,7 @@ partial class IncidentCreateFlowStep
             return state;
         }
 
-        if (message is null)
-        {
-            return state with
-            {
-                MessageStatus = MessageStatus.Collected
-            };
-        }
-
-        if (IsCollected(state, message))
+        if (message is null || IsCollected(state, message))
         {
             return state with
             {

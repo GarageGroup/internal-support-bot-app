@@ -1,10 +1,12 @@
-﻿using System;
+﻿using GarageGroup.Infra.Telegram.Bot;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using GarageGroup.Infra.Telegram.Bot;
-using Microsoft.Extensions.Logging;
 
 namespace GarageGroup.Internal.Support;
+
+using static IncidentCreateResource;
 
 partial class IncidentCreateFlowStep
 {
@@ -28,9 +30,11 @@ partial class IncidentCreateFlowStep
         }
 
         var gptTask = gptApi.InnerCompleteIncidentAsync(context, cancellationToken);
-        var typingTask = context.Api.SendChatActionAsync(BotChatAction.Typing, cancellationToken);
+        var messageTask = context.SendTemporaryMessageAsync(context.Localizer[GptTempMessage], cancellationToken);
 
-        await Task.WhenAll(gptTask, typingTask).ConfigureAwait(false);
+        await Task.WhenAll(gptTask, messageTask).ConfigureAwait(false);
+
+        await context.Api.DeleteMessageAsync(messageTask.Result.MessageId, cancellationToken).ConfigureAwait(false);
 
         return gptTask.Result;
     }
@@ -46,6 +50,9 @@ partial class IncidentCreateFlowStep
                 imageUrls: flowState.PhotoUrls))
         .PipeValue(
             gptApi.CompleteIncidentAsync)
+        .OnFailure(
+            (_, cancellationToken) => context.Api.SendHtmlModeTextAndRemoveReplyKeyboardAsync(
+                context.Localizer[GptErrorMessage], cancellationToken))
         .Fold(
             context.ApplyGptValue,
             context.LogGptFailure);
