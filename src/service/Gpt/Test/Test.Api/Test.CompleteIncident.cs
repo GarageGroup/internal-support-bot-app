@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using GarageGroup.Infra;
 using Moq;
-using PrimeFuncPack.UnitTest;
 using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;

@@ -15,4 +15,6 @@ internal sealed record class IncidentWebAppData
     public OwnerWebAppData? Owner { get; init; }
 
     public string? Description { get; init; }
+
+    public string[]? FileNames { get; init; }
 }

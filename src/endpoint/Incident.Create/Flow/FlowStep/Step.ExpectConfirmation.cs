@@ -118,11 +118,16 @@ partial class IncidentCreateFlowStep
             PriorityCode = state.Priority?.Code ?? default,
             Owner = state.Owner is null ? null : new(state.Owner.Id, state.Owner.FullName),
             Description = state.Description,
+            FileNames = state.Documents.Map(GetFileName)
         };
 
         var data = timesheet.CompressDataJson();
 
-        var webAppUrl = context.WebApp.BuildUrl("updateSupportForm", [new("data", HttpUtility.UrlEncode(data))]);
+        var webAppUrl = context.WebApp.BuildUrl("updateSupportForm", 
+            [
+                new("data", HttpUtility.UrlEncode(data)),
+                new("language", context.User.Culture.TwoLetterISOLanguageName)
+            ]);
         context.Logger.LogInformation("WebAppUrl: {webAppUrl}", webAppUrl);
 
         return new(
@@ -177,11 +182,11 @@ partial class IncidentCreateFlowStep
     }
 
     private static string GetAnnotationFileNames(this IChatFlowContext<IncidentCreateFlowState> context)
-    {
-        return string.Join(", ", context.FlowState.Documents.AsEnumerable().Select(GetFileName));
+        =>
+        string.Join(", ", context.FlowState.Documents.AsEnumerable().Select(GetFileName));
+    
 
-        static string GetFileName(DocumentState document)
+    static string GetFileName(DocumentState document)
             =>
             document.FileName;
-    }
 }

@@ -1,5 +1,4 @@
-﻿using GarageGroup.Infra;
-using PrimeFuncPack.UnitTest;
+﻿using PrimeFuncPack.UnitTest;
 using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
