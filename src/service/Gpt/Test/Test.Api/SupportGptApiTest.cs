@@ -57,4 +57,14 @@ public static partial class SupportGptApiTest
 
         return mock;
     }
+
+    private static Mock<IHttpApi> BuildMockHttpApiWithException(
+        in Exception exception)
+    {
+        var mock = new Mock<IHttpApi>();
+
+        _ = mock.Setup(static a => a.SendAsync(It.IsAny<HttpSendIn>(), It.IsAny<CancellationToken>())).Throws(exception);
+
+        return mock;
+    }
 }

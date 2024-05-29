@@ -57,6 +57,22 @@ partial class SupportGptApiTest
         Assert.StrictEqual(failureExpected, actual);
     }
 
+    [Fact]
+    public static async Task CompleteIncidentAsync_HttpApiTitleIsTaskCanceledException_ExpectFailure()
+    {
+        var exception = new TaskCanceledException("Some exception message");
+        var mockHttpApi = BuildMockHttpApiWithException(exception);
+
+        var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
+
+        var cancellationToken = new CancellationToken(canceled: false);
+        var actual = await api.CompleteIncidentAsync(SomeInput, cancellationToken);
+
+        var expected = exception.ToFailure(IncidentCompleteFailureCode.ExceededTimeout, "Operation is cancelled");
+
+        Assert.StrictEqual(expected, actual);
+    }
+
     [Theory]
     [MemberData(nameof(SupportGptApiTestSource.InputCaseTypeTestData), MemberType = typeof(SupportGptApiTestSource))]
     public static async Task CompleteIncidentAsync_HttpApiTitleIsSuccess_ExpectCaseTypeHttpApiSendAsyncOnce(

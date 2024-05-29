@@ -34,14 +34,31 @@ partial class SupportGptApi
                 Body = HttpBody.SerializeAsJson(@in)
             })
         .PipeValue(
-            gptHttp.SendAsync)
+            SendHttpApiAsync)
         .Forward(
-            MapTitleSuccessOrFailure,
-            static failure => failure.ToStandardFailure().MapFailureCode(ToIncidentCompleteFailureCode))
+            MapTitleSuccessOrFailure)
         .MapSuccess(
             @out => (input, @out))
         .ForwardValue(
             GetCaseTypeAsync);
+
+    private async ValueTask<Result<HttpSendOut, Failure<IncidentCompleteFailureCode>>> SendHttpApiAsync(
+        HttpSendIn request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await gptHttp.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            return result.MapFailure(MapFailure);
+        }
+        catch (TaskCanceledException ex)
+        {
+            return ex.ToFailure(IncidentCompleteFailureCode.ExceededTimeout, "Operation is cancelled");
+        }
+
+        static Failure<IncidentCompleteFailureCode> MapFailure(HttpSendFailure failure)
+            =>
+            failure.ToStandardFailure().MapFailureCode(ToIncidentCompleteFailureCode);
+    }
 
     private ValueTask<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>> GetCaseTypeAsync(
         (IncidentCompleteIn Input, IncidentCompleteOut Output) request, CancellationToken cancellationToken)
@@ -58,10 +75,9 @@ partial class SupportGptApi
                 Body = HttpBody.SerializeAsJson(@in)
             })
         .PipeValue(
-            gptHttp.SendAsync)
+            SendHttpApiAsync)
         .Forward(
-            @out => MapCaseTypeSuccessOrFailure(@out, request.Output),
-            static failure => failure.ToStandardFailure().MapFailureCode(ToIncidentCompleteFailureCode));
+            @out => MapCaseTypeSuccessOrFailure(@out, request.Output));
 
     private ChatGptJsonIn MapCaseTypeInput(IncidentCompleteIn input)
     {
