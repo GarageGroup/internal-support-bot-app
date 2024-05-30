@@ -6,10 +6,9 @@ namespace GarageGroup.Internal.Support.Json;
 internal sealed record class ChatImageUrlJsonIn
 {
     public ChatImageUrlJsonIn(string? url)
-    {
+        =>
         ImageUrl = url.OrEmpty();
-    }
 
     [JsonPropertyName("url")]
-    public string? ImageUrl { get; init; }
+    public string? ImageUrl { get; }
 }
