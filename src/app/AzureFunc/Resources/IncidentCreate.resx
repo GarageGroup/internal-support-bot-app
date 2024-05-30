@@ -220,6 +220,6 @@
     <value>An unexpected error occurred during generation. Fill in the title yourself</value>
   </data>
   <data name="GptTempMessage" xml:space="preserve">
-    <value>The title is generated... It may take some time.</value>
+    <value>The title is generated... It may take some time</value>
   </data>
 </root>
