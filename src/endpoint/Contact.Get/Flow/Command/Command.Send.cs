@@ -21,6 +21,7 @@ partial class ContactGetCommand
             })
         .FindContactBySenderIdOrSkip(
             crmContactApi)
+        .ExpectContactConfirmationOrSkip()
         .ExpectCustomerOrSkip(
             crmCustomerApi)
         .ExpectContactOrSkip(

@@ -1,4 +1,6 @@
-﻿namespace GarageGroup.Internal.Support;
+﻿using System;
+
+namespace GarageGroup.Internal.Support;
 
 internal sealed record class IncidentWebAppData
 {
@@ -15,4 +17,6 @@ internal sealed record class IncidentWebAppData
     public OwnerWebAppData? Owner { get; init; }
 
     public string? Description { get; init; }
+
+    public FlatArray<string> FileNames { get; init; }
 }

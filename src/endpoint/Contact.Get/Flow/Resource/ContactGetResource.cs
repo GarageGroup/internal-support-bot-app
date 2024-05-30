@@ -21,4 +21,10 @@ internal static class ContactGetResource
     public const string CustomerFieldName = "CustomerFieldName";
 
     public const string ContactFieldName = "ContactFieldName";
+
+    public const string ConfirmationHeaderText = "ConfirmationHeaderText";
+
+    public const string ConfirmButton = "ConfirmButton";
+
+    public const string CancelButton = "CancelButton";
 }

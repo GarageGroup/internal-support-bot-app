@@ -88,4 +88,13 @@
   <data name="ContactFieldName" xml:space="preserve">
     <value>Contact</value>
   </data>
+  <data name="ConfirmationHeaderText" xml:space="preserve">
+    <value>Contact is found</value>
+  </data>
+  <data name="ConfirmButton" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="CancelButton" xml:space="preserve">
+    <value>Reject</value>
+  </data>
 </root>

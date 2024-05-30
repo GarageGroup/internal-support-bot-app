@@ -24,6 +24,8 @@ internal static class IncidentCreateResource
 
     public const string ChooseCaseTypeText = "ChooseCaseTypeText";
 
+    public const string ChoosePriorityText = "ChoosePriorityText";
+
     public const string NotAllowedText = "NotAllowedText";
 
     public const string NotFoundOwnersText = "NotFoundOwnersText";
@@ -48,6 +50,8 @@ internal static class IncidentCreateResource
 
     public const string DescriptionFieldName = "DescriptionFieldName";
 
+    public const string AttachmentsFieldName = "AttachmentsFieldName";
+
     public const string EditButton = "EditButton";
 
     public const string ConfirmButton = "ConfirmButton";
@@ -59,4 +63,12 @@ internal static class IncidentCreateResource
     public const string IncidentCreationTemporaryText = "IncidentCreationTemporaryText";
 
     public const string IncidentCreationSuccessTemplate = "IncidentCreationSuccessTemplate";
+
+    public const string IncidentCreationAnnotationFailureTemplate = "IncidentCreationAnnotationFailureTemplate";
+
+    public const string IncidentCreationAnnotationFailureInvalidFileSizeTemplate = "IncidentCreationAnnotationFailureInvalidFileSizeTemplate";
+
+    public const string GptTempMessage = "GptTempMessage";
+
+    public const string GptErrorMessage = "GptErrorMessage";
 }

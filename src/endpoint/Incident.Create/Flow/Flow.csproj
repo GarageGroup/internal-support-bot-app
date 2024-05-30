@@ -20,14 +20,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.3.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Extensions" Version="0.1.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Card" Version="0.1.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Choice" Version="0.1.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Value" Version="0.1.0" />
+    <PackageReference Include="GarageGroup.Core.AsyncPipeline.Extensions" Version="0.2.2" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Extensions" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Card" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Choice" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Value" Version="0.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.1.0" />
-    <PackageReference Include="PrimeFuncPack.Primitives.Pipeline" Version="2.0.3" />
   </ItemGroup>
 
 </Project>

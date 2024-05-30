@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using GarageGroup.Infra.Telegram.Bot;
 
 namespace GarageGroup.Internal.Support;
@@ -99,6 +100,10 @@ partial class ContactGetFlowStep
             id: item.Id.ToString(),
             title: item.Title,
             value: new(item.Id, item.Title));
+
+    private static string BuildCustomerResultMessage(this IChatFlowContextBase context, string customerTitle)
+        =>
+        string.Format("{0}: <b>{1}</b>", context.Localizer[CustomerFieldName], HttpUtility.HtmlEncode(customerTitle));
 
     private static ChatRepeatState MapFailure(this IChatFlowContextBase context, Failure<CustomerSetGetFailureCode> failure)
         =>

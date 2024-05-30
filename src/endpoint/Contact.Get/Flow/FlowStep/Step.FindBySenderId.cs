@@ -33,16 +33,11 @@ partial class ContactGetFlowStep
             return context.FlowState;
         }
 
-        var customerMessage = context.BuildCustomerResultMessage(contact.CustomerName);
-        var contactMessage = context.BuildContactResultMessage(contact.ContactName);
-
-        var resultMessage = string.Format("{0}\n\r{1}", customerMessage, contactMessage);
-        _ = await context.Api.SendHtmlModeTextAndRemoveReplyKeyboardAsync(resultMessage, cancellationToken).ConfigureAwait(false);
-
         return context.FlowState with
         {
             Customer = new(contact.CustomerId, contact.CustomerName),
-            Contact = new(contact.ContactId, contact.ContactName)
+            Contact = new(contact.ContactId, contact.ContactName),
+            ShowConfirmation = true
         };
     }
 
@@ -56,8 +51,7 @@ partial class ContactGetFlowStep
         .PipeValue(
             crmContactApi.GetAsync)
         .OnFailure(
-            failure => context.Logger.LogError(
-                failure.SourceException, "FindContactBySenderId failure: {message}", failure.FailureMessage))
+            context.LogFailure)
         .Fold<ContactGetOut?>(
             static success => success,
             _ => null);

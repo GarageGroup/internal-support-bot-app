@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace GarageGroup.Internal.Support;
 
-internal sealed record class ChatMessageJson
+internal sealed record class ChatMessageJsonOut
 {
     [JsonPropertyName("role")]
     public string? Role { get; init; }

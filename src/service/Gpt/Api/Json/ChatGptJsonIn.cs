@@ -6,7 +6,7 @@ namespace GarageGroup.Internal.Support;
 internal sealed record class ChatGptJsonIn
 {
     [JsonPropertyName("messages")]
-    public FlatArray<ChatMessageJson> Messages { get; init; }
+    public FlatArray<ChatMessageJsonIn> Messages { get; init; }
 
     [JsonPropertyName("max_tokens")]
     public int? MaxTokens { get; init; }

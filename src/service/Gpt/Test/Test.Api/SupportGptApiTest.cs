@@ -18,12 +18,13 @@ public static partial class SupportGptApiTest
         {
             MaxTokens = 150,
             Temperature = 0.7m,
+            IsImageProcessing = true,
             CaseTypeTemplate = new("someCaseTypeTemplate-role", "SomeCaseTypeTemplate message")
         };
 
     private static readonly IncidentCompleteIn SomeInput
         =
-        new("Some customer message");
+        new("Some customer message", new("Some image url"));
 
     private static readonly HttpSendOut SomeSuccessOutput
         =
@@ -54,6 +55,16 @@ public static partial class SupportGptApiTest
 
         var mock = new Mock<IHttpApi>();
         _ = mock.Setup(static a => a.SendAsync(It.IsAny<HttpSendIn>(), It.IsAny<CancellationToken>())).ReturnsAsync(queue.Dequeue);
+
+        return mock;
+    }
+
+    private static Mock<IHttpApi> BuildMockHttpApiWithException(
+        in Exception exception)
+    {
+        var mock = new Mock<IHttpApi>();
+
+        _ = mock.Setup(static a => a.SendAsync(It.IsAny<HttpSendIn>(), It.IsAny<CancellationToken>())).Throws(exception);
 
         return mock;
     }

@@ -42,4 +42,6 @@ public sealed record class IncidentCreateIn
     public Guid CallerUserId { get; }
 
     public long? SenderTelegramId { get; init; }
+
+    public FlatArray<DocumentModel> Documents { get; init; }
 }

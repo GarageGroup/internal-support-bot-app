@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Web;
@@ -37,11 +39,15 @@ partial class IncidentCreateFlowStep
             Keyboard = new(
                 confirmButtonText: context.Localizer[ConfirmButton],
                 cancelButtonText: context.Localizer[CancelButton],
-                cancelText: context.Localizer[CancelText])
+                forwardCancellation: ForwardCancellation)
             {
                 WebAppButton = context.BuildWebAppButton()
             }
         };
+
+        Result<IncidentCreateFlowState, ChatBreakState> ForwardCancellation()
+            =>
+            ChatBreakState.From(context.Localizer[CancelText]);
     }
 
     private static EntityCardOption? CreateIncidentCardOption(IChatFlowContext<IncidentCreateFlowState> context)
@@ -56,10 +62,8 @@ partial class IncidentCreateFlowStep
 
     private static EntityCardOption InnerCreateIncidentCardOption(
         this IChatFlowContext<IncidentCreateFlowState> context, string headerText)
-        =>
-        new(headerText)
-        {
-            FieldValues =
+    {
+        FlatArray<KeyValuePair<string, string?>> fieldValues =
             [
                 new(context.Localizer[TitleFieldName], context.FlowState.Title),
                 new(context.Localizer[CustomerFieldName], context.FlowState.Customer?.Title),
@@ -68,8 +72,20 @@ partial class IncidentCreateFlowStep
                 new(context.Localizer[PriorityFieldName], context.FlowState.Priority?.Title),
                 new(context.Localizer[OwnerFieldName], context.FlowState.Owner?.FullName),
                 new(context.Localizer[DescriptionFieldName], context.FlowState.Description)
-            ]
+            ];
+
+        var annotationFileNames = context.GetAnnotationFileNames();
+        if (string.IsNullOrEmpty(annotationFileNames) is false)
+        {
+            fieldValues = fieldValues.Concat(
+                new KeyValuePair<string, string?>(context.Localizer[AttachmentsFieldName], annotationFileNames));
+        }
+
+        return new(headerText)
+        {
+            FieldValues = fieldValues
         };
+    }  
 
     private static ChatFlowJump<IncidentCreateFlowState> NextOrRestart(IChatFlowContext<IncidentCreateFlowState> context)
     {
@@ -102,11 +118,16 @@ partial class IncidentCreateFlowStep
             PriorityCode = state.Priority?.Code ?? default,
             Owner = state.Owner is null ? null : new(state.Owner.Id, state.Owner.FullName),
             Description = state.Description,
+            FileNames = state.Documents.Map(GetFileName)
         };
 
         var data = timesheet.CompressDataJson();
 
-        var webAppUrl = context.WebApp.BuildUrl("updateSupportForm", [new("data", HttpUtility.UrlEncode(data))]);
+        var webAppUrl = context.WebApp.BuildUrl("updateSupportForm", 
+            [
+                new("data", HttpUtility.UrlEncode(data)),
+                new("language", context.User.Culture.TwoLetterISOLanguageName)
+            ]);
         context.Logger.LogInformation("WebAppUrl: {webAppUrl}", webAppUrl);
 
         return new(
@@ -159,4 +180,13 @@ partial class IncidentCreateFlowStep
 
         return Convert.ToBase64String(memoryStream.ToArray());
     }
+
+    private static string GetAnnotationFileNames(this IChatFlowContext<IncidentCreateFlowState> context)
+        =>
+        string.Join(", ", context.FlowState.Documents.AsEnumerable().Select(GetFileName));
+    
+
+    static string GetFileName(DocumentState document)
+            =>
+            document.FileName;
 }

@@ -13,4 +13,6 @@ internal sealed record class ContactGetFlowState
     public CustomerState? Customer { get; init; }
 
     public ContactState? Contact { get; init; }
+
+    public bool ShowConfirmation { get; init; }
 }

@@ -19,8 +19,11 @@ partial class Application
 
     private static Dependency<IChatCommand<IncidentCreateCommandIn, Unit>> UseIncidentCreateCommand()
         =>
-        Pipeline.Pipe(
-            UseDataverseApi().UseCrmIncidentApi())
+        PrimaryHandler.UseStandardSocketsHttpHandler()
+        .UseLogging("CrmIncidentFileApi")
+        .UseHttpApi()
+        .With(UseDataverseApi())
+        .UseCrmIncidentApi()
         .With(
             UseDataverseApi().With(UseSqlApi()).UseCrmOwnerApi())
         .With(
@@ -72,6 +75,7 @@ partial class Application
         {
             MaxTokens = section.GetValue<int?>("MaxTokens"),
             Temperature = section.GetValue<decimal?>("Temperature"),
+            IsImageProcessing = section.GetValue<bool>("IsImageProcessing"),
             CaseTypeTemplate = new(
                 role: "user",
                 contentTemplate: section["UserIncidentCaseTypeTemplate"].OrEmpty())

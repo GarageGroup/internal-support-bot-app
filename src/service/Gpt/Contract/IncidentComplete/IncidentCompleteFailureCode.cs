@@ -4,5 +4,7 @@ public enum IncidentCompleteFailureCode
 {
     Unknown,
 
-    TooManyRequests
+    TooManyRequests,
+
+    ExceededTimeout
 }

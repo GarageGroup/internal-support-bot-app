@@ -1,10 +1,12 @@
-﻿using System;
+﻿using GarageGroup.Infra.Telegram.Bot;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using GarageGroup.Infra.Telegram.Bot;
-using Microsoft.Extensions.Logging;
 
 namespace GarageGroup.Internal.Support;
+
+using static IncidentCreateResource;
 
 partial class IncidentCreateFlowStep
 {
@@ -22,14 +24,17 @@ partial class IncidentCreateFlowStep
             return context.FlowState;
         }
 
-        // to do: remove before release
-        context.Logger.LogInformation("SenderId: {senderId}", context.FlowState.SourceSender?.UserId);
-        context.Logger.LogInformation("PhotoIds: {photoIds}", string.Join(',', context.FlowState.PhotoIdSet.AsEnumerable()));
+        if (string.IsNullOrWhiteSpace(context.FlowState.Description) && context.FlowState.PhotoUrls.IsEmpty)
+        {
+            return context.FlowState;
+        }
 
         var gptTask = gptApi.InnerCompleteIncidentAsync(context, cancellationToken);
-        var typingTask = context.Api.SendChatActionAsync(BotChatAction.Typing, cancellationToken);
+        var messageTask = context.SendTemporaryMessageAsync(context.Localizer[GptTempMessage], cancellationToken);
 
-        await Task.WhenAll(gptTask, typingTask).ConfigureAwait(false);
+        await Task.WhenAll(gptTask, messageTask).ConfigureAwait(false);
+
+        await context.Api.DeleteMessageAsync(messageTask.Result.MessageId, cancellationToken).ConfigureAwait(false);
 
         return gptTask.Result;
     }
@@ -41,9 +46,13 @@ partial class IncidentCreateFlowStep
             context.FlowState, cancellationToken)
         .Pipe(
             static flowState => new IncidentCompleteIn(
-                message: flowState.Description.OrEmpty()))
+                message: flowState.Description,
+                imageUrls: flowState.PhotoUrls))
         .PipeValue(
             gptApi.CompleteIncidentAsync)
+        .OnFailure(
+            (_, cancellationToken) => context.Api.SendHtmlModeTextAndRemoveReplyKeyboardAsync(
+                context.Localizer[GptErrorMessage], cancellationToken))
         .Fold(
             context.ApplyGptValue,
             context.LogGptFailure);

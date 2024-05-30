@@ -16,10 +16,11 @@ partial class IncidentCreateCommand
                 BotUserId = request.Context.User.Identity?.SystemId ?? default,
                 BotUserName = request.Context.User.Identity?.Name,
                 Description = @in.Description,
-                PhotoIdSet = @in.PhotoIdSet,
+                DocumentIds = @in.DocumentIds,
                 SourceSender = @in.SourceSender is null ? null : new(@in.SourceSender.Id)
             })
         .ExpectContact()
+        .GetDocumentUrls()
         .CallGpt(
             gptApi)
         .ExpectTitleOrSkip()

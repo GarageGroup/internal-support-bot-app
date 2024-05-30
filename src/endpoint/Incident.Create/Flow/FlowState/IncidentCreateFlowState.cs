@@ -10,7 +10,11 @@ internal sealed record class IncidentCreateFlowState
 
     public required string? Description { get; init; }
 
-    public FlatArray<string> PhotoIdSet { get; init; }
+    public FlatArray<string> DocumentIds { get; init; }
+
+    public FlatArray<DocumentState> Documents { get; init; }
+
+    public FlatArray<string> PhotoUrls { get; init; }
 
     public SourceSenderState? SourceSender { get; init; }
 
@@ -35,4 +39,6 @@ internal sealed record class IncidentCreateFlowState
     public bool WithoutConfirmation { get; init; }
 
     public bool IsRepeated { get; init; }
+
+    public FlatArray<AnnotationFailureState> AnnotationFailureFileNames { get; init; }
 }

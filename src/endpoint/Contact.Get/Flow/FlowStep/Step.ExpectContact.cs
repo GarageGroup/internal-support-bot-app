@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using GarageGroup.Infra.Telegram.Bot;
-using Microsoft.Extensions.Logging;
 
 namespace GarageGroup.Internal.Support;
 
@@ -109,6 +109,10 @@ partial class ContactGetFlowStep
             id: SkipButtonId,
             title: context.Localizer[SkipButtonText],
             value: new(default, default));
+
+    private static string BuildContactResultMessage(this IChatFlowContextBase context, string contactName)
+        =>
+        string.Format("{0}: <b>{1}</b>", context.Localizer[ContactFieldName], HttpUtility.HtmlEncode(contactName));
 
     private static ChatRepeatState MapFailure(this IChatFlowContextBase context, Failure<ContactSetGetFailureCode> failure)
         =>

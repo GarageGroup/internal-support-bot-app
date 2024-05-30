@@ -14,4 +14,6 @@ public sealed record class IncidentCreateOut
     public Guid Id { get; }
 
     public string Title { get; }
+
+    public FlatArray<AnnotationCreateFailure> Failures { get; init; }
 }

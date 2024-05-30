@@ -1,4 +1,6 @@
 ﻿using System.Text.Json;
+using System.Threading.Tasks;
+using System.Threading;
 using System.Web;
 using GarageGroup.Infra.Telegram.Bot;
 
@@ -19,6 +21,28 @@ internal static partial class IncidentCreateFlowStep
     private static readonly char[] WordSeparators
         =
         [ ' ', ',', '.', '!', '?' ];
+
+    private static readonly PipelineParallelOption ParallelOption
+        =
+        new()
+        {
+            DegreeOfParallelism = 4
+        };
+
+    private static async Task<BotMessage> SendTemporaryMessageAsync(
+        this IChatFlowContextBase context, string text, CancellationToken cancellationToken)
+    {
+        var request = new ChatMessageSendRequest(text)
+        {
+            DisableNotification = true,
+            ReplyMarkup = new BotReplyKeyboardRemove()
+        };
+
+        var message = await context.Api.SendMessageAsync(request, cancellationToken).ConfigureAwait(false);
+        await context.Api.SendChatActionAsync(BotChatAction.Typing, cancellationToken).ConfigureAwait(false);
+
+        return message;
+    }
 
     private static string GetDisplayName(this IChatFlowContextBase context, IncidentCaseTypeCode caseTypeCode)
         =>

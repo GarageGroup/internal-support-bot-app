@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -31,7 +31,7 @@
     <PackageReference Include="GarageGroup.Infra.Azure.DurableTask" Version="0.8.0" />
     <PackageReference Include="GarageGroup.Infra.Azure.Endpoint" Version="0.14.0" />
     <PackageReference Include="GarageGroup.Infra.Azure.Hosting" Version="0.11.0" />
-    <PackageReference Include="GarageGroup.Infra.Dataverse.Api" Version="3.16.1" />
+    <PackageReference Include="GarageGroup.Infra.Dataverse.Api" Version="3.17.0" />
     <PackageReference Include="GarageGroup.Infra.HealthCheck.Handler" Version="0.3.0" />
     <PackageReference Include="GarageGroup.Infra.Http.Api" Version="0.2.0" />
     <PackageReference Include="GarageGroup.Infra.Http.Header" Version="0.0.1" />
@@ -40,8 +40,8 @@
     <PackageReference Include="GarageGroup.Infra.Sql.Api.Provider.Dataverse" Version="0.1.0" />
     <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Api" Version="0.1.0" />
     <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Api.Dataverse" Version="0.0.2" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Azure" Version="0.1.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Engine" Version="0.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Azure" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Engine" Version="0.2.0" />
     <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Storage.Azure.Blob" Version="0.0.1" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.17.2" OutputItemType="Analyzer" />

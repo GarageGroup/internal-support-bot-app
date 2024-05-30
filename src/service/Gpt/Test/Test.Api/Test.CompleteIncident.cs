@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using GarageGroup.Infra;
 using Moq;
-using PrimeFuncPack.UnitTest;
 using Xunit;
 
 namespace GarageGroup.Internal.Support.Service.Gpt.Test;
@@ -11,17 +10,14 @@ namespace GarageGroup.Internal.Support.Service.Gpt.Test;
 partial class SupportGptApiTest
 {
     [Theory]
-    [InlineData(null)]
-    [InlineData(TestData.EmptyString)]
-    [InlineData(TestData.MixedWhiteSpacesString)]
+    [MemberData(nameof(SupportGptApiTestSource.InputInvalidTestData), MemberType = typeof(SupportGptApiTestSource))]
     public static async Task CompleteIncidentAsync_InputMessageIsNullOrWhiteSpace_ExpectDefaultIncidentCompletion(
-        string? inputMessage)
+        SupportGptApiOption option, IncidentCompleteIn input)
     {
         var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, SomeSuccessOutput);
 
-        var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
+        var api = new SupportGptApi(mockHttpApi.Object, option);
 
-        var input = new IncidentCompleteIn(inputMessage!);
         var cancellationToken = new CancellationToken(canceled: false);
 
         var actual = await api.CompleteIncidentAsync(input, cancellationToken);
@@ -58,6 +54,22 @@ partial class SupportGptApiTest
         var actual = await api.CompleteIncidentAsync(SomeInput, cancellationToken);
 
         Assert.StrictEqual(failureExpected, actual);
+    }
+
+    [Fact]
+    public static async Task CompleteIncidentAsync_HttpApiTitleIsTaskCanceledException_ExpectFailure()
+    {
+        var exception = new TaskCanceledException("Some exception message");
+        var mockHttpApi = BuildMockHttpApiWithException(exception);
+
+        var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
+
+        var cancellationToken = new CancellationToken(canceled: false);
+        var actual = await api.CompleteIncidentAsync(SomeInput, cancellationToken);
+
+        var expected = exception.ToFailure(IncidentCompleteFailureCode.ExceededTimeout, "Operation is cancelled");
+
+        Assert.StrictEqual(expected, actual);
     }
 
     [Theory]
