@@ -11,7 +11,7 @@ partial class SupportGptApi
     public ValueTask<Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>>> CompleteIncidentAsync(
         IncidentCompleteIn input, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(input.Message) && input.ImageUrls.IsEmpty)
+        if (string.IsNullOrWhiteSpace(input.Message) && (input.ImageUrls.IsEmpty || option.IsImageProcessing is false))
         {
             return new(default(IncidentCompleteOut));
         }
@@ -126,21 +126,21 @@ partial class SupportGptApi
             };
     }
 
-    private static FlatArray<ChatContentJsonIn> CreateChatContentJsonIn(IncidentCompleteIn input, ChatMessageOption messageOption)
+    private FlatArray<ChatContentJsonIn> CreateChatContentJsonIn(IncidentCompleteIn input, ChatMessageOption messageOption)
     {
         if (messageOption.Role.Equals("system", StringComparison.InvariantCultureIgnoreCase))
         {
             return [new(text: messageOption.ContentTemplate)];
         }
 
+        if (option.IsImageProcessing is false || input.ImageUrls.IsEmpty)
+        {
+            return [new(text: string.Format(messageOption.ContentTemplate, input.Message?.Trim()))];
+        }
+
         if (string.IsNullOrWhiteSpace(input.Message))
         {
             return input.ImageUrls.Map(CreateChatContentJsonIn);
-        }
-
-        if (input.ImageUrls.IsEmpty)
-        {
-            return [new(text: string.Format(messageOption.ContentTemplate, input.Message.Trim()))];
         }
 
         return input.ImageUrls.Map(CreateChatContentJsonIn).Concat(

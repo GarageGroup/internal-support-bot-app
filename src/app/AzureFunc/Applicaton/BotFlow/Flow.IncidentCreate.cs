@@ -75,6 +75,7 @@ partial class Application
         {
             MaxTokens = section.GetValue<int?>("MaxTokens"),
             Temperature = section.GetValue<decimal?>("Temperature"),
+            IsImageProcessing = section.GetValue<bool>("IsImageProcessing"),
             CaseTypeTemplate = new(
                 role: "user",
                 contentTemplate: section["UserIncidentCaseTypeTemplate"].OrEmpty())

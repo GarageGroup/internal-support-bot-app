@@ -18,6 +18,7 @@ public static partial class SupportGptApiTest
         {
             MaxTokens = 150,
             Temperature = 0.7m,
+            IsImageProcessing = true,
             CaseTypeTemplate = new("someCaseTypeTemplate-role", "SomeCaseTypeTemplate message")
         };
 

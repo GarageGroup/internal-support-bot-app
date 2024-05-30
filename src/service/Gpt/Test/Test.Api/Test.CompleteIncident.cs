@@ -12,11 +12,11 @@ partial class SupportGptApiTest
     [Theory]
     [MemberData(nameof(SupportGptApiTestSource.InputInvalidTestData), MemberType = typeof(SupportGptApiTestSource))]
     public static async Task CompleteIncidentAsync_InputMessageIsNullOrWhiteSpace_ExpectDefaultIncidentCompletion(
-        IncidentCompleteIn input)
+        SupportGptApiOption option, IncidentCompleteIn input)
     {
         var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, SomeSuccessOutput);
 
-        var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
+        var api = new SupportGptApi(mockHttpApi.Object, option);
 
         var cancellationToken = new CancellationToken(canceled: false);
 

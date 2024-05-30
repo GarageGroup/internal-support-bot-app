@@ -15,4 +15,6 @@ public sealed record class SupportGptApiOption
     public decimal? Temperature { get; init; }
 
     public ChatMessageOption? CaseTypeTemplate { get; init; }
+
+    public bool IsImageProcessing { get; init; }
 }
