@@ -205,7 +205,7 @@
     <value>Обращение {0} было создано успешно</value>
   </data>
   <data name="ChoosePriorityText" xml:space="preserve">
-    <value>Выберите приоретет</value>
+    <value>Выберите приоритет</value>
   </data>
   <data name="AttachmentsFieldName" xml:space="preserve">
     <value>Вложения</value>
