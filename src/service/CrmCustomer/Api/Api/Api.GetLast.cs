@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using GarageGroup.Infra;
 
 namespace GarageGroup.Internal.Support;
 
@@ -12,7 +11,7 @@ partial class CrmCustomerApi
         =>
         AsyncPipeline.Pipe(
             input, cancellationToken)
-        .Pipe<IDbQuery>(
+        .Pipe(
             static @in => DbIncidentCustomer.QueryAll with
             {
                 Top = @in.Top,
