@@ -1,5 +1,3 @@
 namespace GarageGroup.Internal.Support;
 
-public interface ISupportGptApi : IIncidentCompleteSupplier
-{
-}
+public interface ISupportGptApi : IIncidentCompleteSupplier;

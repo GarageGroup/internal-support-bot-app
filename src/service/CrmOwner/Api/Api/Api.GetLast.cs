@@ -12,7 +12,7 @@ partial class CrmOwnerApi
         =>
         AsyncPipeline.Pipe(
             input, cancellationToken)
-        .Pipe<IDbQuery>(
+        .Pipe(
             static @in => DbIncidentOwner.QueryAll with
             {
                 Top = @in.Top,
