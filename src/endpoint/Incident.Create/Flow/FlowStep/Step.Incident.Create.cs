@@ -25,7 +25,7 @@ partial class IncidentCreateFlowStep
         await Task.WhenAll(incidentTask, messageTask).ConfigureAwait(false);
 
         return incidentTask.Result with
-        { 
+        {
             TemporaryMessageId = messageTask.Result.MessageId
         };
     }
@@ -44,7 +44,7 @@ partial class IncidentCreateFlowStep
                 description: flowState.Description,
                 caseTypeCode: flowState.CaseType?.Code ?? default,
                 priorityCode: flowState.Priority?.Code ?? default,
-                callerUserId: flowState.BotUserId)
+                callerObjectId: flowState.BotUserId)
             {
                 SenderTelegramId = flowState.SourceSender?.UserId,
                 Documents = flowState.Documents.Map(MapDocument)
@@ -73,7 +73,7 @@ partial class IncidentCreateFlowStep
         foreach (var failure in incidentCreateOut.Failures)
         {
             context.Logger.LogError(
-                failure.SourceException, 
+                failure.SourceException,
                 "Annotation error. FileName: {fileName}. Message: {failureMessage}", failure.FileName, failure.FailureMessage);
         }
     }

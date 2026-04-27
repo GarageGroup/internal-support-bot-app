@@ -7,11 +7,14 @@ namespace GarageGroup.Internal.Support;
 internal sealed record class AnnotationJsonCreateIn
 {
     internal static DataverseEntityCreateIn<AnnotationJsonCreateIn> BuildDataverseCreateInput(
-        AnnotationJsonCreateIn annotationJson)
+        AnnotationJsonCreateIn annotationJson, Guid callerObjectId)
         =>
         new(
             entityPluralName: "annotations",
-            entityData: annotationJson);
+            entityData: annotationJson)
+        {
+            CallerObjectId = callerObjectId
+        };
 
     internal AnnotationJsonCreateIn(Guid incidentId, string base64Data, string fileName)
     {

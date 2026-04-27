@@ -38,9 +38,9 @@ partial class CrmIncidentApi
                 SenderTelegramId = @in.SenderTelegramId?.ToString()
             })
         .Pipe(
-            IncidentJsonCreateIn.BuildDataverseCreateInput)
+            incident => IncidentJsonCreateIn.BuildDataverseCreateInput(incident, input.CallerObjectId))
         .PipeValue(
-            dataverseApi.Impersonate(input.CallerUserId).CreateEntityAsync<IncidentJsonCreateIn, IncidentJsonCreateOut>)
+            dataverseApi.CreateEntityAsync<IncidentJsonCreateIn, IncidentJsonCreateOut>)
         .MapFailure(
             static failure => failure.MapFailureCode(ToIncidentCreateFailureCode))
         .MapSuccess(
@@ -48,7 +48,7 @@ partial class CrmIncidentApi
                 id: entityCreateOut.Value.IncidentId,
                 title: entityCreateOut.Value.Title))
         .MapSuccess(
-            @out => new AnnotationSetInput(input.Documents, input.CallerUserId, @out))
+            @out => new AnnotationSetInput(input.Documents, input.CallerObjectId, @out))
         .MapSuccessValue(
             CreateAnnotationsAsync);
 
@@ -65,7 +65,7 @@ partial class CrmIncidentApi
 
         AnnotationInput CreateAnnotationInput(DocumentModel pictureModel)
             =>
-            new(pictureModel, input.CallerUserId, input.Incident.Id);
+            new(pictureModel, input.CallerObjectId, input.Incident.Id);
 
         IncidentCreateOut GetIncident(FlatArray<AnnotationCreateFailure?> failures)
             =>
@@ -81,7 +81,7 @@ partial class CrmIncidentApi
                 if (failure is not null)
                 {
                     yield return failure;
-                }                
+                }
             }
         }
     }
@@ -101,19 +101,19 @@ partial class CrmIncidentApi
             MapSuccessHttpApiOrFailure,
             static failure => failure.ToStandardFailure().WithFailureCode(AnnotationCreateFailureCode.Unknown))
         .MapSuccess(
-            @out => new AnnotationJsonCreateIn(input.IncidentId, @out, input.Document.FileName)
-            {
-                Subject = input.Document.Type switch 
-                { 
-                    DocumentType.Document => DocumentSubject,
-                    DocumentType.Video => VideoSubject,
-                    _ => PictureSubject
-                }
-            })
-        .MapSuccess(
-            AnnotationJsonCreateIn.BuildDataverseCreateInput)
+            @out => AnnotationJsonCreateIn.BuildDataverseCreateInput(
+                annotationJson:  new(input.IncidentId, @out, input.Document.FileName)
+                {
+                    Subject = input.Document.Type switch
+                    {
+                        DocumentType.Document => DocumentSubject,
+                        DocumentType.Video => VideoSubject,
+                        _ => PictureSubject
+                    }
+                },
+                callerObjectId: input.CallerObjectId))
         .ForwardValue(
-            dataverseApi.Impersonate(input.CallerUserId).CreateEntityAsync,
+            dataverseApi.CreateEntityAsync,
             static failure => failure.MapFailureCode(ToAnnotationCreateFailureCode))
         .Fold<AnnotationCreateFailure?>(
             _ => null,

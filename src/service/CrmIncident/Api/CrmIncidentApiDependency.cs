@@ -10,7 +10,7 @@ namespace GarageGroup.Internal.Support;
 public static class CrmIncidentApiDependency
 {
     public static Dependency<ICrmIncidentApi> UseCrmIncidentApi<TDataverseApi>(this Dependency<IHttpApi, TDataverseApi> dependency)
-        where TDataverseApi : IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>
+        where TDataverseApi : IDataverseEntityCreateSupplier
     {
         ArgumentNullException.ThrowIfNull(dependency);
         return dependency.Fold<ICrmIncidentApi>(CreateApi);

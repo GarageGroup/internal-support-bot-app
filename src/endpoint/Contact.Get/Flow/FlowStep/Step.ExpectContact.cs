@@ -61,7 +61,7 @@ partial class ContactGetFlowStep
         .Pipe(
             static state => new LastContactSetGetIn(
                 customerId: state.Customer?.Id ?? default,
-                userId: state.BotUserId,
+                userId: state.SystemUserId,
                 top: MaxContactSetCount))
         .PipeValue(
             crmContactApi.GetLastAsync)

@@ -28,9 +28,7 @@ partial class CrmContactApiTest
             Top = sourceTop
         };
 
-        var cancellationToken = new CancellationToken(canceled: false);
-
-        _ = await api.SearchAsync(input, cancellationToken);
+        _ = await api.SearchAsync(input, TestContext.Current.CancellationToken);
 
         var expected = new DataverseSearchIn(expectedSearchString)
         {
@@ -39,7 +37,7 @@ partial class CrmContactApiTest
             Top = sourceTop
         };
 
-        mockDataverseApi.Verify(a => a.SearchAsync(expected, cancellationToken), Times.Once);
+        mockDataverseApi.Verify(a => a.SearchAsync(expected, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
@@ -60,7 +58,7 @@ partial class CrmContactApiTest
 
         var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySupplier>(), Mock.Of<ISqlQueryEntitySetSupplier>());
 
-        var actual = await api.SearchAsync(SomeContactSetSearchInput, CancellationToken.None);
+        var actual = await api.SearchAsync(SomeContactSetSearchInput, TestContext.Current.CancellationToken);
         var expected = Failure.Create(expectedFailureCode, "Some Failure message");
 
         Assert.StrictEqual(expected, actual);
@@ -74,7 +72,7 @@ partial class CrmContactApiTest
         var mockDataverseApi = CreateMockDataverseApi(dataverseSearchOutput);
         var api = new CrmContactApi(mockDataverseApi.Object, Mock.Of<ISqlQueryEntitySupplier>(), Mock.Of<ISqlQueryEntitySetSupplier>());
 
-        var actual = await api.SearchAsync(SomeContactSetSearchInput, CancellationToken.None);
+        var actual = await api.SearchAsync(SomeContactSetSearchInput, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(expected, actual);
     }

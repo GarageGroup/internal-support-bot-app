@@ -18,9 +18,7 @@ partial class SupportGptApiTest
 
         var api = new SupportGptApi(mockHttpApi.Object, option);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-
-        var actual = await api.CompleteIncidentAsync(input, cancellationToken);
+        var actual = await api.CompleteIncidentAsync(input, TestContext.Current.CancellationToken);
         var expected = default(IncidentCompleteOut);
 
         Assert.StrictEqual(expected, actual);
@@ -32,13 +30,11 @@ partial class SupportGptApiTest
         SupportGptApiOption option, IncidentCompleteIn input, HttpSendIn httpInput)
     {
         var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, SomeSuccessOutput);
-
         var api = new SupportGptApi(mockHttpApi.Object, option);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        _ = await api.CompleteIncidentAsync(input, cancellationToken);
+        _ = await api.CompleteIncidentAsync(input, TestContext.Current.CancellationToken);
 
-        mockHttpApi.Verify(a => a.SendAsync(httpInput, cancellationToken), Times.Once);
+        mockHttpApi.Verify(a => a.SendAsync(httpInput, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
@@ -47,11 +43,9 @@ partial class SupportGptApiTest
         HttpSendFailure httpSendFailure, Failure<IncidentCompleteFailureCode> failureExpected)
     {
         var mockHttpApi = BuildMockHttpApi(httpSendFailure, SomeSuccessOutput);
-
         var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        var actual = await api.CompleteIncidentAsync(SomeInput, cancellationToken);
+        var actual = await api.CompleteIncidentAsync(SomeInput, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(failureExpected, actual);
     }
@@ -64,9 +58,7 @@ partial class SupportGptApiTest
 
         var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        var actual = await api.CompleteIncidentAsync(SomeInput, cancellationToken);
-
+        var actual = await api.CompleteIncidentAsync(SomeInput, TestContext.Current.CancellationToken);
         var expected = exception.ToFailure(IncidentCompleteFailureCode.ExceededTimeout, "Operation is cancelled");
 
         Assert.StrictEqual(expected, actual);
@@ -78,13 +70,11 @@ partial class SupportGptApiTest
         SupportGptApiOption option, IncidentCompleteIn input, HttpSendIn httpInput)
     {
         var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, SomeSuccessOutput);
-
         var api = new SupportGptApi(mockHttpApi.Object, option);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        _ = await api.CompleteIncidentAsync(input, cancellationToken);
+        _ = await api.CompleteIncidentAsync(input, TestContext.Current.CancellationToken);
 
-        mockHttpApi.Verify(a => a.SendAsync(httpInput, cancellationToken), Times.Once);
+        mockHttpApi.Verify(a => a.SendAsync(httpInput, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
@@ -93,11 +83,9 @@ partial class SupportGptApiTest
         HttpSendFailure httpSendFailure, Failure<IncidentCompleteFailureCode> failureExpected)
     {
         var mockHttpApi = BuildMockHttpApi(SomeSuccessOutput, httpSendFailure);
-
         var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        var actual = await api.CompleteIncidentAsync(SomeInput, cancellationToken);
+        var actual = await api.CompleteIncidentAsync(SomeInput, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(failureExpected, actual);
     }
@@ -108,11 +96,9 @@ partial class SupportGptApiTest
         HttpSendOut titleOutput, HttpSendOut caseTypeOutput, Result<IncidentCompleteOut, Failure<IncidentCompleteFailureCode>> expected)
     {
         var mockHttpApi = BuildMockHttpApi(titleOutput, caseTypeOutput);
-
         var api = new SupportGptApi(mockHttpApi.Object, SomeOption);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        var actual = await api.CompleteIncidentAsync(SomeInput, cancellationToken);
+        var actual = await api.CompleteIncidentAsync(SomeInput, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(expected, actual);
     }

@@ -18,8 +18,7 @@ partial class CrmContactApiTest
         const long telegramSenderId = 179190124307;
         var input = new ContactGetIn(telegramSenderId);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        _ = await api.GetAsync(input, cancellationToken);
+        _ = await api.GetAsync(input, TestContext.Current.CancellationToken);
 
         var expectedQuery = new DbSelectQuery("incident", "i")
         {
@@ -42,7 +41,7 @@ partial class CrmContactApiTest
             ]
         };
 
-        mockSqlApi.Verify(a => a.QueryEntityOrFailureAsync<DbIncident>(expectedQuery, cancellationToken), Times.Once);
+        mockSqlApi.Verify(a => a.QueryEntityOrFailureAsync<DbIncident>(expectedQuery, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
@@ -57,7 +56,7 @@ partial class CrmContactApiTest
         var mockSqlApi = BuildMockSqlEntityApi(dbFailure);
         var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
-        var actual = await api.GetAsync(SomeContactGetInput, default);
+        var actual = await api.GetAsync(SomeContactGetInput, TestContext.Current.CancellationToken);
         var expected = Failure.Create(expectedFailureCode, "Some text", sourceException);
 
         Assert.StrictEqual(expected, actual);
@@ -71,7 +70,7 @@ partial class CrmContactApiTest
         var mockSqlApi = BuildMockSqlEntityApi(dbIncident);
         var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object, Mock.Of<ISqlQueryEntitySetSupplier>());
 
-        var actual = await api.GetAsync(SomeContactGetInput, default);
+        var actual = await api.GetAsync(SomeContactGetInput, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(expected, actual);
     }

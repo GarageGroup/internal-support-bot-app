@@ -61,7 +61,7 @@ partial class IncidentCreateFlowStep
         .Pipe(
             static state => new LastOwnerSetGetIn(
                 customerId: state.Customer?.Id ?? default,
-                userId: state.BotUserId,
+                userId: state.SystemUserId,
                 top: MaxOwnerSetCount - 1))
         .PipeValue(
             crmOwnerApi.GetLastAsync)
@@ -105,9 +105,9 @@ partial class IncidentCreateFlowStep
         var builder = FlatArray<ChoiceStepItem<IncidentOwnerState>>.Builder.OfLength(values.Length + 1);
 
         builder[0] = new(
-            id: flowState.BotUserId.ToString(),
+            id: flowState.SystemUserId.ToString(),
             title: flowState.BotUserName.OrEmpty(),
-            value: new(flowState.BotUserId, flowState.BotUserName));
+            value: new(flowState.SystemUserId, flowState.BotUserName));
 
         for (var i = 0; i < values.Length; i++)
         {

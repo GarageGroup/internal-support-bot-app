@@ -18,7 +18,7 @@ partial class CrmContactApi
             {
                 Entities = ContactSetSearchEntities,
                 Filter = new DataverseComparisonFilter("parentcustomerid", DataverseComparisonOperator.Equal, @in.CustomerId),
-                Top = @in.Top 
+                Top = @in.Top
             })
         .PipeValue(
             dataverseApi.SearchAsync)

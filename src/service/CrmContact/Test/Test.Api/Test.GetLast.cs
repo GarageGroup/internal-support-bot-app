@@ -20,8 +20,7 @@ partial class CrmContactApiTest
             userId: new("15d86420-b8c1-4e9e-b652-2e7195447a3a"),
             top: 15);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        _ = await api.GetLastAsync(input, cancellationToken);
+        _ = await api.GetLastAsync(input, TestContext.Current.CancellationToken);
 
         var expectedQuery = new DbSelectQuery("contact", "c")
         {
@@ -47,7 +46,7 @@ partial class CrmContactApiTest
             ]
         };
 
-        mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbContact>(expectedQuery, cancellationToken), Times.Once);
+        mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbContact>(expectedQuery, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -59,7 +58,7 @@ partial class CrmContactApiTest
         var mockSqlApi = BuildMockSqlEntitySetApi(dbFailure);
         var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), Mock.Of<ISqlQueryEntitySupplier>(), mockSqlApi.Object);
 
-        var actual = await api.GetLastAsync(SomeLastContactSetGetInput, default);
+        var actual = await api.GetLastAsync(SomeLastContactSetGetInput, TestContext.Current.CancellationToken);
         var expected = Failure.Create(ContactSetGetFailureCode.Unknown, "Some text", sourceException);
 
         Assert.StrictEqual(expected, actual);
@@ -73,7 +72,7 @@ partial class CrmContactApiTest
         var mockSqlApi = BuildMockSqlEntitySetApi(dbIncidentContacts);
         var api = new CrmContactApi(Mock.Of<IDataverseSearchSupplier>(), Mock.Of<ISqlQueryEntitySupplier>(), mockSqlApi.Object);
 
-        var actual = await api.GetLastAsync(SomeLastContactSetGetInput, default);
+        var actual = await api.GetLastAsync(SomeLastContactSetGetInput, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(expected, actual);
     }

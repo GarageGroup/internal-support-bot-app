@@ -17,7 +17,7 @@ public static partial class CrmIncidentApiTest
             description: "decription",
             caseTypeCode: IncidentCaseTypeCode.Question,
             priorityCode: IncidentPriorityCode.Normal,
-            callerUserId: new("d40c9c6c-ba5f-4264-aaad-542f11caf4f6"));
+            callerObjectId: new("d40c9c6c-ba5f-4264-aaad-542f11caf4f6"));
 
     private static readonly IncidentJsonCreateOut SomeIncidentJsonOutput
         =
@@ -38,7 +38,7 @@ public static partial class CrmIncidentApiTest
             }
         };
 
-    private static Mock<IDataverseEntityCreateSupplier> BuildMockDataverseCreateSupplier(
+    private static Mock<IDataverseEntityCreateSupplier> BuildMockDataverseApi(
         in Result<DataverseEntityCreateOut<IncidentJsonCreateOut>, Failure<DataverseFailureCode>> incidentResult,
         in Result<Unit, Failure<DataverseFailureCode>> annotationResult)
     {
@@ -53,16 +53,6 @@ public static partial class CrmIncidentApiTest
             static api => api.CreateEntityAsync(
                 It.IsAny<DataverseEntityCreateIn<AnnotationJsonCreateIn>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(annotationResult);
-
-        return mock;
-    }
-
-    private static Mock<IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>> BuildMockDataverseApi(
-        IDataverseEntityCreateSupplier dataverseCreateSupplier)
-    {
-        var mock = new Mock<IDataverseImpersonateSupplier<IDataverseEntityCreateSupplier>>();
-
-        _ = mock.Setup(static api => api.Impersonate(It.IsAny<Guid>())).Returns(dataverseCreateSupplier);
 
         return mock;
     }

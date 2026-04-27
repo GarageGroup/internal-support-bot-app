@@ -14,7 +14,7 @@ partial class ContactGetCommand
             @in => new ContactGetFlowState
             {
                 DbMinDate = DateTime.UtcNow.AddDays(-option.DbRequestPeriodInDays).Date,
-                BotUserId = request.Context.User.Identity?.SystemId ?? default,
+                SystemUserId = @in.SystemUserId,
                 TelegramSenderId = @in.TelegramSender?.Id,
                 Customer = @in.Customer is null ? null : new(@in.Customer.Id, @in.Customer.Title),
                 Contact = @in.Contact is null ? null : new(@in.Contact.Id, @in.Contact.FullName)

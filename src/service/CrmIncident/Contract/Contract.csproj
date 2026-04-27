@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <InvariantGlobalization>true</InvariantGlobalization>
@@ -17,9 +17,9 @@
 
   <ItemGroup>
     <PackageReference Include="PrimeFuncPack.Core.Failure" Version="2.2.0" />
-    <PackageReference Include="PrimeFuncPack.Core.FlatArray" Version="1.5.0" />
+    <PackageReference Include="PrimeFuncPack.Core.FlatArray" Version="1.5.2-preview.1" />
     <PackageReference Include="PrimeFuncPack.Core.Result" Version="2.0.2" />
-    <PackageReference Include="PrimeFuncPack.Primitives.Strings" Version="2.0.3" />
+    <PackageReference Include="PrimeFuncPack.Primitives.Strings" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

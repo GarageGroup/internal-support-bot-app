@@ -7,12 +7,15 @@ namespace GarageGroup.Internal.Support;
 internal sealed record class IncidentJsonCreateIn
 {
     internal static DataverseEntityCreateIn<IncidentJsonCreateIn> BuildDataverseCreateInput(
-        IncidentJsonCreateIn incidentJson)
+        IncidentJsonCreateIn incidentJson, Guid callerObjectId)
         =>
         new(
             entityPluralName: "incidents",
             selectFields: IncidentJsonCreateOut.SelectedFields,
-            entityData: incidentJson);
+            entityData: incidentJson)
+        {
+            CallerObjectId = callerObjectId
+        };
 
     internal static string BuildOwnerLookupValue(Guid ownerId)
         =>

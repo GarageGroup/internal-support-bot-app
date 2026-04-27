@@ -13,7 +13,7 @@ public sealed record class IncidentCreateIn
         [AllowNull] string description,
         IncidentCaseTypeCode caseTypeCode,
         IncidentPriorityCode priorityCode,
-        Guid callerUserId)
+        Guid callerObjectId)
     {
         OwnerId = ownerId;
         CustomerId = customerId;
@@ -22,7 +22,7 @@ public sealed record class IncidentCreateIn
         Description = description.OrEmpty();
         CaseTypeCode = caseTypeCode;
         PriorityCode = priorityCode;
-        CallerUserId = callerUserId;
+        CallerObjectId = callerObjectId;
     }
 
     public Guid OwnerId { get; }
@@ -39,7 +39,7 @@ public sealed record class IncidentCreateIn
 
     public IncidentPriorityCode PriorityCode { get; }
 
-    public Guid CallerUserId { get; }
+    public Guid CallerObjectId { get; }
 
     public long? SenderTelegramId { get; init; }
 

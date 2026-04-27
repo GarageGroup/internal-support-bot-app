@@ -26,8 +26,7 @@ partial class CrmOwnerApiTest
             Top = sourceTop
         };
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        _ = await api.SearchAsync(input, cancellationToken);
+        _ = await api.SearchAsync(input, TestContext.Current.CancellationToken);
 
         var expected = new DataverseSearchIn(expectedSearchString)
         {
@@ -35,7 +34,7 @@ partial class CrmOwnerApiTest
             Top = sourceTop
         };
 
-        mockDataverseApi.Verify(a => a.SearchAsync(expected, cancellationToken), Times.Once);
+        mockDataverseApi.Verify(a => a.SearchAsync(expected, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
@@ -61,7 +60,7 @@ partial class CrmOwnerApiTest
             Top = 5
         };
 
-        var actual = await api.SearchAsync(input, CancellationToken.None);
+        var actual = await api.SearchAsync(input, TestContext.Current.CancellationToken);
         var expected = Failure.Create(expectedFailureCode, "Some error message");
 
         Assert.StrictEqual(expected, actual);
@@ -80,7 +79,7 @@ partial class CrmOwnerApiTest
             Top = 5
         };
 
-        var actual = await api.SearchAsync(input, CancellationToken.None);
+        var actual = await api.SearchAsync(input, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(expected, actual);
     }

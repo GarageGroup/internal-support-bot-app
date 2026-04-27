@@ -11,7 +11,7 @@ partial class SupportGptApiTestSource
         {
             {
                 new(
-                    chatMessages: 
+                    chatMessages:
                     [
                         new(
                             role: "some role",
@@ -35,12 +35,12 @@ partial class SupportGptApiTestSource
                         MaxTokens = 30,
                         Temperature = 0,
                         Top = 1,
-                        Messages = 
+                        Messages =
                         [
                             new()
                             {
                                 Role = "some role",
-                                Content = 
+                                Content =
                                 [
                                     new(text: "some content template some message")
                                 ]

@@ -10,32 +10,6 @@ namespace GarageGroup.Internal.Support.Service.CrmIncident.Test;
 
 partial class CrmIncidentApiTest
 {
-    [Fact]
-    public static async Task CreateAsync_InputIsNotNull_ExpectCallImpersonateOnce()
-    {
-        var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(SomeIncidentJsonOutput);
-
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, Result.Success<Unit>(default));
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
-        var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
-
-        var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
-
-        var input = new IncidentCreateIn(
-            ownerId: new("0c1040cc-6dff-4eda-b40b-38b04b72bb82"),
-            customerId: new("4b4d6147-da68-4dea-b8da-f0090d118b12"),
-            contactId: new("6cdae1fe-f0c8-4664-9c0c-579aae1ce242"),
-            title: "Some title",
-            description: "Some description",
-            caseTypeCode: IncidentCaseTypeCode.Problem,
-            priorityCode: IncidentPriorityCode.High,
-            callerUserId: new("de42801c-ae9b-4be1-bd39-a0a70324539f"));
-
-        _ = await api.CreateAsync(input, default);
-
-        mockDataverseApi.Verify(static a => a.Impersonate(new("de42801c-ae9b-4be1-bd39-a0a70324539f")), Times.Once);
-    }
-
     [Theory]
     [MemberData(nameof(CrmIncidentApiTestSource.IncidentInputValidTestData), MemberType = typeof(CrmIncidentApiTestSource))]
     internal static async Task CreateAsync_InputIsNotNull_ExpectDataverseCreateCalledOnce(
@@ -43,17 +17,15 @@ partial class CrmIncidentApiTest
     {
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(SomeIncidentJsonOutput);
 
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, Result.Success<Unit>(default));
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseIncidentCreateOut, Result.Success<Unit>(default));
         var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
 
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
 
-        var token = new CancellationToken(false);
-        _ = await api.CreateAsync(input, token);
+        _ = await api.CreateAsync(input, TestContext.Current.CancellationToken);
 
-        mockDataverseCreateSupplier.Verify(
-            a => a.CreateEntityAsync<IncidentJsonCreateIn, IncidentJsonCreateOut>(expectedInput, token), Times.Once);
+        mockDataverseApi.Verify(
+            a => a.CreateEntityAsync<IncidentJsonCreateIn, IncidentJsonCreateOut>(expectedInput, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
@@ -71,13 +43,12 @@ partial class CrmIncidentApiTest
         var sourceException = new Exception("Some error message");
         var dataverseFailure = Failure.Create(sourceFailureCode, "Some failure message", sourceException);
 
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseFailure, Result.Success<Unit>(default));
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseFailure, Result.Success<Unit>(default));
         var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
 
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
 
-        var actual = await api.CreateAsync(SomeIncidentCreateInput, CancellationToken.None);
+        var actual = await api.CreateAsync(SomeIncidentCreateInput, TestContext.Current.CancellationToken);
         var expected = Failure.Create(expectedFailureCode, "Some failure message", sourceException);
 
         Assert.StrictEqual(expected, actual);
@@ -93,13 +64,12 @@ partial class CrmIncidentApiTest
                 Title = "Some incident title"
             });
 
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseOut, Result.Success<Unit>(default));
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseOut, Result.Success<Unit>(default));
         var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
 
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
 
-        var actual = await api.CreateAsync(SomeIncidentCreateInput, default);
+        var actual = await api.CreateAsync(SomeIncidentCreateInput, TestContext.Current.CancellationToken);
 
         var expected = new IncidentCreateOut(
             id: new("1203c0e2-3648-4596-80dd-127fdd2610b6"),
@@ -112,11 +82,9 @@ partial class CrmIncidentApiTest
     public static async Task CreateAsync_InputIsNotNullAndDocumentsIsNotEmpty_ExpectCallHttpApiOnce()
     {
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(SomeIncidentJsonOutput);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseIncidentCreateOut, Result.Success<Unit>(default));
 
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, Result.Success<Unit>(default));
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
         var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
-
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
 
         var input = new IncidentCreateIn(
@@ -127,16 +95,16 @@ partial class CrmIncidentApiTest
             description: "Some description",
             caseTypeCode: IncidentCaseTypeCode.Problem,
             priorityCode: IncidentPriorityCode.High,
-            callerUserId: new("de42801c-ae9b-4be1-bd39-a0a70324539f"))
+            callerObjectId: new("de42801c-ae9b-4be1-bd39-a0a70324539f"))
         {
-            Documents = 
+            Documents =
             [
                 new("first some file name", "first some image url"),
                 new("second some file name", "second some image url")
             ]
         };
 
-        _ = await api.CreateAsync(input, default);
+        _ = await api.CreateAsync(input, TestContext.Current.CancellationToken);
 
         mockHttpApi.Verify(a => a.SendAsync(new(HttpVerb.Get, "first some image url"), It.IsAny<CancellationToken>()), Times.Once);
         mockHttpApi.Verify(a => a.SendAsync(new(HttpVerb.Get, "second some image url"), It.IsAny<CancellationToken>()), Times.Once);
@@ -152,9 +120,7 @@ partial class CrmIncidentApiTest
         };
 
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(incidentCreateOut);
-
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, Result.Success<Unit>(default));
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseIncidentCreateOut, Result.Success<Unit>(default));
 
         var httpFailure = new HttpSendFailure
         {
@@ -165,8 +131,8 @@ partial class CrmIncidentApiTest
                 Content = BinaryData.FromString("Some failure message")
             }
         };
-        var mockHttpApi = BuildHttpApi(httpFailure);
 
+        var mockHttpApi = BuildHttpApi(httpFailure);
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
 
         var input = new IncidentCreateIn(
@@ -177,7 +143,7 @@ partial class CrmIncidentApiTest
             description: "Some description",
             caseTypeCode: IncidentCaseTypeCode.Question,
             priorityCode: IncidentPriorityCode.Low,
-            callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
+            callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
         {
             Documents =
             [
@@ -185,7 +151,8 @@ partial class CrmIncidentApiTest
             ]
         };
 
-        var actual = await api.CreateAsync(input, default);
+        var actual = await api.CreateAsync(input, TestContext.Current.CancellationToken);
+
         var expected = new IncidentCreateOut(
             id: new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
             title: "Some Incident title")
@@ -211,16 +178,14 @@ partial class CrmIncidentApiTest
         DataverseEntityCreateIn<AnnotationJsonCreateIn> expectedInput)
     {
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(incidentJsonCreateOut);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseIncidentCreateOut, Result.Success<Unit>(default));
 
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, Result.Success<Unit>(default));
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
         var mockHttpApi = BuildHttpApi(httpApiOut);
-
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
 
-        _ = await api.CreateAsync(input, default);
+        _ = await api.CreateAsync(input, TestContext.Current.CancellationToken);
 
-        mockDataverseCreateSupplier.Verify(a => a.CreateEntityAsync(expectedInput, It.IsAny<CancellationToken>()), Times.Once);
+        mockDataverseApi.Verify(a => a.CreateEntityAsync(expectedInput, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
@@ -241,13 +206,11 @@ partial class CrmIncidentApiTest
             Title = "Some Incident title"
         };
         var dataverseIncidentCreateOut = new DataverseEntityCreateOut<IncidentJsonCreateOut>(incidentCreateOut);
-        
+
         var sourceException = new Exception("Some error message");
         var dataverseAnnotationCreateFailure = Failure.Create(sourceFailureCode, "Some failure message", sourceException);
 
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, dataverseAnnotationCreateFailure);
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
-
+        var mockDataverseApi = BuildMockDataverseApi(dataverseIncidentCreateOut, dataverseAnnotationCreateFailure);
         var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
 
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
@@ -260,7 +223,7 @@ partial class CrmIncidentApiTest
             description: "Some description",
             caseTypeCode: IncidentCaseTypeCode.Question,
             priorityCode: IncidentPriorityCode.Low,
-            callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
+            callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
         {
             Documents =
             [
@@ -268,14 +231,15 @@ partial class CrmIncidentApiTest
             ]
         };
 
-        var actual = await api.CreateAsync(input, default);
+        var actual = await api.CreateAsync(input, TestContext.Current.CancellationToken);
+
         var expected = new IncidentCreateOut(
             id: new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
             title: "Some Incident title")
         {
-            Failures = 
+            Failures =
             [
-                new("some file name", "Some failure message") 
+                new("some file name", "Some failure message")
                 {
                     FailureCode = AnnotationCreateFailureCode.Unknown,
                     SourceException = sourceException
@@ -299,9 +263,7 @@ partial class CrmIncidentApiTest
         var sourceException = new Exception("Some error message");
         var dataverseAnnotationCreateFailure = Failure.Create(DataverseFailureCode.InvalidFileSize, "Some failure message", sourceException);
 
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseIncidentCreateOut, dataverseAnnotationCreateFailure);
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
-
+        var mockDataverseApi = BuildMockDataverseApi(dataverseIncidentCreateOut, dataverseAnnotationCreateFailure);
         var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
 
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
@@ -314,7 +276,7 @@ partial class CrmIncidentApiTest
             description: "Some description",
             caseTypeCode: IncidentCaseTypeCode.Question,
             priorityCode: IncidentPriorityCode.Low,
-            callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
+            callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
         {
             Documents =
             [
@@ -322,7 +284,8 @@ partial class CrmIncidentApiTest
             ]
         };
 
-        var actual = await api.CreateAsync(input, default);
+        var actual = await api.CreateAsync(input, TestContext.Current.CancellationToken);
+
         var expected = new IncidentCreateOut(
             id: new("ec8c8180-8ed7-4598-9bee-275262b396e2"),
             title: "Some Incident title")
@@ -350,8 +313,7 @@ partial class CrmIncidentApiTest
                 Title = "Some incident title"
             });
 
-        var mockDataverseCreateSupplier = BuildMockDataverseCreateSupplier(dataverseOut, Result.Success<Unit>(default));
-        var mockDataverseApi = BuildMockDataverseApi(mockDataverseCreateSupplier.Object);
+        var mockDataverseApi = BuildMockDataverseApi(dataverseOut, Result.Success<Unit>(default));
         var mockHttpApi = BuildHttpApi(SomeHttpApiSuccessOutput);
 
         var api = new CrmIncidentApi(mockHttpApi.Object, mockDataverseApi.Object);
@@ -364,7 +326,7 @@ partial class CrmIncidentApiTest
             description: "Some description",
             caseTypeCode: IncidentCaseTypeCode.Question,
             priorityCode: IncidentPriorityCode.Low,
-            callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
+            callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
         {
             Documents =
             [
@@ -372,7 +334,7 @@ partial class CrmIncidentApiTest
             ]
         };
 
-        var actual = await api.CreateAsync(input, default);
+        var actual = await api.CreateAsync(input, TestContext.Current.CancellationToken);
 
         var expected = new IncidentCreateOut(
             id: new("1203c0e2-3648-4596-80dd-127fdd2610b6"),

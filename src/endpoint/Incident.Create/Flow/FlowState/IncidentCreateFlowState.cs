@@ -4,6 +4,8 @@ namespace GarageGroup.Internal.Support;
 
 internal sealed record class IncidentCreateFlowState
 {
+    public required Guid SystemUserId { get; init; }
+
     public required Guid BotUserId { get; init; }
 
     public required string? BotUserName { get; init; }

@@ -1,42 +1,62 @@
-name: Delete AzureFunc Artifact
+name: Delete Artifact
 
 on:
   release:
     types:
       - deleted
 
+permissions:
+  contents: write
+
 jobs:
   delete:
     runs-on: ubuntu-latest
+    if: ${{ github.event.release.tag_name != '' }}
 
     steps:
-    - name: Checkout GitHub Action
-      uses: actions/checkout@v4
+    - name: Check out repository
+      uses: actions/checkout@v6
 
     - name: Get version
       id: get_version
-      run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
+      run: echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
 
-    - uses: azure/login@v1
+    - name: Log in to Azure
+      uses: azure/login@v3
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS_ARTIFACT }}
-        
-    - name: Delete from Azure Blob Storage
-      uses: azure/CLI@v1
+
+    - name: Delete artifact from Azure Blob Storage
+      uses: azure/CLI@v3
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           blob_exists=$(az storage blob exists \
             --name ${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
-            --container-name artifacts \
-            --account-name startifactblob \
+            --container-name ${{ vars.AZURE_ARTIFACT_CONTAINER_NAME }} \
+            --account-name ${{ vars.AZURE_ARTIFACT_ACCOUNT_NAME }} \
             --auth-mode login --output tsv --query exists)
 
           if [ $blob_exists = true ]
           then
             az storage blob delete \
               --name ${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
-              --container-name artifacts \
-              --account-name startifactblob \
+              --container-name ${{ vars.AZURE_ARTIFACT_CONTAINER_NAME }} \
+              --account-name ${{ vars.AZURE_ARTIFACT_ACCOUNT_NAME }} \
               --auth-mode login
             fi
+
+    - name: Log out of Azure
+      uses: azure/CLI@v3
+      with:
+        inlineScript: az logout
+
+    - name: Delete tag from repository
+      env:
+        TAG_NAME: ${{ github.event.release.tag_name }}
+      run: |
+        if git ls-remote --exit-code --tags origin "refs/tags/$TAG_NAME" > /dev/null 2>&1; then
+          git push origin ":refs/tags/$TAG_NAME"
+        else
+          echo "Tag '$TAG_NAME' not found on origin; skipping."
+        fi

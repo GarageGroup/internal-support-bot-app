@@ -2,8 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
+    <FunctionsEnableWorkerIndexing>false</FunctionsEnableWorkerIndexing>
+    <FunctionsEnableExecutorSourceGen>false</FunctionsEnableExecutorSourceGen>
+    <FunctionsAutoRegisterGeneratedFunctionsExecutor>false</FunctionsAutoRegisterGeneratedFunctionsExecutor>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <InvariantGlobalization>false</InvariantGlobalization>
@@ -29,24 +33,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GarageGroup.Infra.Azure.DurableTask" Version="0.9.0" />
-    <PackageReference Include="GarageGroup.Infra.Azure.Endpoint" Version="0.15.0" />
-    <PackageReference Include="GarageGroup.Infra.Azure.Hosting" Version="0.12.1" />
-    <PackageReference Include="GarageGroup.Infra.Dataverse.Api" Version="3.18.0" />
-    <PackageReference Include="GarageGroup.Infra.HealthCheck.Handler" Version="0.3.0" />
-    <PackageReference Include="GarageGroup.Infra.Http.Api" Version="0.3.0" />
+    <PackageReference Include="GarageGroup.Infra.Azure.DurableTask" Version="1.0.3" />
+    <PackageReference Include="GarageGroup.Infra.Azure.Endpoint" Version="0.17.0" />
+    <PackageReference Include="GarageGroup.Infra.Azure.Hosting" Version="1.0.2" />
+    <PackageReference Include="GarageGroup.Infra.Dataverse.Api" Version="3.21.0" />
+    <PackageReference Include="GarageGroup.Infra.HealthCheck.Handler" Version="1.0.0" />
+    <PackageReference Include="GarageGroup.Infra.Http.Api" Version="1.0.0" />
     <PackageReference Include="GarageGroup.Infra.Http.Header" Version="0.0.1" />
-    <PackageReference Include="GarageGroup.Infra.Http.Polly" Version="2.0.0" />
-    <PackageReference Include="GarageGroup.Infra.Sql.Api" Version="2.7.0" />
-    <PackageReference Include="GarageGroup.Infra.Sql.Api.Provider.Dataverse" Version="0.2.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Api" Version="0.1.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Api.Dataverse" Version="0.0.2" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Azure" Version="0.2.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Engine" Version="0.2.0" />
-    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Storage.Azure.Blob" Version="0.0.1" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.0-preview2" OutputItemType="Analyzer" />
-    <PackageReference Include="PrimeFuncPack.DependencyRegistry" Version="2.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Http.Polly" Version="2.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Sql.Api" Version="3.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Sql.Api.Provider.Dataverse" Version="0.4.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Api" Version="0.3.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Api.Dataverse" Version="0.2.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Authorization.Azure" Version="0.4.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Engine" Version="0.4.0" />
+    <PackageReference Include="GarageGroup.Infra.Telegram.Bot.Storage.Azure.Blob" Version="0.1.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.3.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.7" OutputItemType="Analyzer" />
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="5.3.0" PrivateAssets="all" />
+    <PackageReference Include="PrimeFuncPack.DependencyRegistry" Version="2.2.0-preview.1" />
   </ItemGroup>
 
 </Project>
