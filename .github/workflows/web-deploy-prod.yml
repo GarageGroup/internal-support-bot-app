@@ -36,8 +36,9 @@ jobs:
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ vars.PROD_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.PROD_BOTFUNC_PUBLISHPROFILE }}
           package: ./publish/${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip
+          sku: flexconsumption
+          remote-build: false
 
       - name: Log out of Azure
         run: az logout
