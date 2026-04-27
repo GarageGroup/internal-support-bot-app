@@ -18,7 +18,7 @@
   <ItemGroup>
     <PackageReference Include="EarlyFuncPack.Core.AsyncPipeline" Version="0.3.0" />
     <PackageReference Include="GarageGroup.Infra.Http.Api.Contract" Version="1.0.0" />
-    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.2.0-preview.1" />
+    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.2.0-rc.1" />
   </ItemGroup>
 
 </Project>
