@@ -85,7 +85,7 @@ partial class IncidentCreateFlowStep
         {
             FieldValues = fieldValues
         };
-    }  
+    }
 
     private static ChatFlowJump<IncidentCreateFlowState> NextOrRestart(IChatFlowContext<IncidentCreateFlowState> context)
     {
@@ -123,7 +123,7 @@ partial class IncidentCreateFlowStep
 
         var data = timesheet.CompressDataJson();
 
-        var webAppUrl = context.WebApp.BuildUrl("updateSupportForm", 
+        var webAppUrl = context.WebApp.BuildUrl("updateSupportForm",
             [
                 new("data", HttpUtility.UrlEncode(data)),
                 new("language", context.User.Culture.TwoLetterISOLanguageName)
@@ -184,7 +184,7 @@ partial class IncidentCreateFlowStep
     private static string GetAnnotationFileNames(this IChatFlowContext<IncidentCreateFlowState> context)
         =>
         string.Join(", ", context.FlowState.Documents.AsEnumerable().Select(GetFileName));
-    
+
 
     static string GetFileName(DocumentState document)
             =>

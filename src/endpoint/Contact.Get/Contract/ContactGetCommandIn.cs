@@ -1,4 +1,5 @@
-﻿using GarageGroup.Infra.Telegram.Bot;
+﻿using System;
+using GarageGroup.Infra.Telegram.Bot;
 
 namespace GarageGroup.Internal.Support;
 
@@ -21,4 +22,6 @@ public sealed record class ContactGetCommandIn : IChatCommandIn<ContactGetComman
     public CommandCustomer? Customer { get; }
 
     public CommandContact? Contact { get; }
+
+    public required Guid SystemUserId { get; init; }
 }

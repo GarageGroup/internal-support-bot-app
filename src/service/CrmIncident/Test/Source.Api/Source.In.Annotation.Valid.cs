@@ -20,7 +20,7 @@ partial class CrmIncidentApiTestSource
                     description: "Some description",
                     caseTypeCode: IncidentCaseTypeCode.Question,
                     priorityCode: IncidentPriorityCode.Low,
-                    callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
+                    callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
                 {
                     Documents =
                     [
@@ -49,6 +49,9 @@ partial class CrmIncidentApiTestSource
                     {
                         Subject = "Picture from user"
                     })
+                {
+                    CallerObjectId = new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")
+                }
             },
             {
                 new(
@@ -59,7 +62,7 @@ partial class CrmIncidentApiTestSource
                     description: "Some description",
                     caseTypeCode: IncidentCaseTypeCode.Question,
                     priorityCode: IncidentPriorityCode.Low,
-                    callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
+                    callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
                 {
                     Documents =
                     [
@@ -88,6 +91,9 @@ partial class CrmIncidentApiTestSource
                     {
                         Subject = "Video from user"
                     })
+                {
+                    CallerObjectId = new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")
+                }
             },
             {
                 new(
@@ -98,7 +104,7 @@ partial class CrmIncidentApiTestSource
                     description: "Some description",
                     caseTypeCode: IncidentCaseTypeCode.Question,
                     priorityCode: IncidentPriorityCode.Low,
-                    callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
+                    callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"))
                 {
                     Documents =
                     [
@@ -127,6 +133,9 @@ partial class CrmIncidentApiTestSource
                     {
                         Subject = "Document from user"
                     })
+                {
+                    CallerObjectId = new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")
+                }
             }
         };
 }

@@ -11,21 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout GitHub Action
-      uses: actions/checkout@v4
+    - name: Check out repository
+      uses: actions/checkout@v6
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '9.0.100-preview.6.24328.19'
-
-    - name: Add Garage Group NuGet Source
-      run: >
-        dotnet nuget add source ${{ vars.GG_NUGET_SOURCE_URL }}
-        -n garage
-        -u ${{ secrets.GG_NUGET_SOURCE_USER_NAME }}
-        -p ${{ secrets.GG_NUGET_SOURCE_USER_PASSWORD }}
-        --store-password-in-clear-text
+        dotnet-version: '10.0.x'
 
     - name: Restore
       run: dotnet restore
@@ -33,18 +25,18 @@ jobs:
     - name: Test
       run: dotnet test --no-restore -c Release
 
-    - name: Publish AzureFunc
+    - name: Publish Azure Function
       run: dotnet publish ./src/*/*/AzureFunc.csproj -c Release --output ./publish
 
     - name: Get version
       id: get_version
       run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
-    - name: Get current date time
+    - name: Get current date and time
       id: date
       run: echo "datetime=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
-    - name: App Settings Variable Substitution
+    - name: Substitute app settings variables
       uses: microsoft/variable-substitution@v1
       with:
         files: './publish/appsettings.json'
@@ -52,19 +44,20 @@ jobs:
         Info.ApiVersion: '${{ steps.get_version.outputs.version }}'
         Info.BuildDateTime: '${{ steps.date.outputs.datetime }}'
 
-    - name: Archive publish folder
+    - name: Archive the publish folder
       run: |
         cd ./publish
         zip -r ${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip ./
 
-    - uses: azure/login@v1
+    - name: Log in to Azure
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS_ARTIFACT }}
 
-    - name: Upload to Azure Blob Storage
-      uses: azure/CLI@v1
+    - name: Upload artifact to Azure Blob Storage
+      uses: azure/cli@v2
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az storage blob upload \
             --container-name artifacts \
@@ -74,26 +67,27 @@ jobs:
       env:
         AZURE_STORAGE_ACCOUNT: startifactblob
 
-  deploy-to-test:
+  deploy-on-test:
     runs-on: ubuntu-latest
     needs: publish
 
     steps:
-    - name: Checkout GitHub Action
-      uses: actions/checkout@v4
+    - name: Check out repository
+      uses: actions/checkout@v6
 
     - name: Get version
       id: get_version
       run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
-    - uses: azure/login@v1
+    - name: Log in to Azure
+      uses: azure/login@v3
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS_ARTIFACT }}
 
-    - name: Ensure Publish Directory Exists
+    - name: Ensure publish directory exists
       run: mkdir -p ./publish
 
-    - name: Download from Blob Storage
+    - name: Download artifact from Azure Blob Storage
       run: |
         az storage blob download \
           --name ${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
@@ -102,7 +96,7 @@ jobs:
           --container-name artifacts \
           --account-key ${{ secrets.AZURE_ACCOUNT_KEY_ARTIFACT }}
 
-    - name: Deploy to Azure
+    - name: Deploy to Azure Functions
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ vars.TEST_WEBAPP_NAME }}
@@ -114,14 +108,14 @@ jobs:
 
   ping-test:
     runs-on: ubuntu-latest
-    needs: deploy-to-test
+    needs: deploy-on-test
 
     steps:
       - name: Get version
         id: get_version
         run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
-      - name: Ping Health Check URL
+      - name: Ping health check URL
         uses: GarageGroup/platform-ping-app@v0.0.3
         with:
           health_check_url: https://${{ vars.TEST_WEBAPP_NAME }}.azurewebsites.net/health?code=${{ secrets.TEST_BOTFUNC_KEY }}

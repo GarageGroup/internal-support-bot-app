@@ -18,7 +18,7 @@ partial class CrmIncidentApiTestSource
                     description: "Some description",
                     caseTypeCode: IncidentCaseTypeCode.Question,
                     priorityCode: IncidentPriorityCode.Low,
-                    callerUserId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")),
+                    callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")),
                 new(
                     entityPluralName: "incidents",
                     selectFields: new("title"),
@@ -33,6 +33,9 @@ partial class CrmIncidentApiTestSource
                         PriorityCode = 3,
                         CaseOriginCode = null
                     })
+                {
+                    CallerObjectId = new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")
+                }
             },
             {
                 new(
@@ -43,7 +46,7 @@ partial class CrmIncidentApiTestSource
                     description: "Some Description",
                     caseTypeCode: IncidentCaseTypeCode.Request,
                     priorityCode: IncidentPriorityCode.High,
-                    callerUserId: new("144326e7-5aa8-4792-b8aa-d125b6f7f6b5"))
+                    callerObjectId: new("144326e7-5aa8-4792-b8aa-d125b6f7f6b5"))
                 {
                     SenderTelegramId = null
                 },
@@ -61,6 +64,9 @@ partial class CrmIncidentApiTestSource
                         PriorityCode = 1,
                         CaseOriginCode = null
                     })
+                {
+                    CallerObjectId = new("144326e7-5aa8-4792-b8aa-d125b6f7f6b5")
+                }
             },
             {
                 new(
@@ -71,7 +77,7 @@ partial class CrmIncidentApiTestSource
                     description: string.Empty,
                     caseTypeCode: IncidentCaseTypeCode.Problem,
                     priorityCode: IncidentPriorityCode.Normal,
-                    callerUserId: new("a6093320-cdf2-43d7-bf42-21825c303721"))
+                    callerObjectId: new("a6093320-cdf2-43d7-bf42-21825c303721"))
                 {
                     SenderTelegramId = null
                 },
@@ -89,6 +95,9 @@ partial class CrmIncidentApiTestSource
                         PriorityCode = 2,
                         CaseOriginCode = null
                     })
+                {
+                    CallerObjectId = new("a6093320-cdf2-43d7-bf42-21825c303721")
+                }
             },
             {
                 new(
@@ -99,7 +108,7 @@ partial class CrmIncidentApiTestSource
                     description: string.Empty,
                     caseTypeCode: IncidentCaseTypeCode.Problem,
                     priorityCode: IncidentPriorityCode.Normal,
-                    callerUserId: new("a6093320-cdf2-43d7-bf42-21825c303721"))
+                    callerObjectId: new("a6093320-cdf2-43d7-bf42-21825c303721"))
                 {
                     SenderTelegramId = 8978123
                 },
@@ -118,6 +127,9 @@ partial class CrmIncidentApiTestSource
                         CaseOriginCode = null,
                         SenderTelegramId = "8978123"
                     })
+                {
+                    CallerObjectId = new("a6093320-cdf2-43d7-bf42-21825c303721")
+                }
             }
         };
 }

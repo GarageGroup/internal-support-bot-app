@@ -20,8 +20,7 @@ partial class CrmCustomerApiTest
             minCreationTime: new(2023, 09, 17, 23, 16, 51),
             top: 7);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        _ = await api.GetLastAsync(input, cancellationToken);
+        _ = await api.GetLastAsync(input, TestContext.Current.CancellationToken);
 
         var expectedQuery = new DbSelectQuery("incident", "i")
         {
@@ -46,7 +45,7 @@ partial class CrmCustomerApiTest
             ]
         };
 
-        mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbIncidentCustomer>(expectedQuery, cancellationToken), Times.Once);
+        mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbIncidentCustomer>(expectedQuery, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -58,7 +57,7 @@ partial class CrmCustomerApiTest
         var mockSqlApi = BuildMockSqlApi(dbFailure);
         var api = new CrmCustomerApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
-        var actual = await api.GetLastAsync(SomeLastCustomerSetGetInput, default);
+        var actual = await api.GetLastAsync(SomeLastCustomerSetGetInput, TestContext.Current.CancellationToken);
         var expected = Failure.Create(CustomerSetGetFailureCode.Unknown, "Some Failure message", sourceException);
 
         Assert.StrictEqual(expected, actual);
@@ -72,7 +71,7 @@ partial class CrmCustomerApiTest
         var mockSqlApi = BuildMockSqlApi(dbIncidentCustomers);
         var api = new CrmCustomerApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
-        var actual = await api.GetLastAsync(SomeLastCustomerSetGetInput, default);
+        var actual = await api.GetLastAsync(SomeLastCustomerSetGetInput, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(expected, actual);
     }

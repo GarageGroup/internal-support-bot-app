@@ -20,8 +20,7 @@ partial class CrmOwnerApiTest
             userId: new("71cbe0d9-a715-4bf3-bb0c-bb02e343d569"),
             top: 11);
 
-        var cancellationToken = new CancellationToken(canceled: false);
-        _ = await api.GetLastAsync(input, cancellationToken);
+        _ = await api.GetLastAsync(input, TestContext.Current.CancellationToken);
 
         var expectedQuery = new DbSelectQuery("incident", "i")
         {
@@ -50,7 +49,7 @@ partial class CrmOwnerApiTest
             ]
         };
 
-        mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbIncidentOwner>(expectedQuery, cancellationToken), Times.Once);
+        mockSqlApi.Verify(a => a.QueryEntitySetOrFailureAsync<DbIncidentOwner>(expectedQuery, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -62,7 +61,7 @@ partial class CrmOwnerApiTest
         var mockSqlApi = BuildMockSqlApi(dbFailure);
         var api = new CrmOwnerApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
-        var actual = await api.GetLastAsync(SomeLastOwnerSetGetInput, default);
+        var actual = await api.GetLastAsync(SomeLastOwnerSetGetInput, TestContext.Current.CancellationToken);
         var expected = Failure.Create(OwnerSetGetFailureCode.Unknown, "Some failure message", sourceException);
 
         Assert.StrictEqual(expected, actual);
@@ -76,7 +75,7 @@ partial class CrmOwnerApiTest
         var mockSqlApi = BuildMockSqlApi(dbIncidentOwners);
         var api = new CrmOwnerApi(Mock.Of<IDataverseSearchSupplier>(), mockSqlApi.Object);
 
-        var actual = await api.GetLastAsync(SomeLastOwnerSetGetInput, default);
+        var actual = await api.GetLastAsync(SomeLastOwnerSetGetInput, TestContext.Current.CancellationToken);
 
         Assert.StrictEqual(expected, actual);
     }

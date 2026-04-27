@@ -67,12 +67,18 @@ partial class IncidentCreateFlowStep
         if (state.IsRepeated is false)
         {
             return new(
-                telegramSender: state.SourceSender is null ? null : new(state.SourceSender.UserId));
+                telegramSender: state.SourceSender is null ? null : new(state.SourceSender.UserId))
+            {
+                SystemUserId = context.FlowState.SystemUserId
+            };
         }
 
         return new(
             customer: state.Customer is null ? null : new(state.Customer.Id, state.Customer.Title),
-            contact: state.Contact is null ? null : new(state.Contact.Id, state.Contact.FullName));
+            contact: state.Contact is null ? null : new(state.Contact.Id, state.Contact.FullName))
+        {
+            SystemUserId = context.FlowState.SystemUserId
+        };
     }
 
     private static MessageStatus GetMessageStatus(BotMessage? message)

@@ -1,4 +1,4 @@
-name: Deploy Bot App to Prod
+name: Deploy Bot App to Production
 
 on:
   workflow_dispatch:
@@ -8,38 +8,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout GitHub Action
-      uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-    - name: Get version
-      id: get_version
-      run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
+      - name: Get version
+        id: get_version
+        run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS_ARTIFACT }}
+      - name: Log in to Azure
+        uses: azure/login@v3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_ARTIFACT }}
 
-    - name: Ensure Publish Directory Exists
-      run: mkdir -p ./publish
+      - name: Ensure publish directory exists
+        run: mkdir -p ./publish
 
-    - name: Download from Blob Storage
-      run: |
-        az storage blob download \
-          --name ${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
-          --file ./publish/${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
-          --account-name startifactblob \
-          --container-name artifacts \
-          --account-key ${{ secrets.AZURE_ACCOUNT_KEY_ARTIFACT }}
+      - name: Download artifact from Azure Blob Storage
+        run: |
+          az storage blob download \
+            --name ${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
+            --file ./publish/${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip \
+            --account-name startifactblob \
+            --container-name artifacts \
+            --account-key ${{ secrets.AZURE_ACCOUNT_KEY_ARTIFACT }}
 
-    - name: Deploy to Azure
-      uses: Azure/functions-action@v1
-      with:
-        app-name: ${{ vars.PROD_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.PROD_BOTFUNC_PUBLISHPROFILE }}
-        package: ./publish/${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ vars.PROD_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.PROD_BOTFUNC_PUBLISHPROFILE }}
+          package: ./publish/${{ vars.AZURE_ARTIFACT_NAME }}-${{ steps.get_version.outputs.version }}.zip
 
-    - name: Log out of Azure
-      run: az logout
+      - name: Log out of Azure
+        run: az logout
 
   ping:
     runs-on: ubuntu-latest
@@ -50,7 +51,7 @@ jobs:
         id: get_version
         run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
-      - name: Ping Health Check URL
+      - name: Ping health check URL
         uses: GarageGroup/platform-ping-app@v0.0.3
         with:
           health_check_url: https://${{ vars.PROD_WEBAPP_NAME }}.azurewebsites.net/health?code=${{ secrets.PROD_BOTFUNC_KEY }}

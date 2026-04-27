@@ -4,7 +4,7 @@ namespace GarageGroup.Internal.Support;
 
 internal sealed record class ContactGetFlowState
 {
-    public required Guid BotUserId { get; init; }
+    public required Guid SystemUserId { get; init; }
 
     public required DateTime DbMinDate { get; init; }
 

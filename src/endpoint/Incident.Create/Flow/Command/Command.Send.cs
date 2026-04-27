@@ -13,7 +13,8 @@ partial class IncidentCreateCommand
         request.StartChatFlow(
             @in => new IncidentCreateFlowState
             {
-                BotUserId = request.Context.User.Identity?.SystemId ?? default,
+                SystemUserId = ParseSystemUserId(request.Context.User),
+                BotUserId = request.Context.User.Identity?.Id ?? default,
                 BotUserName = request.Context.User.Identity?.Name,
                 Description = @in.Description,
                 DocumentIds = @in.DocumentIds,

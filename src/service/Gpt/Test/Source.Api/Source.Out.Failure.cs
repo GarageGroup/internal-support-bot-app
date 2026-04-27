@@ -14,7 +14,7 @@ partial class SupportGptApiTestSource
             {
                 default,
                 new(
-                    failureCode: IncidentCompleteFailureCode.Unknown, 
+                    failureCode: IncidentCompleteFailureCode.Unknown,
                     failureMessage: "An unexpected http failure occured: 0.")
             },
             {
@@ -28,7 +28,7 @@ partial class SupportGptApiTestSource
                     }
                 },
                 new(
-                    failureCode: IncidentCompleteFailureCode.Unknown, 
+                    failureCode: IncidentCompleteFailureCode.Unknown,
                     failureMessage: "An unexpected http failure occured: 400.\nSome failure message")
             },
             {
@@ -46,7 +46,7 @@ partial class SupportGptApiTestSource
                     }
                 },
                 new(
-                    failureCode: IncidentCompleteFailureCode.Unknown, 
+                    failureCode: IncidentCompleteFailureCode.Unknown,
                     failureMessage: "An unexpected http failure occured: 500 Some reason.\nSome error text.")
             },
             {
@@ -64,7 +64,7 @@ partial class SupportGptApiTestSource
                     }
                 },
                 new(
-                    failureCode: IncidentCompleteFailureCode.TooManyRequests, 
+                    failureCode: IncidentCompleteFailureCode.TooManyRequests,
                     failureMessage: "An unexpected http failure occured: 429 Some reason.\nSome error text.")
             },
         };

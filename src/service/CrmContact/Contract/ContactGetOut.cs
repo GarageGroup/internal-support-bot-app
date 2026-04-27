@@ -6,9 +6,9 @@ namespace GarageGroup.Internal.Support;
 public sealed record class ContactGetOut
 {
     public ContactGetOut(
-        Guid contactId, 
-        [AllowNull] string contactName, 
-        Guid customerId, 
+        Guid contactId,
+        [AllowNull] string contactName,
+        Guid customerId,
         [AllowNull] string customerName)
     {
         ContactId = contactId;

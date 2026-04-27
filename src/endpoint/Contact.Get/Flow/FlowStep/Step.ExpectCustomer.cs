@@ -60,7 +60,7 @@ partial class ContactGetFlowStep
             context.FlowState, cancellationToken)
         .Pipe(
             static state => new LastCustomerSetGetIn(
-                userId: state.BotUserId,
+                userId: state.SystemUserId,
                 minCreationTime: state.DbMinDate,
                 top: MaxCustomerSetCount))
         .PipeValue(
