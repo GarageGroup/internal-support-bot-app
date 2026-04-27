@@ -58,9 +58,10 @@ jobs:
         run: echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
       - name: Ping health check URL
-        uses: GarageGroup/platform-ping-app@v0.0.3
+        uses: GarageGroup/platform-ping-app@v0.1.0
         with:
           health_check_url: https://${{ vars.PROD_WEBAPP_NAME }}.azurewebsites.net/health?code=${{ secrets.PROD_BOTFUNC_KEY }}
           contains: ${{ steps.get_version.outputs.version }}
+          is_end_of_line_match: true
           retry_delay_in_seconds: 15
           max_attempts: 10

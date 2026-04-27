@@ -22,7 +22,7 @@
     <PackageReference Include="GarageGroup.Infra.Sql.Api.Core.DbRequest" Version="4.0.1" />
     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="5.3.0" PrivateAssets="all" />
     <PackageReference Include="PrimeFuncPack.Core.Optional" Version="2.1.0" />
-    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.2.0-preview.1" />
+    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.2.0-rc.1" />
   </ItemGroup>
 
 </Project>
