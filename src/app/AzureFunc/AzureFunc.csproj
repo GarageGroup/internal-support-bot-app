@@ -39,7 +39,7 @@
     <PackageReference Include="GarageGroup.Infra.Dataverse.Api" Version="3.21.0" />
     <PackageReference Include="GarageGroup.Infra.HealthCheck.Handler" Version="1.0.0" />
     <PackageReference Include="GarageGroup.Infra.Http.Api" Version="1.0.0" />
-    <PackageReference Include="GarageGroup.Infra.Http.Header" Version="0.0.1" />
+    <PackageReference Include="GarageGroup.Infra.Http.Configurator" Version="1.0.0" />
     <PackageReference Include="GarageGroup.Infra.Http.Polly" Version="2.1.0" />
     <PackageReference Include="GarageGroup.Infra.Sql.Api" Version="3.1.0" />
     <PackageReference Include="GarageGroup.Infra.Sql.Api.Provider.Dataverse" Version="0.4.0" />
