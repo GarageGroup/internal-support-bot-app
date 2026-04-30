@@ -13,11 +13,13 @@ public sealed record class IncidentCreateIn
         [AllowNull] string description,
         IncidentCaseTypeCode caseTypeCode,
         IncidentPriorityCode priorityCode,
-        Guid callerObjectId)
+        Guid callerObjectId,
+        Guid? projectId = null)
     {
         OwnerId = ownerId;
         CustomerId = customerId;
         ContactId = contactId;
+        ProjectId = projectId;
         Title = title.OrEmpty();
         Description = description.OrEmpty();
         CaseTypeCode = caseTypeCode;
@@ -30,6 +32,8 @@ public sealed record class IncidentCreateIn
     public Guid CustomerId { get; }
 
     public Guid? ContactId { get; }
+
+    public Guid? ProjectId { get; }
 
     public string Title { get; }
 

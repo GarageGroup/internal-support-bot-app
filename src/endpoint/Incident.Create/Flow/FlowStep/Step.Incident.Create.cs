@@ -44,7 +44,8 @@ partial class IncidentCreateFlowStep
                 description: flowState.Description,
                 caseTypeCode: flowState.CaseType?.Code ?? default,
                 priorityCode: flowState.Priority?.Code ?? default,
-                callerObjectId: flowState.BotUserId)
+                callerObjectId: flowState.BotUserId,
+                projectId: flowState.Project?.Id)
             {
                 SenderTelegramId = flowState.SourceSender?.UserId,
                 Documents = flowState.Documents.Map(MapDocument)

@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <InvariantGlobalization>false</InvariantGlobalization>
-    <NoWarn>$(NoWarn);IDE0130;CA1859</NoWarn>
+    <NoWarn>$(NoWarn);IDE0130;CA1859;CA1873</NoWarn>
     <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
     <AssemblyName>GarageGroup.Internal.Support.Endpoint.Incident.Create.Flow</AssemblyName>
   </PropertyGroup>
@@ -15,6 +15,7 @@
     <ProjectReference Include="..\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\CrmIncident\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\CrmOwner\Contract\Contract.csproj" />
+    <ProjectReference Include="..\..\..\service\CrmProject\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\service\Gpt\Contract\Contract.csproj" />
     <ProjectReference Include="..\..\..\shared\Entity\Entity.csproj" />
     <ProjectReference Include="..\..\Contact.Get\Contract\Contract.csproj" />
@@ -28,7 +29,7 @@
     <PackageReference Include="GarageGroup.Infra.Telegram.Bot.ChatFlow.Step.Value" Version="0.4.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
     <PackageReference Include="OpenTelemetry.Api" Version="1.15.3" />
-    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.2.0-rc.1" />
+    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="2.2.0" />
   </ItemGroup>
 
 </Project>

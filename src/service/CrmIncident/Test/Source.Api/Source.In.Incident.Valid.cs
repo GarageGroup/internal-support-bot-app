@@ -18,7 +18,8 @@ partial class CrmIncidentApiTestSource
                     description: "Some description",
                     caseTypeCode: IncidentCaseTypeCode.Question,
                     priorityCode: IncidentPriorityCode.Low,
-                    callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1")),
+                    callerObjectId: new("8d690bea-2c1d-4ded-b5c2-0d070e8559f1"),
+                    projectId: new("8b6ef8f3-5c5f-42fb-bad5-0c2d5b7d61cc")),
                 new(
                     entityPluralName: "incidents",
                     selectFields: new("title"),
@@ -27,6 +28,7 @@ partial class CrmIncidentApiTestSource
                         OwnerId = "/systemusers(1203c0e2-3648-4596-80dd-127fdd2610b6)",
                         CustomerId = "/accounts(bd8b8e33-554e-e611-80dc-c4346bad0190)",
                         ContactId = "/contacts(be761c38-5d95-47c2-b4aa-1056e61a1cb0)",
+                        ProjectId = "/gg_projects(8b6ef8f3-5c5f-42fb-bad5-0c2d5b7d61cc)",
                         Title = "Some title",
                         Description = "Some description",
                         CaseTypeCode = 1,

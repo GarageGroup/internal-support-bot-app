@@ -39,6 +39,11 @@
     <Project Path="src/service/CrmOwner/Contract/Contract.csproj" />
     <Project Path="src/service/CrmOwner/Test/Test.csproj" />
   </Folder>
+  <Folder Name="/service/CrmProject/">
+    <Project Path="src/service/CrmProject/Api/Api.csproj" />
+    <Project Path="src/service/CrmProject/Contract/Contract.csproj" />
+    <Project Path="src/service/CrmProject/Test/Test.csproj" />
+  </Folder>
   <Folder Name="/service/Gpt/">
     <Project Path="src/service/Gpt/Api/Api.csproj" />
     <Project Path="src/service/Gpt/Contract/Contract.csproj" />

@@ -16,6 +16,8 @@ internal sealed partial class IncidentCreateCommand : IIncidentCreateCommand
 
     private readonly ISupportGptApi gptApi;
 
+    private readonly ICrmProjectApi projectApi;
+
     private readonly TelemetryClient? telemetryClient;
 
     private readonly IncidentCreateFlowOption option;
@@ -23,12 +25,14 @@ internal sealed partial class IncidentCreateCommand : IIncidentCreateCommand
     internal IncidentCreateCommand(
         ICrmIncidentApi incidentApi,
         ICrmOwnerApi ownerApi,
+        ICrmProjectApi projectApi,
         ISupportGptApi gptApi,
         TelemetryClient? telemetryClient,
         IncidentCreateFlowOption option)
     {
         this.incidentApi = incidentApi;
         this.ownerApi = ownerApi;
+        this.projectApi = projectApi;
         this.gptApi = gptApi;
         this.telemetryClient = telemetryClient;
         this.option = option;

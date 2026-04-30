@@ -29,6 +29,10 @@ internal sealed record class IncidentJsonCreateIn
         =>
         $"/contacts({contactId:D})";
 
+    internal static string BuildProjectLookupValue(Guid projectId)
+        =>
+        $"/gg_projects({projectId:D})";
+
     [JsonPropertyName("ownerid@odata.bind")]
     public string? OwnerId { get; init; }
 
@@ -37,6 +41,9 @@ internal sealed record class IncidentJsonCreateIn
 
     [JsonPropertyName("primarycontactid@odata.bind")]
     public string? ContactId { get; init; }
+
+    [JsonPropertyName("gg_supportprojectID@odata.bind")]
+    public string? ProjectId { get; init; }
 
     [JsonPropertyName("title")]
     public string? Title { get; init; }

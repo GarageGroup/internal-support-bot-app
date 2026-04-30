@@ -68,6 +68,7 @@ partial class IncidentCreateFlowStep
                 new(context.Localizer[TitleFieldName], context.FlowState.Title),
                 new(context.Localizer[CustomerFieldName], context.FlowState.Customer?.Title),
                 new(context.Localizer[ContactFieldName], (context.FlowState.Contact?.FullName).OrNullIfEmpty() ?? "--"),
+                new(context.Localizer[ProjectFieldName], (context.FlowState.Project?.Name).OrNullIfEmpty() ?? "--"),
                 new(context.Localizer[CaseTypeFieldName], context.FlowState.CaseType?.Title),
                 new(context.Localizer[PriorityFieldName], context.FlowState.Priority?.Title),
                 new(context.Localizer[OwnerFieldName], context.FlowState.Owner?.FullName),
@@ -114,9 +115,12 @@ partial class IncidentCreateFlowStep
             Title = state.Title,
             Customer = state.Customer is null ? null : new(state.Customer.Id, state.Customer.Title),
             Contact = state.Contact is null ? null : new(state.Contact.Id, state.Contact.FullName),
+            Project = state.Project is null ? null : new(state.Project.Id, state.Project.Name),
+            Projects = state.FoundProjects.Map(project => new ProjectWebAppData(project.Id, project.Name)),
             CaseTypeCode = state.CaseType?.Code ?? default,
             PriorityCode = state.Priority?.Code ?? default,
             Owner = state.Owner is null ? null : new(state.Owner.Id, state.Owner.FullName),
+            Owners = state.FoundOwners.Map(owner => new OwnerWebAppData(owner.Id, owner.FullName)),
             Description = state.Description,
             FileNames = state.Documents.Map(GetFileName)
         };
@@ -157,6 +161,9 @@ partial class IncidentCreateFlowStep
             Title = incident.Title,
             Customer = incident.Customer is null ? null : new(incident.Customer.Id, incident.Customer.Title),
             Contact = incident.Contact is null ? null : new(incident.Contact.Id, incident.Contact.FullName),
+            Project = incident.Project is null ? null : new(incident.Project.Id, incident.Project.Name),
+            IsProjectSkipped = incident.Project is null,
+            FoundProjects = incident.Projects.IsEmpty ? context.FlowState.FoundProjects : incident.Projects.Map(MapProject),
             CaseType = new(incident.CaseTypeCode, context.GetDisplayName(incident.CaseTypeCode)),
             Priority = new(incident.PriorityCode, context.GetDisplayName(incident.PriorityCode)),
             Owner = incident.Owner is null ? null : new(incident.Owner.Id, incident.Owner.FullName),
@@ -165,6 +172,12 @@ partial class IncidentCreateFlowStep
             IsRepeated = true
         };
     }
+
+    private static IncidentProjectState MapProject(ProjectWebAppData project)
+        =>
+        new(
+            id: project.Id,
+            name: project.Name);
 
     private static string CompressDataJson(this IncidentWebAppData data)
     {
