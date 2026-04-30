@@ -16,7 +16,7 @@ partial class IncidentCreateFlowStep
         chatFlow.ExpectChoiceValueOrSkip(
             crmOwnerApi.CreateOwnerStepOption);
 
-    private static ChoiceStepOption<IncidentCreateFlowState, IncidentOwnerState>? CreateOwnerStepOption(
+    private static ChoiceStepOption<IncidentCreateFlowState, IncidentOwnerChoiceState>? CreateOwnerStepOption(
         this ICrmOwnerApi crmOwnerApi, IChatFlowContext<IncidentCreateFlowState> context)
     {
         if (context.FlowState.Owner is not null)
@@ -29,7 +29,7 @@ partial class IncidentCreateFlowStep
             resultMessageFactory: CreateResultMessage,
             selectedItemMapper: MapFlowState);
 
-        ValueTask<Result<ChoiceStepSet<IncidentOwnerState>, ChatRepeatState>> GetOwnersAsync(
+        ValueTask<Result<ChoiceStepSet<IncidentOwnerChoiceState>, ChatRepeatState>> GetOwnersAsync(
             ChoiceStepRequest request, CancellationToken cancellationToken)
             =>
             string.IsNullOrEmpty(request.Text) switch
@@ -38,22 +38,23 @@ partial class IncidentCreateFlowStep
                 _ => crmOwnerApi.SearchOwnersAsync(context, request, cancellationToken)
             };
 
-        ChatMessageSendRequest CreateResultMessage(ChoiceStepItem<IncidentOwnerState> item)
+        ChatMessageSendRequest CreateResultMessage(ChoiceStepItem<IncidentOwnerChoiceState> item)
             =>
             new(context.BuildOwnerResultMessage(item.Title))
             {
                 ReplyMarkup = new BotReplyKeyboardRemove()
             };
 
-        IncidentCreateFlowState MapFlowState(ChoiceStepItem<IncidentOwnerState> item)
+        IncidentCreateFlowState MapFlowState(ChoiceStepItem<IncidentOwnerChoiceState> item)
             =>
             context.FlowState with
             {
-                Owner = item.Value
+                Owner = item.Value.Owner,
+                FoundOwners = item.Value.FoundOwners
             };
     }
 
-    private static ValueTask<Result<ChoiceStepSet<IncidentOwnerState>, ChatRepeatState>> GetDefaultOwnersAsync(
+    private static ValueTask<Result<ChoiceStepSet<IncidentOwnerChoiceState>, ChatRepeatState>> GetDefaultOwnersAsync(
         this ICrmOwnerApi crmOwnerApi, IChatFlowContext<IncidentCreateFlowState> context, CancellationToken cancellationToken)
         =>
         AsyncPipeline.Pipe(
@@ -76,10 +77,12 @@ partial class IncidentCreateFlowStep
                 choiceText: context.Localizer[ChooseOrSearchOwnerText])
             {
                 Items = owners.InsertBotUser(context.FlowState)
-            });
+            })
+        .MapSuccess(
+            static ownerSet => ownerSet.WithFoundOwners());
 
-    private static ValueTask<Result<ChoiceStepSet<IncidentOwnerState>, ChatRepeatState>> SearchOwnersAsync(
-        this ICrmOwnerApi crmOwnerApi, IChatFlowContextBase context, ChoiceStepRequest request, CancellationToken token)
+    private static ValueTask<Result<ChoiceStepSet<IncidentOwnerChoiceState>, ChatRepeatState>> SearchOwnersAsync(
+        this ICrmOwnerApi crmOwnerApi, IChatFlowContext<IncidentCreateFlowState> context, ChoiceStepRequest request, CancellationToken token)
         =>
         AsyncPipeline.Pipe(
             request.Text, token)
@@ -97,7 +100,27 @@ partial class IncidentCreateFlowStep
                 choiceText: @out.Owners.IsEmpty ? context.Localizer[NotFoundOwnersText] : context.Localizer[ChooseOrSearchOwnerText])
             {
                 Items = @out.Owners.Map(context.MapOwner)
-            });
+            })
+        .MapSuccess(
+            static ownerSet => ownerSet.WithFoundOwners());
+
+    private static ChoiceStepSet<IncidentOwnerChoiceState> WithFoundOwners(this ChoiceStepSet<IncidentOwnerState> ownerSet)
+    {
+        var foundOwners = ownerSet.Items.Map(static item => item.Value);
+
+        return new(ownerSet.ChoiceText)
+        {
+            Items = ownerSet.Items.Map(item => item.WithFoundOwners(foundOwners))
+        };
+    }
+
+    private static ChoiceStepItem<IncidentOwnerChoiceState> WithFoundOwners(
+        this ChoiceStepItem<IncidentOwnerState> item, FlatArray<IncidentOwnerState> foundOwners)
+        =>
+        new(
+            id: item.Id,
+            title: item.Title,
+            value: new(item.Value, foundOwners));
 
     private static FlatArray<ChoiceStepItem<IncidentOwnerState>> InsertBotUser(
         this FlatArray<ChoiceStepItem<IncidentOwnerState>> values, IncidentCreateFlowState flowState)
@@ -132,4 +155,5 @@ partial class IncidentCreateFlowStep
                 OwnerSetGetFailureCode.NotAllowed => context.Localizer[NotAllowedText],
                 _ => throw failure.ToException()
             });
+
 }

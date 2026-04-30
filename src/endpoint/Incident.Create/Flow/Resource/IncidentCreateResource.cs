@@ -32,6 +32,16 @@ internal static class IncidentCreateResource
 
     public const string ChooseOrSearchOwnerText = "ChooseOrSearchOwnerText";
 
+    public const string NotFoundProjectsText = "NotFoundProjectsText";
+
+    public const string NotExistProjectsText = "NotExistProjectsText";
+
+    public const string ChooseProjectText = "ChooseProjectText";
+
+    public const string ChooseOrSearchProjectText = "ChooseOrSearchProjectText";
+
+    public const string SkipProjectButtonText = "SkipProjectButtonText";
+
     public const string ConfirmationHeaderText = "ConfirmationHeaderText";
 
     public const string ModificationHeaderText = "ModificationHeaderText";
@@ -41,6 +51,8 @@ internal static class IncidentCreateResource
     public const string CustomerFieldName = "CustomerFieldName";
 
     public const string ContactFieldName = "ContactFieldName";
+
+    public const string ProjectFieldName = "ProjectFieldName";
 
     public const string CaseTypeFieldName = "CaseTypeFieldName";
 

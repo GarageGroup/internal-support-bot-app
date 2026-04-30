@@ -24,6 +24,12 @@ internal sealed record class IncidentCreateFlowState
 
     public IncidentContactState? Contact { get; init; }
 
+    public FlatArray<IncidentProjectState> FoundProjects { get; init; }
+
+    public IncidentProjectState? Project { get; init; }
+
+    public bool IsProjectSkipped { get; init; }
+
     public string? Title { get; init; }
 
     public CaseTypeState? CaseType { get; init; }
@@ -31,6 +37,8 @@ internal sealed record class IncidentCreateFlowState
     public PriorityState? Priority { get; init; }
 
     public IncidentOwnerState? Owner { get; init; }
+
+    public FlatArray<IncidentOwnerState> FoundOwners { get; init; }
 
     public int TemporaryMessageId { get; init; }
 

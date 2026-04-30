@@ -159,6 +159,21 @@
   <data name="ChooseOrSearchOwnerText" xml:space="preserve">
     <value>Выберите ответственного или введите часть имени для поиска</value>
   </data>
+  <data name="NotFoundProjectsText" xml:space="preserve">
+    <value>Проекты не найдены. Введите другую часть названия проекта или пропустите этот шаг</value>
+  </data>
+  <data name="NotExistProjectsText" xml:space="preserve">
+    <value>По этому клиенту проекты не найдены. Шаг выбора проекта будет пропущен</value>
+  </data>
+  <data name="ChooseProjectText" xml:space="preserve">
+    <value>Выберите проект или пропустите этот шаг</value>
+  </data>
+  <data name="ChooseOrSearchProjectText" xml:space="preserve">
+    <value>Найдены не все проекты. Выберите проект из списка ниже или введите название проекта либо его часть для поиска</value>
+  </data>
+  <data name="SkipProjectButtonText" xml:space="preserve">
+    <value>Пропустить</value>
+  </data>
   <data name="ConfirmationHeaderText" xml:space="preserve">
     <value>Создать обращение?</value>
   </data>
@@ -173,6 +188,9 @@
   </data>
   <data name="ContactFieldName" xml:space="preserve">
     <value>Контакт</value>
+  </data>
+  <data name="ProjectFieldName" xml:space="preserve">
+    <value>Проект</value>
   </data>
   <data name="CaseTypeFieldName" xml:space="preserve">
     <value>Тип обращения</value>

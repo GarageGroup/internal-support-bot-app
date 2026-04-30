@@ -159,6 +159,21 @@
   <data name="ChooseOrSearchOwnerText" xml:space="preserve">
     <value>Choose the owner or enter part of the name to search</value>
   </data>
+  <data name="NotFoundProjectsText" xml:space="preserve">
+    <value>No projects were found. Enter another part of the project name or skip this step</value>
+  </data>
+  <data name="NotExistProjectsText" xml:space="preserve">
+    <value>No projects were found for this customer. The project selection step will be skipped</value>
+  </data>
+  <data name="ChooseProjectText" xml:space="preserve">
+    <value>Choose the project or skip this step</value>
+  </data>
+  <data name="ChooseOrSearchProjectText" xml:space="preserve">
+    <value>There are more projects. Choose one from the list below, or enter the project name or part of it to search</value>
+  </data>
+  <data name="SkipProjectButtonText" xml:space="preserve">
+    <value>Skip</value>
+  </data>
   <data name="ConfirmationHeaderText" xml:space="preserve">
     <value>Create an incident?</value>
   </data>
@@ -173,6 +188,9 @@
   </data>
   <data name="ContactFieldName" xml:space="preserve">
     <value>Contact</value>
+  </data>
+  <data name="ProjectFieldName" xml:space="preserve">
+    <value>Project</value>
   </data>
   <data name="CaseTypeFieldName" xml:space="preserve">
     <value>Case Type</value>

@@ -21,6 +21,9 @@ partial class IncidentCreateCommand
                 SourceSender = @in.SourceSender is null ? null : new(@in.SourceSender.Id)
             })
         .ExpectContact()
+        .GetProjects(
+            projectApi)
+        .ExpectProjectOrSkip()
         .GetDocumentUrls()
         .CallGpt(
             gptApi)

@@ -19,6 +19,7 @@ partial class CrmIncidentApi
                 OwnerId = IncidentJsonCreateIn.BuildOwnerLookupValue(@in.OwnerId),
                 CustomerId = IncidentJsonCreateIn.BuildCustomerLookupValue(@in.CustomerId),
                 ContactId = @in.ContactId is null ? null : IncidentJsonCreateIn.BuildContactLookupValue(@in.ContactId.Value),
+                ProjectId = @in.ProjectId is null ? null : IncidentJsonCreateIn.BuildProjectLookupValue(@in.ProjectId.Value),
                 Title = @in.Title,
                 Description = @in.Description,
                 CaseTypeCode = @in.CaseTypeCode switch

@@ -14,6 +14,10 @@ internal static partial class IncidentCreateFlowStep
 
     private const int MaxOwnerSetCount = 6;
 
+    private const int MaxProjectSetCount = 5;
+
+    private const string SkipButtonId = "Skip";
+
     private static readonly JsonSerializerOptions SerializerOptions
         =
         new(JsonSerializerDefaults.Web);
@@ -65,4 +69,8 @@ internal static partial class IncidentCreateFlowStep
     private static string BuildOwnerResultMessage(this IChatFlowContextBase context, string ownerName)
         =>
         string.Format("{0}: <b>{1}</b>", context.Localizer[OwnerFieldName], HttpUtility.HtmlEncode(ownerName));
+
+    private static string BuildProjectResultMessage(this IChatFlowContextBase context, string projectName)
+        =>
+        string.Format("{0}: <b>{1}</b>", context.Localizer[ProjectFieldName], HttpUtility.HtmlEncode(projectName));
 }

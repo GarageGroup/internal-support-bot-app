@@ -27,6 +27,8 @@ partial class Application
         .With(
             UseDataverseApi().With(UseSqlApi()).UseCrmOwnerApi())
         .With(
+            UseSqlApi().UseCrmProjectApi())
+        .With(
             UseSupportGptApi())
         .With(
             ServiceProviderServiceExtensions.GetService<TelemetryClient>,
