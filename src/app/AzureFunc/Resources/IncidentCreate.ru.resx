@@ -169,7 +169,7 @@
     <value>Выберите проект или пропустите этот шаг</value>
   </data>
   <data name="ChooseOrSearchProjectText" xml:space="preserve">
-    <value>Найдены не все проекты. Выберите проект из списка ниже или введите название проекта либо его часть для поиска</value>
+    <value>Выберите проект или введите часть имени для поиска</value>
   </data>
   <data name="SkipProjectButtonText" xml:space="preserve">
     <value>Пропустить</value>

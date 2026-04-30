@@ -169,7 +169,7 @@
     <value>Choose the project or skip this step</value>
   </data>
   <data name="ChooseOrSearchProjectText" xml:space="preserve">
-    <value>There are more projects. Choose one from the list below, or enter the project name or part of it to search</value>
+    <value>Choose the project or enter part of the name to search</value>
   </data>
   <data name="SkipProjectButtonText" xml:space="preserve">
     <value>Skip</value>
