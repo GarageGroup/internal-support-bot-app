@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <InvariantGlobalization>false</InvariantGlobalization>
-    <NoWarn>$(NoWarn);IDE0130;CA1859</NoWarn>
+    <NoWarn>$(NoWarn);IDE0130;CA1859;CA1873</NoWarn>
     <RootNamespace>GarageGroup.Internal.Support</RootNamespace>
     <AssemblyName>GarageGroup.Internal.Support.Endpoint.Contact.Get.Contract</AssemblyName>
   </PropertyGroup>

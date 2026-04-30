@@ -22,7 +22,8 @@ partial class Application
         PrimaryHandler.UseStandardSocketsHttpHandler()
         .UseLogging("CrmIncidentFileApi")
         .UseHttpApi()
-        .With(UseDataverseApi())
+        .With(
+            UseDataverseApi())
         .UseCrmIncidentApi()
         .With(
             UseDataverseApi().With(UseSqlApi()).UseCrmOwnerApi())
@@ -66,6 +67,7 @@ partial class Application
         var section = serviceProvider.GetConfiguration().GetRequiredSection("GptApi:IncidentComplete");
 
         return new(
+            chatMessages:
             [
                 new(
                     role: "system",

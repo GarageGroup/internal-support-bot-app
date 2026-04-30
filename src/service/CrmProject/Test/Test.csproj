@@ -8,7 +8,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);IDE0130;CA1859</NoWarn>
+    <NoWarn>$(NoWarn);IDE0130;CA1859;CA1873</NoWarn>
     <RootNamespace>GarageGroup.Internal.Support.Service.CrmProject.Test</RootNamespace>
     <AssemblyName>GarageGroup.Internal.Support.Service.CrmProject.Test</AssemblyName>
   </PropertyGroup>

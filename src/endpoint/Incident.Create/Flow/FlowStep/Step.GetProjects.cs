@@ -67,7 +67,7 @@ partial class IncidentCreateFlowStep
             static success => success,
             static _ => null);
 
-    private static IncidentProjectState MapProject(ProjectItemOut project)
+    private static IncidentProjectState MapProject(ProjectItem project)
         =>
         new(
             id: project.Id,

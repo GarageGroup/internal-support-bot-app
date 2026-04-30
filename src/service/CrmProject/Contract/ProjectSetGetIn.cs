@@ -2,7 +2,7 @@ using System;
 
 namespace GarageGroup.Internal.Support;
 
-public sealed record class ProjectSetGetIn
+public readonly record struct ProjectSetGetIn
 {
     public ProjectSetGetIn(Guid customerId)
         =>

@@ -22,7 +22,7 @@ partial class CrmProjectApi
                         DbProject.IsActiveFilter,
                         DbProject.BuildClientIdFilter(@in.CustomerId)
                     ]
-                },
+                }
             })
         .PipeValue(
             sqlApi.QueryEntitySetOrFailureAsync<DbProject>)
@@ -32,7 +32,7 @@ partial class CrmProjectApi
                 Projects = success.Map(MapProject)
             });
 
-    private static ProjectItemOut MapProject(DbProject dbProject)
+    private static ProjectItem MapProject(DbProject dbProject)
         =>
         new(
             id: dbProject.ProjectId,

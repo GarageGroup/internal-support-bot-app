@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GarageGroup.Internal.Support;
 
-public sealed record class ProjectItemOut
+public sealed record class ProjectItem
 {
-    public ProjectItemOut(Guid id, [AllowNull] string name)
+    public ProjectItem(Guid id, [AllowNull] string name)
     {
         Id = id;
         Name = name.OrEmpty();

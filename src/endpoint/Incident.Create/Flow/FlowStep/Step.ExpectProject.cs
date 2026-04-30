@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GarageGroup.Infra.Telegram.Bot;
@@ -60,12 +59,7 @@ partial class IncidentCreateFlowStep
 
         return new(context.BuildProjectChoiceText(projects))
         {
-            Items = projects
-                .AsEnumerable()
-                .Take(MaxProjectSetCount)
-                .Select(context.MapProject)
-                .ToFlatArray()
-                .Concat(context.GetSkipProjectButton())
+            Items = projects.Take(MaxProjectSetCount).Map(context.MapProject).Concat(context.GetSkipProjectButton())
         };
     }
 
@@ -77,10 +71,11 @@ partial class IncidentCreateFlowStep
             return projects;
         }
 
-        return projects
-            .AsEnumerable()
-            .Where(project => project.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
-            .ToFlatArray();
+        return projects.Filter(InnerContainsText);
+
+        bool InnerContainsText(IncidentProjectState project)
+            =>
+            project.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase);
     }
 
     private static string BuildProjectChoiceText(
